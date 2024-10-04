@@ -1,0 +1,75 @@
+import { type SquadPlayer } from "../modules/moduleTypes";
+export class stringUtils {
+    static brackets(input: string): string[] {
+        const regex = /\[\[(.*?)\]\]/g;
+        const matches = input.matchAll(regex);
+        const extractedStrings: string[] = [];
+
+        for (const match of matches) {
+            extractedStrings.push(match[1]);
+        }
+
+        return extractedStrings;
+    }
+    static duration(durationString: string): number {
+        const regex = /(\d+d)?(\d+h)?(\d+m)?(\d+s)?/;
+        const match = durationString.replace(/\s+/g, "").match(regex);
+
+        if (!match) {
+            throw new Error("Invalid duration string format");
+        }
+
+        const now = new Date();
+        const futureDate = new Date(now);
+
+        const [, days, hours, minutes, seconds] = match;
+
+        if (days) futureDate.setDate(futureDate.getDate() + parseInt(days));
+        if (hours) futureDate.setHours(futureDate.getHours() + parseInt(hours));
+        if (minutes)
+            futureDate.setMinutes(futureDate.getMinutes() + parseInt(minutes));
+        if (seconds)
+            futureDate.setSeconds(futureDate.getSeconds() + parseInt(seconds));
+
+        return futureDate.getTime() - Date.now();
+    }
+    static formatSquadPlayerInfo(players: SquadPlayer[]): string {
+        const abc = players.map((player) => {
+            const date = new Date(player.joindate);
+            const formattedDate = date.toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+            });
+
+            const day = date.getDate();
+            const suffix = ["th", "st", "nd", "rd"][
+                day % 10 > 3 ? 0 : (day % 100) - (day % 10) != 10 ? day % 10 : 0
+            ];
+
+            const finalDate = formattedDate.replace(/(\d+)/, `$1${suffix}`);
+
+            return `[**${player.link}**](https://liquipedia.net/brawlstars/${player.link}): ${player.nationality}, joined ${finalDate}`;
+        });
+        let answer = "";
+        for (const info of abc) {
+            answer += info + "\n";
+        }
+        return answer;
+    }
+    static formatDate(joinDate: string) {
+        const date = new Date(joinDate);
+        const formattedDate = date.toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+
+        const day = date.getDate();
+        const suffix = ["th", "st", "nd", "rd"][
+            day % 10 > 3 ? 0 : (day % 100) - (day % 10) != 10 ? day % 10 : 0
+        ];
+
+        return formattedDate.replace(/(\d+)/, `$1${suffix}`);
+    }
+}
