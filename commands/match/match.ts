@@ -5,13 +5,13 @@ import {
     type ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
-    Message,
     SlashCommandBuilder,
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { MatchInfo } from "../../modules/eSportsInfo/match";
 import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds";
+import { MapInfo } from "../../modules/inGameInfo/mapInfo";
 
 export const data = new SlashCommandBuilder()
     .setName("match")
@@ -53,12 +53,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const selectRow =
         new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
     // Send menu.
-    const reply = (await interaction.reply({
+    const reply = await interaction.reply({
         content: `Match selection for ${matchObj.matches[0].tickername}`,
         components: [selectRow],
         ephemeral: true,
-        fetchReply: true,
-    })) as Message;
+    });
     // Collect responses for Menu and Buttons (buttons currently WIP)
     const collector = reply.createMessageComponentCollector({
         componentType: ComponentType.StringSelect,
@@ -66,7 +65,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         time: 40_000,
     });
     collector.on("collect", async (i) => {
-        // Sending Match Embed. Map embed handling is done ahead.
+        // Sending Match Embed.
         const gameNumber = +i.values[0];
         const match = matchObj.matches[gameNumber];
         const opp1 = match.match2opponents[0];
@@ -95,14 +94,16 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 continue;
             }
             const map = game.map;
+            const mapObj = await MapInfo.setMap(map);
             MapButtons.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(map.toLowerCase())
+                    .setURL(mapObj.link)
                     .setLabel(map)
-                    .setStyle(ButtonStyle.Secondary)
+                    .setStyle(ButtonStyle.Link)
             );
         }
         await i.reply({
+            content: "\u200b",
             embeds: [embed],
             components: [MapButtons],
         });
