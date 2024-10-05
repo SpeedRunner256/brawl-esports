@@ -1,6 +1,6 @@
 import { findPageName } from "./findPage";
 import { readFile, writeFile } from "fs/promises";
-import {type SquadPlayer, type Team} from "../moduleTypes"
+import { type SquadPlayer, type Team } from "../moduleTypes";
 export class TeamInfo {
     currentObject: Team | undefined;
     constructor(data: Team | undefined) {
@@ -47,7 +47,7 @@ export class TeamInfo {
             });
         const param = new URLSearchParams({
             wiki: "brawlstars",
-            conditions: `[[pagename::${name}]] AND [[status::active]] AND [[type::player]]`,
+            conditions: `[[pagename::${name}]] AND [[status::active]]`,
         });
         await fetch(
             `https://api.liquipedia.net/api/v3/squadplayer?${param.toString()}`,
@@ -56,13 +56,23 @@ export class TeamInfo {
             .then((response) => response.json())
             .then((data) => {
                 for (const memberNumber in Object.values(data.result)) {
-                    const { link, status, joindate, nationality } =
-                        data.result[memberNumber];
+                    const {
+                        link,
+                        status,
+                        joindate,
+                        nationality,
+                        role,
+                        type,
+                        id,
+                    } = data.result[memberNumber];
                     teamData.players.push({
                         link,
                         status,
                         joindate,
                         nationality,
+                        role,
+                        type,
+                        id,
                     } as SquadPlayer);
                 }
             });
@@ -77,65 +87,75 @@ export class TeamInfo {
     }
     get pagename() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.pagename;
     }
     get name() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.name;
     }
     get region() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.region;
     }
     get logo() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.logodarkurl;
     }
     get textlesslogo() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.textlesslogodarkurl;
     }
     get links(): object {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.links;
     }
     get status() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         const cap = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
         return cap(this.currentObject.status);
     }
     get createdate(): string {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
-
+            throw new Error("Did not find value");
         }
         return this.currentObject.createdate;
     }
-    get players(){
+    get players() {
         if (!this.currentObject) {
-            throw new Error("Did not find value")
+            throw new Error("Did not find value");
         }
-        return this.currentObject.players;
+        const answer: SquadPlayer[] = [];
+        for (const player of this.currentObject.players) {
+            if (player.type == "player") {
+                answer.push(player);
+            }
+        }
+        return answer;
+    }
+    get staff() {
+        if (!this.currentObject) {
+            throw new Error("Did not find value");
+        }
+        const answer: SquadPlayer[] = [];
+        for (const player of this.currentObject.players) {
+            if (player.type == "staff") {
+                answer.push(player);
+            }
+        }
+        return answer;
     }
 }

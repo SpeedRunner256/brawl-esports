@@ -63,6 +63,9 @@ export type Player = {
     earnings: string;
 };
 export type SquadPlayer = {
+    id: string;
+    type: string;
+    role: string;
     link: string;
     status: string;
     joindate: string;

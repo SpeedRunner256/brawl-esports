@@ -1,5 +1,19 @@
 import { type SquadPlayer } from "../modules/moduleTypes";
 export class stringUtils {
+    static formatStaff(players: SquadPlayer[]): string {
+        return players
+            .map(
+                (player) =>
+                    `**[${
+                        player.id
+                    }](https://liquipedia.net/brawlstars/${new URLSearchParams(
+                        player.link
+                    ).toString()})**: ${player.role} - ${this.formatDate(
+                        player.joindate
+                    )}`
+            )
+            .join("\n");
+    }
     static brackets(input: string): string[] {
         const regex = /\[\[(.*?)\]\]/g;
         const matches = input.matchAll(regex);
@@ -49,7 +63,7 @@ export class stringUtils {
 
             const finalDate = formattedDate.replace(/(\d+)/, `$1${suffix}`);
 
-            return `[**${player.link}**](https://liquipedia.net/brawlstars/${player.link}): ${player.nationality}, joined ${finalDate}`;
+            return `[**${player.link}**](https://liquipedia.net/brawlstars/${player.link}): ${player.nationality}, - ${finalDate}`;
         });
         let answer = "";
         for (const info of abc) {

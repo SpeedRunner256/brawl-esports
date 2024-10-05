@@ -26,6 +26,14 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
                 inline: true,
             },
             {
+                name: "<:game:1291684262910885918> Members",
+                value: stringUtils.formatSquadPlayerInfo(team.players),
+            },
+            {
+                name: "<:coach:1292130323806556272> Coaches",
+                value: stringUtils.formatStaff(team.staff),
+            },
+            {
                 name: "<:score:1291686732621676605> Links",
                 value: Object.entries(team.links)
                     .map(
@@ -36,10 +44,6 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
                     )
                     .join(", "),
                 inline: true,
-            },
-            {
-                name: "<:game:1291684262910885918> Members",
-                value: stringUtils.formatSquadPlayerInfo(team.players),
             },
         ]);
     return sendEmbed;
