@@ -4,7 +4,9 @@ import { BrawlerInfo } from "../../modules/inGameInfo/brawlerInfo";
 export async function searchBrawler(query: string) {
     const brawler = await BrawlerInfo.setBrawler(query);
     const sendEmbed = new EmbedBuilder()
-        .setTitle(brawler.name)
+        .setTitle(
+            `<:bsStar:1292082767848542208> ${brawler.name} <:bsStar:1292082767848542208>`
+        )
         .setDescription(brawler.description)
         .setColor(brawler.rarityColor)
         .setURL(

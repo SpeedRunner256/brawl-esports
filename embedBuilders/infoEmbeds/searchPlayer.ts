@@ -10,47 +10,45 @@ export async function searchPlayer(query: string) {
             .setDescription("Are you searching correctly? Maybe check again.");
     }
     const sendEmbed = new EmbedBuilder()
-        .setTitle(player.id)
+        .setTitle(`<:duels:1291683169569083392> ${player.id}`)
+        .setDescription(
+            `${
+                player.pagename
+            } is a member (player/coach/analyst) at **${await findPrintableName(
+                player?.teampagename
+            )}**.`
+        )
         .setColor(player?.status == "Active" ? 0x4287f5 : 0xf54254)
         .setURL(`https://liquipedia.net/brawlstars/${player?.pagename}`)
+        .setFooter({ text: "We do not have licenses to use player images." })
         .addFields([
             {
-                name: "Team",
+                name: "<:game:1291684262910885918> Team",
                 value: `[${await findPrintableName(
                     player?.teampagename
                 )}](https://liquipedia.net/brawlstars/${player.teampagename})`,
                 inline: true,
             },
             {
-                name: "Living in",
+                name: "<:living:1292086781071593515> Living in",
                 value: player.nationality,
                 inline: true,
             },
             {
-                name: "\u200b",
-                value: "\u200b",
+                name: "<:money:1292086783886233621> Earnings",
+                value: "$" + player.earnings,
                 inline: true,
             },
             {
-                name: "Socials",
-                value: Object.entries(player.links)
+                name: "<:score:1291686732621676605> Socials",
+                value: `${Object.entries(player.links)
                     .map(
                         ([key, value]) =>
                             `[${
                                 key.charAt(0).toUpperCase() + key.slice(1)
                             }](${value})`
                     )
-                    .join("\n"),
-                inline: true,
-            },
-            {
-                name: "Earnings",
-                value: "$" + player.earnings,
-                inline: true,
-            },
-            {
-                name: "\u200b",
-                value: "\u200b",
+                    .join(", ")}`,
                 inline: true,
             },
         ]);

@@ -10,7 +10,10 @@ import {
 import { searchBrawler } from "../../embedBuilders/infoEmbeds/searchBrawler";
 import { searchMap } from "../../embedBuilders/infoEmbeds/searchMap";
 import { searchPlayer } from "../../embedBuilders/infoEmbeds/searchPlayer";
-import { searchTeam, searchTeamPlayers } from "../../embedBuilders/infoEmbeds/searchTeam";
+import {
+    searchTeam,
+    searchTeamPlayers,
+} from "../../embedBuilders/infoEmbeds/searchTeam";
 
 // command declaration
 export const data = new SlashCommandBuilder()
@@ -65,6 +68,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     new ButtonBuilder()
                         .setCustomId(member.toLowerCase())
                         .setLabel(member)
+                        .setEmoji("<:bounty:1291683164758212668>")
                         .setStyle(ButtonStyle.Secondary)
                 ); // Make the "Player" Buttons for team.
             }

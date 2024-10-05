@@ -7,7 +7,7 @@ export function matchEmbedFields(match: Match) {
     for (const game of match.match2games) {
         if (Object.values(game.participants).length !== 0) {
             answer.push({
-                name: `<:game:1291684262910885918> Game ${counter}`,
+                name: `<:combat:1292086786872442973> Game ${counter}`,
                 value: `<:bs_map:1291686752569921546> ${game.map} 
                     <:score:1291686732621676605> **${game.scores[0]}**:**${
                     game.scores[1]
@@ -18,8 +18,12 @@ export function matchEmbedFields(match: Match) {
                     game.participants["1_3"].brawler
                 }** vs **${game.participants["2_1"].brawler}**, **${
                     game.participants["2_2"].brawler
-                }**, **${game.participants["2_3"].brawler}** <:brawlers:1291686735906078861>
-                    <:bans:1291686740486131772> **Bans** ${getBanList(game.extradata)}`,
+                }**, **${
+                    game.participants["2_3"].brawler
+                }** <:brawlers:1291686735906078861>
+                    <:bans:1291686740486131772> **Bans** ${getBanList(
+                        game.extradata
+                    )}`,
                 inline: true,
             });
         }
