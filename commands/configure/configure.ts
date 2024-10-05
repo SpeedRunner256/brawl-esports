@@ -1,3 +1,4 @@
+import { EmbedBuilder } from "@discordjs/builders";
 import {
     ChannelType,
     ChatInputCommandInteraction,
@@ -25,15 +26,29 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         throw new Error("How is this in not a server?");
     }
     const log = interaction.options.getChannel("log");
-
     const configObj = {
-        log,
+        log: log,
     };
     const data = await readFile("config.json", "utf-8");
     const configData = JSON.parse(data);
     configData[+interaction.guildId] = configObj;
-    writeFile("config.json", JSON.stringify(configData));
+    writeFile("config.json", JSON.stringify(configData, null, "    "));
+
+    const configEmbed = new EmbedBuilder()
+        .setTitle("Success!")
+        .setDescription("This interaction resulted in a good time.")
+        .setColor(0x44db90)
+        .addFields([
+            {
+                name: "Server name",
+                value: `${interaction.guild}`,
+            },
+            {
+                name: "Log Channel",
+                value: `${configObj.log}`,
+            },
+        ]);
     await interaction.reply({
-        content: `Success! Made log channel for server **${interaction.guild}** to ${configObj.log}`,
+        embeds: [configEmbed],
     });
 }
