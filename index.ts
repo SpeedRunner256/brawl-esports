@@ -6,6 +6,7 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildMessagePolls,
     ],
 });
 declare module "discord.js" {
@@ -64,7 +65,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
         } else {
             await interaction.reply({
-                content: "There was an error while executing this command!",
+                content: `${error}`,
                 ephemeral: true,
             });
         }

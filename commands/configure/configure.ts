@@ -16,6 +16,14 @@ export const data = new SlashCommandBuilder()
             .setName("log")
             .setDescription("Enter your log channel.")
             .setRequired(true)
+    )
+    .addStringOption((option) =>
+        option
+            .setName("separator")
+            .setRequired(false)
+            .setDescription(
+                "Add a separator for the entirety of the bot. Defaulted to ';;'"
+            )
     );
 
 /* 1. Set log channel for interactions.
@@ -26,12 +34,17 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         throw new Error("How is this in not a server?");
     }
     const log = interaction.options.getChannel("log");
-    const configObj = {
-        log: log,
-    };
     const data = await readFile("config.json", "utf-8");
     const configData = JSON.parse(data);
-    configData[+interaction.guildId] = configObj;
+    let separator = interaction.options.getString("separator");
+    if (!separator) {
+        separator = ";;";
+    }
+    const configObj = {
+        log,
+        separator,
+    };
+    configData[interaction.guildId] = configObj;
     writeFile("config.json", JSON.stringify(configData, null, "    "));
 
     const configEmbed = new EmbedBuilder()
@@ -40,8 +53,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setColor(0x44db90)
         .addFields([
             {
-                name: "Server name",
-                value: `${interaction.guild}`,
+                name: "Server",
+                value: `${interaction.guildId}`,
             },
             {
                 name: "Log Channel",
