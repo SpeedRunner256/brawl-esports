@@ -96,9 +96,14 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     // All button interactions. Too bad I have to redo the for loop, maybe there's something better.
     collector.on("collect", async (i) => {
         if (i.customId === "sendtochat") {
+            Row.components[0].setDisabled(true);
             await i.reply({
                 embeds: [sendEmbed],
+                
             });
+            await interaction.editReply({
+                components: [Row]
+            })
             return;
         }
         for (const member of await searchTeamPlayers(query)) {
@@ -110,5 +115,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 return;
             }
         }
+    });
+    collector.on("end", async () => {
+        for (const item of Row.components) {
+            item.setDisabled(true);
+        }
+        await interaction.editReply({
+            components: [Row],
+        });
     });
 }
