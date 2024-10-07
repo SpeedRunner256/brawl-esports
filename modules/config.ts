@@ -29,6 +29,24 @@ export class Config {
             throw new Error(`Error: ${err}`);
         }
     }
+    static async userAlreadyVoted(
+        predictionNumber: string,
+        ID: string
+    ): Promise<boolean> {
+        const data = JSON.parse(await readFile("db/prediction.json", "utf8"));
+        const prediction = data[predictionNumber];
+        return (
+            prediction.userChoices[1].includes(ID) ||
+            prediction.userChoices[2].includes(ID)
+        );
+    }
+    static async mult(guildId: string | null) {
+        if (!guildId) {
+            throw new Error("Guild is null");
+        }
+        const data = JSON.parse(await readFile("./config.json", "utf-8"));
+        return data[guildId].mult
+    }
     static async log(
         logMessage: string,
         logContent: string,

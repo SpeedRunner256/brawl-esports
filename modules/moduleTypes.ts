@@ -132,12 +132,13 @@ export type User = {
     balance: number;
 };
 export type Prediction = {
+    guildId: string | null;
     question: string;
     choice1: string;
     choice2: string;
     predictionNumber: number;
     time: string;
-    userChoices: PredictionChoice[];
+    userChoices: { 1: string[]; 2: string[] };
     answer?: { hasAnswer: boolean; answer: number };
 };
 export type PredictionChoice = {

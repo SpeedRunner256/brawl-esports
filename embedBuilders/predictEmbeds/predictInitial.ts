@@ -9,7 +9,7 @@ export function predictCreateInitial(
     const answer = new EmbedBuilder()
         .setTitle(question)
         .setDescription(`Entries for this prediction **end in ${time}**`)
-        .setColor(0x4284f5)
+        .setColor(0x6441a5)
         .setFooter({ text: "Predict now!" })
         .setTimestamp()
         .setFooter({ text: "Voting requires 100 kash." })

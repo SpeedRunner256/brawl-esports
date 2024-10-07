@@ -73,16 +73,16 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
     // Send prediction data to db
     const currentPrediction: Prediction = {
+        guildId: interaction.guildId,
         question,
         choice1,
         choice2,
         time,
         predictionNumber: +predictionNumber,
-        userChoices: [],
+        userChoices: { 1: [], 2: [] },
+        answer: { hasAnswer: false, answer: 0 },
     };
     await savePredictionToDatabase(currentPrediction);
-
-    // Send prediction data to log channel.
 
     // Buttons and responses.
     const collector = reply.createMessageComponentCollector({
@@ -97,6 +97,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 content: "You are not registered. Type /start.",
                 ephemeral: true,
             });
+
             return;
         }
         if (i.customId === "choice1") {
@@ -108,17 +109,24 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 });
                 return;
             }
-            user.debit(100);
+            // Already voted
+            if (await Config.userAlreadyVoted(predictionNumber, i.user.id)) {
+                await i.reply({
+                    content: "You have already voted on this prediction",
+                    ephemeral: true,
+                });
+                return;
+            }
             // Send
             await i.reply({
                 content: `Predicted **${choice1}** for 100 kash.`,
                 ephemeral: true,
             });
+            // debit
+            user.debit(100);
             // Add the prediction log
-            currentPrediction.userChoices.push({
-                userID: i.user.id,
-                choice: 1,
-            });
+            currentPrediction.userChoices[1].push(i.user.id);
+            await savePredictionToDatabase(currentPrediction);
             return;
         } else if (i.customId === "choice2") {
             // Not enough money
@@ -129,17 +137,24 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 });
                 return;
             }
-            user.debit(100);
+            // Already voted
+            if (await Config.userAlreadyVoted(predictionNumber, i.user.id)) {
+                await i.reply({
+                    content: "You have already voted on this prediction",
+                    ephemeral: true,
+                });
+                return;
+            }
             // Reply
             await i.reply({
                 content: `Predicted **${choice2}** for 100 kash.`,
                 ephemeral: true,
             });
+            // debit
+            user.debit(100);
             // Add to log.
-            currentPrediction.userChoices.push({
-                userID: i.user.id,
-                choice: 1,
-            });
+            currentPrediction.userChoices[2].push(i.user.id);
+            await savePredictionToDatabase(currentPrediction);
             return;
         }
     });
@@ -166,7 +181,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             time: time,
             answer: { hasAnswered: false, answer: null },
         };
-        Config.log("Logging Prediction data from /predict",
+        Config.log(
+            "Logging Prediction data from /predict",
             JSON.stringify(logThis, null, "  ")
                 .split("\n")
                 .slice(1, 10)
