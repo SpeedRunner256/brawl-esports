@@ -9,6 +9,7 @@ import {
 import { predictCreateInitial } from "../../embedBuilders/predictEmbeds/predictInitial";
 import { stringUtils } from "../../utilities/stringUtils";
 import { predictEndEmbed } from "../../embedBuilders/predictEmbeds/predictEnd";
+import { Economy } from "../../modules/economy/economy";
 
 export const data = new SlashCommandBuilder()
     .setName("prediction")
@@ -39,6 +40,7 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+    const predictionNumber = (Date.now() / 1000).toString().split(".")[0];
     const question = interaction.options.getString("question")?.trim();
     const choice1 = interaction.options.getString("choice1")?.trim();
     const choice2 = interaction.options.getString("choice2")?.trim();
@@ -72,15 +74,39 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         componentType: ComponentType.Button,
     });
     collector.on("collect", async (i) => {
-        if (i.customId === "choice1") {
+        const user = await Economy.UserByID(i.user.id);
+        if (!user) {
             await i.reply({
-                content: `You have predicted choice 1 - ${choice1}.\nPlease wait for the event organizer to enter the answer.`,
+                content: "You are not registered. Type /start.",
+                ephemeral: true,
+            });
+            return;
+        }
+        if (i.customId === "choice1") {
+            if (user.balance < 100) {
+                await i.reply({
+                    content: "You cannot vote - you do not enough kash.",
+                    ephemeral: true,
+                });
+                return;
+            }
+            user.debit(100);
+            await i.reply({
+                content: `Predicted **${choice1} for 100 kash.`,
                 ephemeral: true,
             });
             return;
         } else if (i.customId === "choice2") {
+            if (user.balance < 100) {
+                await i.reply({
+                    content: "You cannot vote - you do not enough kash.",
+                    ephemeral: true,
+                });
+                return;
+            }
+            user.debit(100);
             await i.reply({
-                content: `You have predicted choice 2 - ${choice2}.\n Please wait for the event orgaizer to enter the answer.`,
+                content: `Predicted **${choice2}** for 100 kash.`,
                 ephemeral: true,
             });
         }
@@ -92,6 +118,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         await interaction.editReply({
             embeds: [endEmbed],
             components: [choiceRow],
+        });
+        await interaction.followUp({
+            content: `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
+            ephemeral: true,
         });
     });
 }

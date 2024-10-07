@@ -10,8 +10,9 @@ export function predictCreateInitial(
         .setTitle(question)
         .setDescription(`Entries for this prediction **end in ${time}**`)
         .setColor(0x4284f5)
-        .setFooter({text: "Predict now!"})
+        .setFooter({ text: "Predict now!" })
         .setTimestamp()
+        .setFooter({ text: "Voting requires 100 kash." })
         .addFields([
             {
                 name: "Choice 1",

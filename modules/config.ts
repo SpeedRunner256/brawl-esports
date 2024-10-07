@@ -14,4 +14,18 @@ export class Config {
             throw new Error(`Error reading separator: ${error}`);
         }
     }
+    static async balance(guildID: string | null): Promise<number> {
+        try {
+            if (!guildID) {
+                throw new Error("Guild ID is null.");
+            }
+            const config = JSON.parse(await readFile("./config.json", "utf-8"));
+            if (!(guildID in config)) {
+                throw new Error("Guild not found in config.");
+            }
+            return config[guildID].startBal;
+        } catch (err) {
+            throw new Error(`Error: ${err}`);
+        }
+    }
 }

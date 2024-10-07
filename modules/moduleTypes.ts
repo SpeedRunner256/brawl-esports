@@ -126,3 +126,8 @@ export type Map = {
         imageUrl: string;
     };
 };
+export type User = {
+    username: string;
+    userID: string;
+    balance: number;
+};

@@ -3,7 +3,7 @@ import {
     ChatInputCommandInteraction,
     SlashCommandBuilder,
 } from "discord.js";
-import { Config } from "../../modules/getConfig";
+import { Config } from "../../modules/config";
 
 export const data = new SlashCommandBuilder()
     .setName("poll")
