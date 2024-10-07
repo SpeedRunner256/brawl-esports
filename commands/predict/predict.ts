@@ -10,6 +10,9 @@ import { predictCreateInitial } from "../../embedBuilders/predictEmbeds/predictI
 import { stringUtils } from "../../utilities/stringUtils";
 import { predictEndEmbed } from "../../embedBuilders/predictEmbeds/predictEnd";
 import { Economy } from "../../modules/economy/economy";
+import type { Prediction } from "../../modules/moduleTypes";
+import { savePredictionToDatabase } from "../../modules/predictSave";
+import { Config } from "../../modules/config";
 
 export const data = new SlashCommandBuilder()
     .setName("prediction")
@@ -68,13 +71,27 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         embeds: [initialEmbed],
         components: [choiceRow],
     });
+    // Send prediction data to db
+    const currentPrediction: Prediction = {
+        question,
+        choice1,
+        choice2,
+        time,
+        predictionNumber: +predictionNumber,
+        userChoices: [],
+    };
+    await savePredictionToDatabase(currentPrediction);
 
+    // Send prediction data to log channel.
+
+    // Buttons and responses.
     const collector = reply.createMessageComponentCollector({
         time: stringUtils.duration(time),
         componentType: ComponentType.Button,
     });
     collector.on("collect", async (i) => {
         const user = await Economy.UserByID(i.user.id);
+        // Not registered
         if (!user) {
             await i.reply({
                 content: "You are not registered. Type /start.",
@@ -83,6 +100,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             return;
         }
         if (i.customId === "choice1") {
+            // Not enough money
             if (user.balance < 100) {
                 await i.reply({
                     content: "You cannot vote - you do not enough kash.",
@@ -91,12 +109,19 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 return;
             }
             user.debit(100);
+            // Send
             await i.reply({
-                content: `Predicted **${choice1} for 100 kash.`,
+                content: `Predicted **${choice1}** for 100 kash.`,
                 ephemeral: true,
+            });
+            // Add the prediction log
+            currentPrediction.userChoices.push({
+                userID: i.user.id,
+                choice: 1,
             });
             return;
         } else if (i.customId === "choice2") {
+            // Not enough money
             if (user.balance < 100) {
                 await i.reply({
                     content: "You cannot vote - you do not enough kash.",
@@ -105,13 +130,21 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 return;
             }
             user.debit(100);
+            // Reply
             await i.reply({
                 content: `Predicted **${choice2}** for 100 kash.`,
                 ephemeral: true,
             });
+            // Add to log.
+            currentPrediction.userChoices.push({
+                userID: i.user.id,
+                choice: 1,
+            });
+            return;
         }
     });
     collector.on("end", async () => {
+        // Disable all buttons + change embed
         choiceRow.components[0].setDisabled(true);
         choiceRow.components[1].setDisabled(true);
         const endEmbed = predictEndEmbed(question, time);
@@ -119,9 +152,27 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             embeds: [endEmbed],
             components: [choiceRow],
         });
+        // Send messsage to person to started the event.
         await interaction.followUp({
             content: `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
             ephemeral: true,
         });
+        // Log this.
+        const logThis = {
+            predictionNumber,
+            question: currentPrediction.question,
+            choice1: currentPrediction.choice1,
+            choice2: currentPrediction.choice2,
+            time: time,
+            answer: { hasAnswered: false, answer: null },
+        };
+        Config.log("Logging Prediction data from /predict",
+            JSON.stringify(logThis, null, "  ")
+                .split("\n")
+                .slice(1, 10)
+                .map((str) => str.trim())
+                .join("\n"),
+            interaction
+        );
     });
 }

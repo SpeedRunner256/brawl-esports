@@ -131,3 +131,16 @@ export type User = {
     userID: string;
     balance: number;
 };
+export type Prediction = {
+    question: string;
+    choice1: string;
+    choice2: string;
+    predictionNumber: number;
+    time: string;
+    userChoices: PredictionChoice[];
+    answer?: { hasAnswer: boolean; answer: number };
+};
+export type PredictionChoice = {
+    userID: string;
+    choice: number;
+};

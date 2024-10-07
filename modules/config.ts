@@ -1,3 +1,4 @@
+import type { ChatInputCommandInteraction, TextChannel } from "discord.js";
 import { readFile } from "fs/promises";
 export class Config {
     static async separator(guildID: string): Promise<string> {
@@ -27,5 +28,20 @@ export class Config {
         } catch (err) {
             throw new Error(`Error: ${err}`);
         }
+    }
+    static async log(
+        logMessage: string,
+        logContent: string,
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
+        const data = JSON.parse(await readFile("config.json", "utf8"));
+        const guildId = interaction.guildId;
+        if (!guildId) {
+            throw new Error("Not in a guild.");
+        }
+        const log = data[guildId].log.id;
+        (interaction.client.channels.cache.get(log) as TextChannel).send(
+            `${logMessage}\`\`\`json\n${logContent}\`\`\``
+        );
     }
 }
