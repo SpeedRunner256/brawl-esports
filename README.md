@@ -8,7 +8,7 @@ bun install
 
 You can probably use node too but I haven't tried it yet.
 
-To get the bot working, just open the powershell or bash script depending on which side of the universe you belong to.
+To get the bot working, just open the powershell or bash script (setup.pwsh/setup.sh) depending on which side of the universe you belong to.
 
 1. To get a discord token, follow any tutorial online - there are hundreds.
 2. Paste the bot's ID as client id and the guild you want the bot to be in as your Guild id.
