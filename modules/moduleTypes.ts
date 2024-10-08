@@ -102,7 +102,7 @@ export type Brawler = {
         {
             name: string;
             description: string;
-        }
+        },
     ];
     gadgets: [
         {
@@ -112,7 +112,7 @@ export type Brawler = {
         {
             name: string;
             description: string;
-        }
+        },
     ];
 };
 export type Map = {
@@ -131,6 +131,7 @@ export type User = {
     username: string;
     userID: string;
     balance: number;
+    lastGambleTime: number;
 };
 export type Prediction = {
     guildId: string | null;

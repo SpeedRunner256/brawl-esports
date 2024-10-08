@@ -27,10 +27,10 @@ export class Economy {
     static async initUser(
         username: string,
         userID: string,
-        guildID: string
+        guildID: string,
     ): Promise<Economy> {
         const balance = await Config.balance(guildID);
-        const newUser: User = { username, userID, balance };
+        const newUser: User = { username, userID, balance, lastGambleTime: 0 };
         const data = JSON.parse(await readFile("db/economy.json", "utf-8"));
         data[userID] = newUser;
         writeFile("db/economy.json", JSON.stringify(data, null, "    "));
@@ -42,11 +42,12 @@ export class Economy {
         for (const user of Object.keys(data)) {
             if (user === ID) {
                 const currentUser = data[ID];
-                currentUser.balance = userObj.balance;
+                currentUser.balance = Math.floor(userObj.balance);
+                currentUser.lastGambleTime = userObj.lastGambleTime;
                 data[ID] = currentUser;
                 writeFile(
                     "db/economy.json",
-                    JSON.stringify(data, null, "    ")
+                    JSON.stringify(data, null, "    "),
                 );
                 return;
             }
@@ -62,6 +63,13 @@ export class Economy {
     get balance() {
         return this.currentUser.balance;
     }
+    get lastGambleTime() {
+        return this.currentUser.lastGambleTime;
+    }
+    time(time: number) {
+        this.currentUser.lastGambleTime = time;
+        this.Update(this.currentUser);
+    }
     credit(credit: number) {
         this.currentUser.balance += credit;
         this.Update(this.currentUser);
@@ -69,6 +77,5 @@ export class Economy {
     debit(debit: number) {
         this.currentUser.balance -= debit;
         this.Update(this.currentUser);
-
     }
 }
