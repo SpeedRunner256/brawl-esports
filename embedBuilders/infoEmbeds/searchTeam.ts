@@ -4,49 +4,54 @@ import { stringUtils } from "../../utilities/stringUtils";
 
 export async function searchTeam(query: string): Promise<EmbedBuilder> {
     const team = await TeamInfo.setTeam(query);
-    const sendEmbed = new EmbedBuilder()
-        .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
-        .setURL(`https://liquipedia.net/brawlstars/${team.pagename}`)
-        .setThumbnail(team.textlesslogo)
-        .setColor(team.status == "Active" ? 0x4287f5 : 0xf54254)
-        .addFields([
-            {
-                name: "<:time:1292086778550812672> Creation Date",
-                value: stringUtils.formatDate(team.createdate),
-                inline: true,
-            },
-            {
-                name: "<:living:1292086781071593515>  Region",
-                value: team.region,
-                inline: true,
-            },
-            {
-                name: "\u200b",
-                value: "\u200b",
-                inline: true,
-            },
-            {
-                name: "<:game:1291684262910885918> Members",
-                value: stringUtils.formatSquadPlayerInfo(team.players),
-            },
-            {
-                name: "<:coach:1292130323806556272> Coaches",
-                value: stringUtils.formatStaff(team.staff),
-            },
-            {
-                name: "<:score:1291686732621676605> Links",
-                value: Object.entries(team.links)
-                    .map(
-                        ([key, value]) =>
-                            `[${
-                                key.charAt(0).toUpperCase() + key.slice(1)
-                            }](${value})`
-                    )
-                    .join(", "),
-                inline: true,
-            },
-        ]);
-    return sendEmbed;
+    let answer = new EmbedBuilder();
+    try {
+        answer = new EmbedBuilder()
+            .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
+            .setURL(`https://liquipedia.net/brawlstars/${team.pagename}`)
+            .setThumbnail(team.textlesslogo)
+            .setColor(team.status == "Active" ? 0x4287f5 : 0xf54254)
+            .addFields([
+                {
+                    name: "<:time:1292086778550812672> Creation Date",
+                    value: stringUtils.formatDate(team.createdate),
+                    inline: true,
+                },
+                {
+                    name: "<:living:1292086781071593515>  Region",
+                    value: team.region,
+                    inline: true,
+                },
+                {
+                    name: "\u200b",
+                    value: "\u200b",
+                    inline: true,
+                },
+                {
+                    name: "<:game:1291684262910885918> Members",
+                    value: stringUtils.formatSquadPlayerInfo(team.players),
+                },
+                {
+                    name: "<:coach:1292130323806556272> Coaches",
+                    value: stringUtils.formatStaff(team.staff),
+                },
+                {
+                    name: "<:score:1291686732621676605> Links",
+                    value: Object.entries(team.links)
+                        .map(
+                            ([key, value]) =>
+                                `[${
+                                    key.charAt(0).toUpperCase() + key.slice(1)
+                                }](${value})`,
+                        )
+                        .join(", "),
+                    inline: true,
+                },
+            ]);
+    } catch (error) {
+        console.log(error);
+    }
+    return answer;
 }
 export async function searchTeamPlayers(query: string) {
     const team = await TeamInfo.setTeam(query);

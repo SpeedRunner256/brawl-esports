@@ -9,8 +9,8 @@ import {
     StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { MatchInfo } from "../../modules/eSportsInfo/match";
 import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds";
+import { MatchInfo } from "../../modules/eSportsInfo/match";
 import { MapInfo } from "../../modules/inGameInfo/mapInfo";
 
 export const data = new SlashCommandBuilder()
@@ -20,7 +20,7 @@ export const data = new SlashCommandBuilder()
         option
             .setName("page_name")
             .setDescription("Page link for the match")
-            .setRequired(true)
+            .setRequired(true),
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
@@ -46,7 +46,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         menuFields.push(
             new StringSelectMenuOptionBuilder()
                 .setLabel(matchName)
-                .setValue(`${counter - 1}`)
+                .setValue(`${counter - 1}`),
         );
         counter += 1;
     }
@@ -112,7 +112,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     new ButtonBuilder()
                         .setURL(mapObj.link)
                         .setLabel(map)
-                        .setStyle(ButtonStyle.Link)
+                        .setStyle(ButtonStyle.Link),
                 );
             }
 
