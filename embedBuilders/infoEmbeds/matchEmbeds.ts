@@ -12,16 +12,14 @@ export function matchEmbedFields(match: Match) {
                     <:score:1291686732621676605> **${game.scores[0]}**:**${
                     game.scores[1]
                 }**
-                    <:brawlers:1291686735906078861> **Picks**: **${
+                    <:brawlers:1291686735906078861> Picks: **${
                         game.participants["1_1"].brawler
                     }**, **${game.participants["1_2"].brawler}**, **${
                     game.participants["1_3"].brawler
                 }** vs **${game.participants["2_1"].brawler}**, **${
                     game.participants["2_2"].brawler
-                }**, **${
-                    game.participants["2_3"].brawler
-                }** <:brawlers:1291686735906078861>
-                    <:bans:1291686740486131772> **Bans** ${getBanList(
+                }**, **${game.participants["2_3"].brawler}**
+                    <:bans:1291686740486131772> Bans: ${getBanList(
                         game.extradata
                     )}`,
                 inline: true,

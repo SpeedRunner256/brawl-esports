@@ -2,6 +2,7 @@ export type Match = {
     pagename: string;
     objectname: string;
     winner: number;
+    finished: boolean;
     stream: object;
     tickername: string;
     icondarkurl: string;

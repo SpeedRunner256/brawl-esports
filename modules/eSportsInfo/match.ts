@@ -17,6 +17,12 @@ export class MatchInfo {
         const json = JSON.parse(fetchedData);
         for (const i of Object.keys(json)) {
             if (i == query.toLowerCase()) {
+                for (const match of json[i]) {
+                    if (!match.finished) {
+                        console.log("Match not finished, getting new data.");
+                        break;
+                    }
+                }
                 return new MatchInfo(json[i]);
             }
         }
@@ -37,6 +43,7 @@ export class MatchInfo {
                         pagename,
                         objectname,
                         winner,
+                        finished,
                         stream,
                         tickername,
                         icondarkurl,
@@ -84,6 +91,7 @@ export class MatchInfo {
                         stream,
                         tickername,
                         icondarkurl,
+                        finished,
                         tiertype: liquipediatiertype,
                         match2opponents,
                         match2games,
