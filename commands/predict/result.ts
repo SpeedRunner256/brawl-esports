@@ -17,16 +17,17 @@ export const data = new SlashCommandBuilder()
         option
             .setName("prediction_number")
             .setDescription("Enter the prediction number you received here.")
-            .setRequired(true)
+            .setRequired(true),
     )
     .addIntegerOption((option) =>
         option
             .setName("answer")
             .setDescription("The answer of the prediction.")
+            .setRequired(true)
             .setChoices([
                 { name: "Choice 1", value: 1 },
                 { name: "Choice 2", value: 2 },
-            ])
+            ]),
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
     const mult = await Config.mult(interaction.guildId);
@@ -88,7 +89,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .slice(1, 10)
             .map((str) => str.trim())
             .join("\n"),
-        interaction
+        interaction,
     );
     // Make embed.
     const embed = new EmbedBuilder()
@@ -121,9 +122,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     amount * winnerPercent * mult
                 }
                 \`\`\`Choice 1: ${convertToAscii(
-                    convertNumber(percent1)
+                    convertNumber(percent1),
                 )}: ${percent1}%\nChoice 2: ${convertToAscii(
-                    convertNumber(percent2)
+                    convertNumber(percent2),
                 )}: ${percent2}%\`\`\``,
                 inline: false,
             },

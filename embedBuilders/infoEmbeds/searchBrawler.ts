@@ -3,7 +3,10 @@ import { BrawlerInfo } from "../../modules/inGameInfo/brawlerInfo";
 
 export async function searchBrawler(query: string) {
     const brawler = await BrawlerInfo.setBrawler(query);
-    let answer: EmbedBuilder = new EmbedBuilder();
+    let answer: EmbedBuilder = new EmbedBuilder()
+        .setTitle("Cant find your query.")
+        .setDescription("Maybe you typed something wrong? Who knows")
+        .setColor(0xff0000);
     try {
         answer = new EmbedBuilder()
             .setTitle(

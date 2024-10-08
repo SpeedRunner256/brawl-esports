@@ -4,7 +4,10 @@ import { stringUtils } from "../../utilities/stringUtils";
 
 export async function searchTeam(query: string): Promise<EmbedBuilder> {
     const team = await TeamInfo.setTeam(query);
-    let answer = new EmbedBuilder();
+    let answer: EmbedBuilder = new EmbedBuilder()
+        .setTitle("Cant find your query.")
+        .setDescription("Maybe you typed something wrong? Who knows")
+        .setColor(0xff0000);
     try {
         answer = new EmbedBuilder()
             .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
