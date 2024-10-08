@@ -8,10 +8,8 @@ export class Economy {
     }
     static async userExist(ID: string): Promise<boolean> {
         const data = JSON.parse(await readFile("db/economy.json", "utf8"));
-        for (const user of Object.keys(data)) {
-            if (user == ID) {
-                return true;
-            }
+        if (Object.keys(data).includes(ID)) {
+            return true;
         }
         return false;
     }
