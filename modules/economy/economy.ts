@@ -6,6 +6,9 @@ export class Economy {
     constructor(user: User) {
         this.currentUser = user;
     }
+    static async getData() {
+        return JSON.parse(await readFile("db/economy.json", "utf8"));
+    }
     static async userExist(ID: string): Promise<boolean> {
         const data = JSON.parse(await readFile("db/economy.json", "utf8"));
         if (Object.keys(data).includes(ID)) {
