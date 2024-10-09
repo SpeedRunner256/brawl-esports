@@ -1,6 +1,6 @@
 import { findPageName } from "./findPage";
-import { readFile, writeFile } from "fs/promises";
 import { type SquadPlayer, type Team } from "../moduleTypes";
+import { DatabaseTeam } from "../../database/DatabaseTeam";
 export class TeamInfo {
     currentObject: Team | undefined;
     constructor(data: Team | undefined) {
@@ -8,17 +8,15 @@ export class TeamInfo {
     }
     static async setTeam(query: string) {
         const name = await findPageName(query);
-        const a = await readFile("db/team.json", "utf8");
-        const b = JSON.parse(a);
-        for (const i of Object.keys(b)) {
-            if (name.toLowerCase() == i) {
-                return new TeamInfo(b[i]);
-            }
+        const db = new DatabaseTeam();
+        const teams = await db.getTeam(null, name);
+        if (teams.length != 0) {
+            return new TeamInfo(teams[0]);
         }
         const headers = { Authorization: `Apikey ${process.env.LIQUID_TOKEN}` };
         const teamData = await fetch(
             `https://api.liquipedia.net/api/v3/team?wiki=brawlstars&conditions=%5B%5Bpagename%3A%3A${name}%5D%5D`,
-            { headers: headers }
+            { headers: headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -51,7 +49,7 @@ export class TeamInfo {
         });
         await fetch(
             `https://api.liquipedia.net/api/v3/squadplayer?${param.toString()}`,
-            { headers: headers }
+            { headers: headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -76,14 +74,8 @@ export class TeamInfo {
                     } as SquadPlayer);
                 }
             });
-        TeamInfo.writeData("db/team.json", teamData);
+        db.pushTeam(teamData);
         return new TeamInfo(teamData);
-    }
-    static async writeData(file: string, data: Team) {
-        const a = await readFile(file, "utf8");
-        const b = JSON.parse(a);
-        b[data.pagename.toLowerCase()] = data;
-        await writeFile(file, JSON.stringify(b, null, "  "));
     }
     get pagename() {
         if (!this.currentObject) {

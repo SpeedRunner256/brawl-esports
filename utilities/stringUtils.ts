@@ -7,10 +7,10 @@ export class stringUtils {
                     `**[${
                         player.id
                     }](https://liquipedia.net/brawlstars/${new URLSearchParams(
-                        player.link
+                        player.link,
                     ).toString()})**: ${player.role} - ${this.formatDate(
-                        player.joindate
-                    )}`
+                        player.joindate,
+                    )}`,
             )
             .join("\n");
     }
@@ -63,7 +63,7 @@ export class stringUtils {
 
             const finalDate = formattedDate.replace(/(\d+)/, `$1${suffix}`);
 
-            return `[**${player.link}**](https://liquipedia.net/brawlstars/${player.link}): ${player.nationality}, - ${finalDate}`;
+            return `[**${player.link}**](https://liquipedia.net/brawlstars/${player.link}): ${player.nationality} - ${finalDate}`;
         });
         let answer = "";
         for (const info of abc) {

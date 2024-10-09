@@ -1,30 +1,21 @@
-//Get data using the /match endpoint of the v3 wiki.
 const headers = { Authorization: `Apikey ${process.env.LIQUID_TOKEN}` };
-import { readFile, writeFile } from "fs/promises";
 import {
     type Match,
     type Match2Games,
     type Match2Opponents,
     type Match2Players,
 } from "../moduleTypes";
+import { DatabaseMatch } from "../../database/DatabaseMatch";
 export class MatchInfo {
     private currentObject: Match[];
     constructor(data: Match[]) {
         this.currentObject = data;
     }
     static async setMatch(query: string) {
-        const fetchedData = await readFile("db/match.json", "utf-8");
-        const json = JSON.parse(fetchedData);
-        for (const i of Object.keys(json)) {
-            if (i == query.toLowerCase()) {
-                for (const match of json[i]) {
-                    if (!match.finished) {
-                        console.log("Match not finished, getting new data.");
-                        break;
-                    }
-                }
-                return new MatchInfo(json[i]);
-            }
+        const db = new DatabaseMatch();
+        const matches = await db.getMatch(query);
+        if (matches.length != 0) {
+            return new MatchInfo(matches);
         }
         const param = new URLSearchParams({
             wiki: "brawlstars",
@@ -32,7 +23,7 @@ export class MatchInfo {
         });
         const data: Match[] = await fetch(
             `https://api.liquipedia.net/api/v3/match?${param.toString()}`,
-            { headers: headers }
+            { headers: headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -99,19 +90,11 @@ export class MatchInfo {
                 }
                 return answer;
             });
-        await MatchInfo.writeData("db/match.json", data);
+        console.log(JSON.stringify(data));
+        db.pushMatch(data);
         return new MatchInfo(data);
     }
     get matches() {
         return this.currentObject;
-    }
-    static async writeData(file: string, data: Match[] | void) {
-        if (!data) {
-            return;
-        }
-        const a = await readFile(file, "utf8");
-        const b = JSON.parse(a);
-        b[data[0].pagename.toLowerCase()] = data;
-        await writeFile(file, JSON.stringify(b, null, "  "));
     }
 }

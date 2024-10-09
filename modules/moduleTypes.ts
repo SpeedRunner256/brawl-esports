@@ -59,7 +59,7 @@ export type Player = {
     nationality: string;
     region: string;
     teampagename: string;
-    links: object;
+    twitter: string;
     status: string;
     earnings: string;
 };

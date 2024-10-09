@@ -2,7 +2,7 @@ import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 export async function findPageName(query: string): Promise<string> {
     const search = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`
+        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
     )
         .then((response) => response.json())
         .then((data) => {
@@ -20,7 +20,7 @@ export async function findPrintableName(query: string): Promise<string> {
         return "No data";
     }
     const search = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`
+        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
     )
         .then((response) => {
             if (response.status != 200) {
@@ -36,7 +36,7 @@ export async function findPrintableName(query: string): Promise<string> {
 }
 export async function findPlayerImage(query: string): Promise<string> {
     const link = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`
+        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
     )
         .then((response) => response.json())
         .then((data) => {

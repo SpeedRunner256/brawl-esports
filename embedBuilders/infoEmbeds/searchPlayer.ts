@@ -15,8 +15,8 @@ export async function searchPlayer(query: string) {
             `${
                 player.pagename
             } is a member (player/coach/analyst) at **${await findPrintableName(
-                player?.teampagename
-            )}**.`
+                player?.teampagename,
+            )}**.`,
         )
         .setColor(player?.status == "Active" ? 0x4287f5 : 0xf54254)
         .setURL(`https://liquipedia.net/brawlstars/${player?.pagename}`)
@@ -25,7 +25,7 @@ export async function searchPlayer(query: string) {
             {
                 name: "<:game:1291684262910885918> Team",
                 value: `[${await findPrintableName(
-                    player?.teampagename
+                    player?.teampagename,
                 )}](https://liquipedia.net/brawlstars/${player.teampagename})`,
                 inline: true,
             },
@@ -41,14 +41,7 @@ export async function searchPlayer(query: string) {
             },
             {
                 name: "<:score:1291686732621676605> Socials",
-                value: `${Object.entries(player.links)
-                    .map(
-                        ([key, value]) =>
-                            `[${
-                                key.charAt(0).toUpperCase() + key.slice(1)
-                            }](${value})`
-                    )
-                    .join(", ")}`,
+                value: `[Twitter](${player.twitter})`,
                 inline: true,
             },
         ]);

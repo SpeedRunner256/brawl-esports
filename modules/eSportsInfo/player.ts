@@ -1,6 +1,6 @@
-import { readFile, writeFile } from "fs/promises";
 import { findPageName } from "./findPage";
-import {type Player } from "../moduleTypes"
+import { type Player } from "../moduleTypes";
+import { DatabasePlayer } from "../../database/DatabasePlayer";
 export class PlayerInfo {
     private currentObject: Player;
 
@@ -10,17 +10,17 @@ export class PlayerInfo {
 
     static async setPlayer(query: string): Promise<PlayerInfo | undefined> {
         const name = await findPageName(query);
-        const data = await readFile("db/player.json", "utf8");
-        const parsedData = JSON.parse(data);
-        for (const i of Object.keys(parsedData)) {
-            if (i == name.toLowerCase()) {
-                return new PlayerInfo(parsedData[i]);
-            }
+        const db = new DatabasePlayer();
+        const players = await db.getPlayer(null, null, name);
+        if (players.length != 0) {
+            return new PlayerInfo(players[0]);
         }
-        const headers = { Authorization: `Apikey ${process.env.LIQUID_TOKEN}` };
-        const fetchedData = await fetch(
+        const headers = {
+            Authorization: `Apikey ${process.env.LIQUID_TOKEN}`,
+        };
+        const player = await fetch(
             `https://api.liquipedia.net/api/v3/player?wiki=brawlstars&conditions=%5B%5Bpagename%3A%3A${name}%5D%5D`,
-            { headers }
+            { headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -40,23 +40,14 @@ export class PlayerInfo {
                     nationality,
                     region,
                     teampagename,
-                    links,
+                    twitter: links.twitter,
                     status,
                     earnings,
                 };
                 return answer;
-            })
-        PlayerInfo.writeData("db/player.json", fetchedData);
-        return new PlayerInfo(fetchedData);
-    }
-    static async writeData(file: string, data: Player | void) {
-        if (!data) {
-            return;
-        }
-        const a = await readFile(file, "utf8");
-        const b = JSON.parse(a);
-        b[data.id.toLowerCase()] = data;
-        await writeFile(file, JSON.stringify(b, null, "  "));
+            });
+        db.pushPlayer(player);
+        return new PlayerInfo(player);
     }
     get object() {
         if (!this.currentObject) {
@@ -94,11 +85,11 @@ export class PlayerInfo {
         }
         return this.currentObject.teampagename;
     }
-    get links(): object {
+    get twitter(): string {
         if (!this.currentObject) {
-            return {};
+            throw new Error("Cant find player.");
         }
-        return this.currentObject.links;
+        return this.currentObject.twitter;
     }
     get status() {
         if (!this.currentObject) {
