@@ -92,6 +92,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         });
         // Throw in rewards.
         const rewardedUsers = rewards(people);
+        if (rewardedUsers[0] === "a") {
+            await interaction.followUp({
+                content: "Nobody entered the raffle, ending.",
+            });
+            return;
+        }
         const reward = points / rewardedUsers.length;
         for (const user of rewardedUsers) {
             const eco = await Economy.UserByID(user);
@@ -131,6 +137,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 // Throw in rewards
 function rewards(people: string[]): string[] {
     const answer: string[] = [];
+    if (people.length == 0) {
+        return ["a"];
+    }
     if (people.length == 1) {
         return people;
     }

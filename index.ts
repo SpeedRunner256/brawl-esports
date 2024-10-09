@@ -1,13 +1,14 @@
 import * as path from "node:path";
 import * as fs from "node:fs";
-import { Client, GatewayIntentBits, Collection, Events } from "discord.js";
+import {
+    Client,
+    GatewayIntentBits,
+    Collection,
+    Events,
+    ActivityType,
+} from "discord.js";
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.GuildMessagePolls,
-    ],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessagePolls],
 });
 declare module "discord.js" {
     export interface Client {
@@ -17,6 +18,16 @@ declare module "discord.js" {
 }
 
 client.on("ready", () => {
+    client.user?.setStatus("dnd");
+    client.user?.setPresence({
+        activities: [
+            {
+                name: "against ZETA in worlds",
+                type: ActivityType.Playing,
+            },
+        ],
+        status: "dnd",
+    });
     console.log("Bot has started as " + client.user?.username);
 });
 
