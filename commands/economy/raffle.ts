@@ -41,9 +41,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         )
         .setColor(Colors.DarkNavy);
 
-    // Button
+    // Raffle registration button
     const button = new ButtonBuilder()
-        .setCustomId("count-me-in")
+        .setCustomId("raffle-register")
         .setEmoji("🎉")
         .setStyle(ButtonStyle.Primary)
         .setLabel("Count me in!");
