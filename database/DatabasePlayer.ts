@@ -36,25 +36,23 @@ export class DatabasePlayer {
      * @returns Promise<Player[]>
      */
     async getPlayer(
-        id: string | null = null,
-        nationality: string | null = null,
-        pagename: string | null = null,
+        Id: string | null = null,
+        Nationality: string | null = null,
+        Pagename: string | null = null,
     ): Promise<Player[]> {
         const playerArray: Player[] = [];
         const data = JSON.parse(
             await readFile(this.filePath, "utf-8"),
         ) as Player[];
         for (const player of data) {
-            const playerVal = Object.values(player).map((values) =>
-                values.toLowerCase(),
-            ) as string[];
-            if (id && playerVal.includes(id.toLowerCase())) {
+            const { id, nationality, pagename } = player;
+            if (Id && id == Id.toLowerCase()) {
                 playerArray.push(player);
             }
-            if (nationality && playerVal.includes(nationality.toLowerCase())) {
+            if (Nationality && Nationality == nationality.toLowerCase()) {
                 playerArray.push(player);
             }
-            if (pagename && playerVal.includes(pagename.toLowerCase())) {
+            if (Pagename && Pagename == pagename.toLowerCase()) {
                 playerArray.push(player);
             }
         }

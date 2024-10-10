@@ -19,22 +19,51 @@ import {
 export const data = new SlashCommandBuilder()
     .setName("search")
     .setDescription("Search a query!")
-    .addStringOption((option) =>
-        option
-            .setName("type")
-            .setDescription("Type of the query")
-            .setRequired(true)
-            .addChoices([
-                { name: "Brawler", value: "brawler" },
-                { name: "Map", value: "map" },
-                { name: "Player", value: "player" },
-                { name: "Team", value: "team" },
-            ])
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("brawler")
+            .setDescription("Query a brawler")
+            .addStringOption((option) =>
+                option
+                    .setName("query")
+                    .setDescription("Type your query here.")
+                    .setRequired(true),
+            ),
     )
-    .addStringOption((option) =>
-        option.setName("query").setDescription("The query").setRequired(true)
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("map")
+            .setDescription("Query a map")
+            .addStringOption((option) =>
+                option
+                    .setName("query")
+                    .setDescription("Type your query here.")
+                    .setRequired(true),
+            ),
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("player")
+            .setDescription("Query a player")
+            .addStringOption((option) =>
+                option
+                    .setName("query")
+                    .setDescription("Type your query here.")
+                    .setRequired(true),
+            ),
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("team")
+            .setDescription("Query a team")
+            .addStringOption((option) =>
+                option
+                    .setName("query")
+                    .setDescription("Type your query here.")
+                    .setRequired(true),
+            ),
     );
-// command execution
+
 export async function execute(interaction: ChatInputCommandInteraction) {
     const query = interaction.options.getString("query");
 
@@ -45,13 +74,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setLabel("Send to chat!")
         .setStyle(ButtonStyle.Primary);
     const Row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        sendToChatButton
+        sendToChatButton,
     ); // Row to send in this interaction.reply
     if (!query) {
         return;
     } //eslint :p
 
-    switch (interaction.options.getString("type")) {
+    switch (interaction.options.getSubcommand()) {
         case "brawler":
             sendEmbed = await searchBrawler(query);
             break;
@@ -69,7 +98,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         .setCustomId(member.toLowerCase())
                         .setLabel(member)
                         .setEmoji("<:bounty:1291683164758212668>")
-                        .setStyle(ButtonStyle.Secondary)
+                        .setStyle(ButtonStyle.Secondary),
                 ); // Make the "Player" Buttons for team.
             }
 
@@ -78,7 +107,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             sendEmbed = new EmbedBuilder()
                 .setTitle("typescript-eslint")
                 .setDescription(
-                    "Only for eslint to stop barking at me, I think getting default is impossible. But who am I to say. If you're seeing this, come to me with a screenshot of how this happened."
+                    "Only for eslint to stop barking at me, I think getting default is impossible. But who am I to say. If you're seeing this, come to me with a screenshot of how this happened.",
                 ); // Need to confirm.
     }
 
@@ -99,11 +128,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             Row.components[0].setDisabled(true);
             await i.reply({
                 embeds: [sendEmbed],
-                
             });
             await interaction.editReply({
-                components: [Row]
-            })
+                components: [Row],
+            });
             return;
         }
         for (const member of await searchTeamPlayers(query)) {

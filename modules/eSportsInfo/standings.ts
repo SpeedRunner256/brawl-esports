@@ -1,1 +1,0 @@
-const fetching = await fetch();

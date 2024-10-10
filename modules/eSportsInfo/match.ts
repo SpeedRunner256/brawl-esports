@@ -14,8 +14,17 @@ export class MatchInfo {
     static async setMatch(query: string) {
         const db = new DatabaseMatch();
         const matches = await db.getMatch(query);
+        // if all not finished, fetch data again.
         if (matches.length != 0) {
-            return new MatchInfo(matches);
+            let allFin = true;
+            for (const match of matches) {
+                if (!match.finished) {
+                    allFin = false;
+                }
+            }
+            if (allFin) {
+                return new MatchInfo(matches);
+            }
         }
         const param = new URLSearchParams({
             wiki: "brawlstars",
@@ -90,7 +99,6 @@ export class MatchInfo {
                 }
                 return answer;
             });
-        console.log(JSON.stringify(data));
         db.pushMatch(data);
         return new MatchInfo(data);
     }

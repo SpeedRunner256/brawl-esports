@@ -1,14 +1,15 @@
 import jsdom from "jsdom";
 const { JSDOM } = jsdom;
 export async function findPageName(query: string): Promise<string> {
-    const search = await fetch(
+    const fetching = await fetch(
         `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
     )
         .then((response) => response.json())
         .then((data) => {
             return data[3][0];
         });
-    const answer = search.split("/")[4];
+    const answer = fetching.split("/")[4];
+    console.log("Searching for", answer);
     if (answer == "Navi") {
         return "Natus_Vincere";
     } else {

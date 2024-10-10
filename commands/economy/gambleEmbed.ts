@@ -9,7 +9,9 @@ export function gambleMakeEmbed(
 ): EmbedBuilder {
     const answer = new EmbedBuilder()
         .setTitle(win ? "You won!" : "You lost.")
-        .setDescription("Results of your gambling.")
+        .setDescription(
+            `You may win ${mult}x your money if you win, or 0x if you lose.`,
+        )
         .setColor(win ? 0x00ff00 : 0xff0000)
         .addFields([
             {
@@ -18,7 +20,7 @@ export function gambleMakeEmbed(
                 inline: true,
             },
             {
-                name: "Amount gained",
+                name: "Winnings",
                 value: win ? `${bet * mult}` : "0",
                 inline: true,
             },
@@ -29,12 +31,17 @@ export function gambleMakeEmbed(
             },
             {
                 name: "Old balance",
-                value: `${balance},`,
+                value: `${balance}`,
                 inline: true,
             },
             {
                 name: "New Balance",
                 value: win ? `${bet * mult + balance}` : `${balance - bet}`,
+                inline: true,
+            },
+            {
+                name: "\u200b",
+                value: "\u200b",
                 inline: true,
             },
         ]);

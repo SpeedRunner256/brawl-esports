@@ -11,7 +11,6 @@ import {
 } from "discord.js";
 import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds";
 import { MatchInfo } from "../../modules/eSportsInfo/match";
-import { MapInfo } from "../../modules/inGameInfo/mapInfo";
 
 export const data = new SlashCommandBuilder()
     .setName("match")
@@ -81,7 +80,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         try {
             const embed = new EmbedBuilder()
                 .setTitle("Match Info")
-                .setDescription(`Played  ${match.tickername}`)
+                .setDescription(`Played at ${match.tickername}`)
                 .setColor(0xd2eb34)
                 .setThumbnail(match.icondarkurl)
                 .addFields([
@@ -103,14 +102,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             // Buttons
             const MapButtons = new ActionRowBuilder<ButtonBuilder>();
             for (const game of match.match2games) {
-                if (Object.entries(game.participants).length === 0) {
+                if (
+                    Object.entries(game.participants).length == 0 ||
+                    Object.values(game.scores).length == 0
+                ) {
                     continue;
                 }
                 const map = game.map;
-                const mapObj = await MapInfo.setMap(map);
                 MapButtons.addComponents(
                     new ButtonBuilder()
-                        .setURL(mapObj.link)
+                        .setURL(
+                            `https://liquipedia.net/brawlstars/${encodeURI(map)}`,
+                        )
                         .setLabel(map)
                         .setStyle(ButtonStyle.Link),
                 );

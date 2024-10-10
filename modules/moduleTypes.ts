@@ -147,3 +147,28 @@ export type PredictionChoice = {
     userID: string;
     choice: number;
 };
+export type Groups = {
+    pagename: string;
+    standingsindex: number;
+    opponentname: string;
+    placement: string;
+    scoreboard: {
+        overtime: {
+            d: string;
+            w: string;
+            l: number;
+        };
+        points: number;
+        diff: number;
+        game: {
+            d: number;
+            w: number;
+            l: number;
+        };
+        match: {
+            d: number;
+            w: number;
+            l: number;
+        };
+    };
+};
