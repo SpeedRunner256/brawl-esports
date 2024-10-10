@@ -6,75 +6,87 @@ import {
     ComponentType,
     EmbedBuilder,
     SlashCommandBuilder,
-    StringSelectMenuBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds";
 import { MatchInfo } from "../../modules/eSportsInfo/match";
+import { StringSelectMenuBuilder } from "discord.js";
 
 export const data = new SlashCommandBuilder()
     .setName("match")
     .setDescription("IMPORTANT: look at help if haven't already.")
     .addStringOption((option) =>
         option
-            .setName("page_name")
+            .setName("pagename")
             .setDescription("Page link for the match")
             .setRequired(true),
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    const query = interaction.options.getString("page_name");
-
+    const query = interaction.options.getString("pagename");
     if (!query) {
-        throw new Error("Can't find query.");
+        throw new Error("Not found query");
     }
-    const matchObj = await MatchInfo.setMatch(query);
-
-    // Menu for all the matches played on matchObj.matches[].
-    const menuFields: StringSelectMenuOptionBuilder[] = [];
-
-    let counter = 1;
-    for (const match of matchObj.matches) {
+    const matchArray = (await MatchInfo.setMatch(query)).matches;
+    let matchNumber = 0;
+    let gameNumber = 0; // My plans are measured in centuries motherfucker
+    // Match Selection
+    const matchSelectMenuFields: StringSelectMenuOptionBuilder[] = [];
+    let matchMenuCounter = 1;
+    for (const match of matchArray) {
         if (
             match.match2opponents[0].name == "TBD" ||
             match.match2opponents[1].name == "TBD"
         ) {
             continue;
         }
-        const matchName = `${counter}. ${match.match2opponents[0].name} vs ${match.match2opponents[1].name}`;
-        menuFields.push(
+        const matchName = `${matchMenuCounter}. ${match.match2opponents[0].name} vs ${match.match2opponents[1].name}`;
+        matchSelectMenuFields.push(
             new StringSelectMenuOptionBuilder()
                 .setLabel(matchName)
-                .setValue(`${counter - 1}`),
+                .setValue(`${matchMenuCounter - 1}`),
         );
-        counter += 1;
+        matchMenuCounter += 1;
     }
-
-    // Making the menu.
-    const select = new StringSelectMenuBuilder()
+    const selectMatch = new StringSelectMenuBuilder()
         .setCustomId("matchselect")
-        .addOptions(menuFields)
-        .setPlaceholder("Select match here.");
-    const selectRow =
-        new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
-    // Send menu.
+        .setPlaceholder("What match to show?")
+        .addOptions(matchSelectMenuFields);
+    const matchSelectionRow =
+        new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+            selectMatch,
+        );
     const reply = await interaction.reply({
-        content: `Match selection for ${matchObj.matches[0].tickername}`,
-        components: [selectRow],
-        ephemeral: true,
+        content: `Select the match to show for ${matchArray[0].tickername}`,
+        components: [matchSelectionRow],
     });
-
-    // Collect responses for Menu and Buttons
-    const collector = reply.createMessageComponentCollector({
-        componentType: ComponentType.StringSelect,
-        filter: (i) => i.user.id === interaction.user.id,
+    // Navigation buttons - to be used in relation with matchNagivationCounter
+    const previous = new ButtonBuilder()
+        .setCustomId("previous")
+        .setLabel("Previous")
+        .setStyle(ButtonStyle.Secondary);
+    const home = new ButtonBuilder()
+        .setCustomId("home")
+        .setLabel("Home")
+        .setStyle(ButtonStyle.Primary);
+    const next = new ButtonBuilder()
+        .setCustomId("next")
+        .setLabel("Next")
+        .setStyle(ButtonStyle.Secondary);
+    const navigationRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        previous,
+        home,
+        next,
+    );
+    // Interactions for the match selection componenet
+    const matchSelectCollector = reply.createMessageComponentCollector({
         time: 40_000,
+        filter: (i) => i.user.id === interaction.user.id,
+        componentType: ComponentType.StringSelect,
     });
-
-    collector.on("collect", async (i) => {
-        // Sending Match Embed.
-        const gameNumber = +i.values[0];
-        const match = matchObj.matches[gameNumber];
+    matchSelectCollector.on("collect", async (i) => {
+        matchNumber = +i.values[0];
+        const match = matchArray[matchNumber];
         const opp1 = match.match2opponents[0];
         const opp2 = match.match2opponents[1];
         try {
@@ -88,48 +100,179 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
                         value: `1. **${opp1.name}**: ${opp1.match2players[0].displayname}, ${opp1.match2players[1].displayname}, ${opp1.match2players[2].displayname}\n2. **${opp2.name}**: ${opp2.match2players[0].displayname}, ${opp2.match2players[1].displayname}, ${opp2.match2players[2].displayname}`,
                     },
-                    ...matchEmbedFields(match),
-                    {
-                        name: "<:winner:1291683177605369906> Winner <:winner:1291683177605369906> ",
-                        value: `${
-                            match.match2opponents[match.winner - 1].name
-                        } won with a score of **${opp1.score}**:**${
-                            opp2.score
-                        }**`,
-                    },
+                    matchEmbedFields(matchArray, matchNumber, gameNumber),
                 ]);
-
-            // Buttons
-            const MapButtons = new ActionRowBuilder<ButtonBuilder>();
-            for (const game of match.match2games) {
-                if (
-                    Object.entries(game.participants).length == 0 ||
-                    Object.values(game.scores).length == 0
-                ) {
-                    continue;
-                }
-                const map = game.map;
-                MapButtons.addComponents(
-                    new ButtonBuilder()
-                        .setURL(
-                            `https://liquipedia.net/brawlstars/${encodeURI(map)}`,
-                        )
-                        .setLabel(map)
-                        .setStyle(ButtonStyle.Link),
-                );
-            }
-
             await i.reply({
-                embeds: [embed],
-                components: [MapButtons],
-            });
-        } catch (error) {
-            await i.reply({
-                content: `A fetching error has occured. One of the following things have happened:
-                1. The bot is dead.\n2. More likely, the bot cannot read data from liquipedia.\n3. Most likely, the match was just not played/played _yet_. `,
+                content: "Edited embed.",
                 ephemeral: true,
             });
+            await interaction.editReply({
+                content: "Updating...",
+                embeds: [embed],
+                components: [navigationRow],
+            });
+        } catch (error) {
             console.log(error);
         }
     });
+    const navigationButtonCollector = reply.createMessageComponentCollector({
+        time: 40_000,
+        filter: (i) => i.user.id === interaction.user.id,
+        componentType: ComponentType.Button,
+    });
+    navigationButtonCollector.on("collect", async (i) => {
+        const oldGameNumber = gameNumber;
+        if (i.customId == "previous") {
+            if (gameNumber == 0) {
+                await i.reply({
+                    content: "You're already at zero.",
+                    ephemeral: true,
+                });
+                return;
+            }
+            gameNumber -= 1;
+        }
+        if (i.customId == "next") {
+            if (gameNumber == 4) {
+                await interaction.reply({
+                    content: "You're already at the last game.",
+                    ephemeral: true,
+                });
+                return;
+            }
+            gameNumber += 1;
+        }
+        if (i.customId == "home") {
+            gameNumber = 0;
+        }
+        if (
+            Object.entries(
+                matchArray[matchNumber].match2games[gameNumber].scores,
+            ).length == 0
+        ) {
+            gameNumber = oldGameNumber;
+            await i.reply({
+                content:
+                    "Navigation button warning -> the match asked does not exist.",
+                ephemeral: true,
+            });
+            return;
+        }
+        await i.reply({
+            content: `Game changed to number ${gameNumber + 1}.`,
+            ephemeral: true,
+        });
+        const opp1 = matchArray[matchNumber].match2opponents[0];
+        const opp2 = matchArray[matchNumber].match2opponents[1];
+        const newEmbed = new EmbedBuilder()
+            .setTitle("Match Info")
+            .setDescription(`Played at ${matchArray[0].tickername}`)
+            .setColor(0xd2eb34)
+            .setThumbnail(matchArray[0].icondarkurl)
+            .addFields([
+                {
+                    name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
+                    value: `1. **${opp1.name}**: ${opp1.match2players[0].displayname}, ${opp1.match2players[1].displayname}, ${opp1.match2players[2].displayname}\n2. **${opp2.name}**: ${opp2.match2players[0].displayname}, ${opp2.match2players[1].displayname}, ${opp2.match2players[2].displayname}`,
+                },
+                matchEmbedFields(matchArray, matchNumber, gameNumber),
+            ]);
+        await interaction.editReply({
+            content: "Navigation buttons clicked, updating.",
+            embeds: [newEmbed],
+        });
+    });
 }
+// const query = interaction.options.getString("page_name");
+
+//     if (!query) {
+//         throw new Error("Can't find query.");
+//     }
+//     const matchObj = await MatchInfo.setMatch(query);
+
+//     // Menu for all the matches played on matchObj.matches[].
+//     const menuFields: StringSelectMenuOptionBuilder[] = [];
+
+//     let counter = 1;
+
+//     // Making the menu.
+//     const select = new StringSelectMenuBuilder()
+//         .setCustomId("matchselect")
+//         .addOptions(menuFields)
+//         .setPlaceholder("Select match here.");
+//     const selectRow =
+//         new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select);
+//     // Send menu.
+//     const reply = await interaction.reply({
+//         content: `Match selection for ${matchObj.matches[0].tickername}`,
+//         components: [selectRow],
+//         ephemeral: true,
+//     });
+
+//     // Collect responses for Menu and Buttons
+//     const collector = reply.createMessageComponentCollector({
+//         componentType: ComponentType.StringSelect,
+//         filter: (i) => i.user.id === interaction.user.id,
+//         time: 40_000,
+//     });
+
+//     collector.on("collect", async (i) => {
+//         // Sending Match Embed.
+//         const gameNumber = +i.values[0];
+//         const match = matchObj.matches[gameNumber];
+//         const opp1 = match.match2opponents[0];
+//         const opp2 = match.match2opponents[1];
+//         try {
+//             const embed = new EmbedBuilder()
+//                 .setTitle("Match Info")
+//                 .setDescription(`Played at ${match.tickername}`)
+//                 .setColor(0xd2eb34)
+//                 .setThumbnail(match.icondarkurl)
+//                 .addFields([
+//                     {
+//                         name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
+//                         value: `1. **${opp1.name}**: ${opp1.match2players[0].displayname}, ${opp1.match2players[1].displayname}, ${opp1.match2players[2].displayname}\n2. **${opp2.name}**: ${opp2.match2players[0].displayname}, ${opp2.match2players[1].displayname}, ${opp2.match2players[2].displayname}`,
+//                     },
+//                     ...matchEmbedFields(match),
+//                     {
+//                         name: "<:winner:1291683177605369906> Winner <:winner:1291683177605369906> ",
+//                         value: `${
+//                             match.match2opponents[match.winner - 1].name
+//                         } won with a score of **${opp1.score}**:**${
+//                             opp2.score
+//                         }**`,
+//                     },
+//                 ]);
+
+//             // Buttons
+//             const MapButtons = new ActionRowBuilder<ButtonBuilder>();
+//             for (const game of match.match2games) {
+//                 if (
+//                     Object.entries(game.participants).length == 0 ||
+//                     Object.values(game.scores).length == 0
+//                 ) {
+//                     continue;
+//                 }
+//                 const map = game.map;
+//                 MapButtons.addComponents(
+//                     new ButtonBuilder()
+//                         .setURL(
+//                             `https://liquipedia.net/brawlstars/${encodeURI(map)}`,
+//                         )
+//                         .setLabel(map)
+//                         .setStyle(ButtonStyle.Link),
+//                 );
+//             }
+
+//             await i.reply({
+//                 embeds: [embed],
+//                 components: [MapButtons],
+//             });
+//         } catch (error) {
+//             await i.reply({
+//                 content: `A fetching error has occured. One of the following things have happened:
+//                 1. The bot is dead.\n2. More likely, the bot cannot read data from liquipedia.\n3. Most likely, the match was just not played/played _yet_. `,
+//                 ephemeral: true,
+//             });
+//             console.log(error);
+//         }
+//     });
