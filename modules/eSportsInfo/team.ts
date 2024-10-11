@@ -10,6 +10,7 @@ export class TeamInfo {
         const name = await findPageName(query);
         const db = new DatabaseTeam();
         const teams = await db.getTeam(null, name);
+        console.log(teams[0]);
         if (teams.length != 0) {
             return new TeamInfo(teams[0]);
         }
@@ -136,6 +137,19 @@ export class TeamInfo {
                 answer.push(player);
             }
         }
+        if (answer.length == 0) {
+            return [
+                {
+                    id: "No player",
+                    type: "player",
+                    role: "player",
+                    link: "404",
+                    status: "status",
+                    joindate: "0000-01-01",
+                    nationality: "Earth",
+                },
+            ] as SquadPlayer[];
+        }
         return answer;
     }
     get staff() {
@@ -147,6 +161,19 @@ export class TeamInfo {
             if (player.type == "staff") {
                 answer.push(player);
             }
+        }
+        if (answer.length == 0) {
+            return [
+                {
+                    id: "No staff",
+                    type: "staff",
+                    role: "Team disbanded",
+                    link: "404",
+                    status: "status",
+                    joindate: "0000-01-01",
+                    nationality: "Earth?",
+                },
+            ] as SquadPlayer[];
         }
         return answer;
     }

@@ -76,7 +76,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
         } else {
             await interaction.reply({
-                content: `${error}`,
+                content: `This set of parameters resulted in an error. If it shouldn't, please contact the owner.`,
                 ephemeral: true,
             });
         }
