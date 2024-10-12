@@ -74,6 +74,7 @@ export class MatchInfo {
                             winner,
                             date,
                             extradata,
+                            resulttype,
                         } = match;
                         match2games.push({
                             map,
@@ -82,6 +83,7 @@ export class MatchInfo {
                             participants,
                             date,
                             extradata,
+                            resulttype,
                         });
                     }
                     answer.push({

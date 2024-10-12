@@ -1,31 +1,27 @@
 import { readFile } from "fs/promises";
 import type { Match } from "../../modules/moduleTypes";
-export async function sortByBrawler(name: string) {
+
+export async function getMapBans(name: string) {
     const unsorteddata = JSON.parse(
         await readFile("db/matches.json", "utf8"),
     ) as Match[];
     const data = sortMatchesByDate(unsorteddata);
-    const answer: Match[] = [];
+    const answer: string[] = [];
     for (const match of data) {
         for (const game of match.match2games) {
             if (game.resulttype == "np") {
                 continue;
             }
-            for (const brawler of Object.values(game.participants)) {
-                if (
-                    Object.values(brawler)[0].toLowerCase() ==
-                    name.toLowerCase()
-                ) {
-                    answer.push(match);
-                    if (answer.length == 20) {
-                        console.log("Found 20");
-                        return answer;
-                    }
+            if (game.map.toLowerCase() == name.toLowerCase()) {
+                for (const ban1 of Object.values(game.extradata.bans.team1)) {
+                    answer.push(ban1);
+                }
+                for (const ban2 of Object.values(game.extradata.bans.team2)) {
+                    answer.push(ban2);
                 }
             }
         }
     }
-    console.log("Found ", answer.length);
     return answer;
 }
 function getLatestGameDate(match: Match): Date {

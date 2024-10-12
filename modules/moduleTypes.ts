@@ -30,6 +30,7 @@ export type Match2Games = {
     };
     winner: number;
     date: string;
+    resulttype: string;
     extradata: {
         bans: {
             team1: {

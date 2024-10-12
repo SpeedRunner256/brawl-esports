@@ -54,11 +54,19 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 }
 
 function amountSetting(amount: string, balance: number) {
-    if (!amount.endsWith("%")) {
-        return +amount;
+    try {
+        if (+amount) {
+            return +amount;
+        } else {
+            return 0;
+        }
+    } catch {
+        return 0;
     }
     if (amount.toLowerCase() === "all") {
         return balance;
     }
-    return Math.floor((+amount.split("%")[0] / 100) * balance);
+    if (amount.endsWith("%")) {
+        return Math.floor((+amount.split("%")[0] / 100) * balance);
+    }
 }

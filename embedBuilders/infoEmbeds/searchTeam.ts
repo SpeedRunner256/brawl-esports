@@ -60,7 +60,7 @@ export async function searchTeamPlayers(query: string) {
     const team = await TeamInfo.setTeam(query);
     return team.players.map((a) => a.link);
 }
-function getRandomTeamNameEmoji(): string {
+export function getRandomTeamNameEmoji(): string {
     const emojiArray = [
         "<:badge1:1292091475823300670>",
         "<:badge2:1292091479262629958>",

@@ -9,6 +9,7 @@ import {
 } from "discord.js";
 import { GroupsInfo } from "../../modules/eSportsInfo/groups";
 import type { Groups } from "../../modules/moduleTypes";
+import { getRandomTeamNameEmoji } from "../../embedBuilders/infoEmbeds/searchTeam";
 
 export const data = new SlashCommandBuilder()
     .setName("groups")
@@ -30,19 +31,25 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const groupB = groups.slice(3, 6);
     const groupC = groups.slice(6, 9);
     const groupD = groups.slice(9, 12);
-
+    if (groupField(groupA).length == 0) {
+        await interaction.reply({
+            content: "This game did not have groups.",
+            ephemeral: true,
+        });
+        return;
+    }
     const embed = new EmbedBuilder()
-        .setTitle("Groups")
+        .setTitle(`<:time:1292086778550812672> Groups`)
         .setTimestamp()
         .setColor(Colors.DarkPurple)
         .addFields([
             {
-                name: "Group A",
+                name: `${getRandomTeamNameEmoji()} Group A`,
                 value: groupField(groupA),
                 inline: true,
             },
             {
-                name: "Group B",
+                name: `${getRandomTeamNameEmoji()}  Group B`,
                 value: groupField(groupB),
                 inline: true,
             },
@@ -52,12 +59,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 inline: true,
             },
             {
-                name: "Group C",
+                name: `${getRandomTeamNameEmoji()}  Group C`,
                 value: groupField(groupC),
                 inline: true,
             },
             {
-                name: "Group D",
+                name: `${getRandomTeamNameEmoji()}  Group D`,
                 value: groupField(groupD),
                 inline: true,
             },

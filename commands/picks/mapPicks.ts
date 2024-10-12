@@ -1,33 +1,27 @@
 import { readFile } from "fs/promises";
 import type { Match } from "../../modules/moduleTypes";
-export async function sortByBrawler(name: string) {
+
+export async function getMapPicks(name: string) {
     const unsorteddata = JSON.parse(
         await readFile("db/matches.json", "utf8"),
     ) as Match[];
     const data = sortMatchesByDate(unsorteddata);
-    const answer: Match[] = [];
+    const answer: string[] = [];
     for (const match of data) {
         for (const game of match.match2games) {
             if (game.resulttype == "np") {
                 continue;
             }
-            for (const brawler of Object.values(game.participants)) {
-                if (
-                    Object.values(brawler)[0].toLowerCase() ==
-                    name.toLowerCase()
-                ) {
-                    answer.push(match);
-                    if (answer.length == 20) {
-                        console.log("Found 20");
-                        return answer;
-                    }
+            if (game.map.toLowerCase() == name.toLowerCase()) {
+                for (const brawler of Object.values(game.participants)) {
+                    answer.push(Object.values(brawler)[0]);
                 }
             }
         }
     }
-    console.log("Found ", answer.length);
     return answer;
 }
+
 function getLatestGameDate(match: Match): Date {
     if (!match.match2games || match.match2games.length === 0) {
         return new Date(0); // Return earliest possible date if no games

@@ -71,12 +71,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
             await interaction.followUp({
-                content: "There was an error while executing this command!",
+                content:
+                    "This set of parameters resulted in an error. If it shouldn't, please contact modmail.",
                 ephemeral: true,
             });
         } else {
             await interaction.reply({
-                content: `This set of parameters resulted in an error. If it shouldn't, please contact the owner.`,
+                content: `This set of parameters resulted in an error. If it shouldn't, please contact modmail.`,
                 ephemeral: true,
             });
         }
