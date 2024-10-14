@@ -23,7 +23,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     const embed = new EmbedBuilder()
         .setTitle("Player successfully registered!")
-        .setDescription("Added your data to the database. Have fun playing!")
+        .setDescription(
+            "Your data has been added to the database. Have fun playing!",
+        )
         .setColor(0x34eb7d)
         .setThumbnail(interaction.user.avatarURL())
         .addFields([
@@ -34,7 +36,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             },
             {
                 name: "Balance",
-                value: `${ecoUser.balance}`,
+                value: `${ecoUser.balance} Kash`,
                 inline: true,
             },
             {

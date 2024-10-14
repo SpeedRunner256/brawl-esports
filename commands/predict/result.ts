@@ -99,12 +99,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .addFields([
             {
                 name: ":one: " + logThis.choice1,
-                value: `People: ${predict.userChoices[1].length}`,
+                value: `Votes: ${predict.userChoices[1].length}`,
                 inline: true,
             },
             {
                 name: ":two: " + logThis.choice2,
-                value: `People: ${predict.userChoices[2].length}`,
+                value: `Votes: ${predict.userChoices[2].length}`,
                 inline: true,
             },
             {
@@ -114,11 +114,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             },
             {
                 name: "Results",
-                value: ` <:score:1291686743485059086> Amount of people: ${amount}
-                <:money:1292086783886233621> Total number of points taken: ${
-                    amount * 100
-                }
-                <:money:1292086783886233621> Total number of points given: ${
+                value: ` <:score:1291686743485059086> Total votes: ${amount}
+                <:money:1292086783886233621> Total entry points: ${amount * 100}
+                <:money:1292086783886233621> Total points given: ${
                     amount * winnerPercent * mult
                 }
                 \`\`\`Choice 1: ${convertToAscii(

@@ -2,10 +2,10 @@ import { EmbedBuilder } from "discord.js";
 
 export function predictEndEmbed(question: string, time: string): EmbedBuilder {
     const answer = new EmbedBuilder()
-        .setTitle("Prediction End")
+        .setTitle("Predictions Closed")
         .setDescription(
-            `This prediction - ${question} - has ended recieving votes. Please come back for the next one!\nPrediction entries ran for ${time}`
-    )
+            `This prediction has received all the votes it could. Please come back for the next one!\nPrediction entries ran for ${time}.`,
+        )
         .setColor(0xf5428d)
         .setTimestamp();
     return answer;
