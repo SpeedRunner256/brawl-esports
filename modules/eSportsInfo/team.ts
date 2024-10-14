@@ -140,13 +140,13 @@ export class TeamInfo {
         if (answer.length == 0) {
             return [
                 {
-                    id: "No player",
+                    id: "No players",
                     type: "player",
                     role: "player",
                     link: "404",
                     status: "status",
-                    joindate: "0000-01-01",
-                    nationality: "Earth",
+                    joindate: "2017-06-12",
+                    nationality: "Team disbanded",
                 },
             ] as SquadPlayer[];
         }
@@ -165,13 +165,13 @@ export class TeamInfo {
         if (answer.length == 0) {
             return [
                 {
-                    id: "No staff",
+                    id: "No staffs",
                     type: "staff",
                     role: "Team disbanded",
                     link: "404",
                     status: "status",
-                    joindate: "0000-01-01",
-                    nationality: "Earth?",
+                    joindate: "2017-06-12",
+                    nationality: "Team disbanded",
                 },
             ] as SquadPlayer[];
         }

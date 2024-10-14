@@ -1,39 +1,28 @@
-import {
-    ChannelType,
-    ChatInputCommandInteraction,
-    SlashCommandBuilder,
-} from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { Config } from "../../modules/config";
 
 export const data = new SlashCommandBuilder()
     .setName("poll")
     .setDescription("Create a poll.")
-    .addChannelOption((option) =>
-        option
-            .addChannelTypes(ChannelType.GuildText)
-            .setName("channel")
-            .setDescription("Put the channel to post this here.")
-            .setRequired(true)
-    )
     .addStringOption((option) =>
         option
             .setName("question")
             .setDescription("Question of the poll here.")
-            .setRequired(true)
+            .setRequired(true),
     )
     .addStringOption((option) =>
         option
             .setName("answers")
             .setRequired(true)
-            .setDescription("Set your answers here, separated by \\")
+            .setDescription("Set your answers here, separated by ;"),
     )
     .addStringOption((option) =>
         option
             .setName("emojis")
             .setRequired(true)
             .setDescription(
-                "Add emojis, nth emoji is for the nth answer. Seperate by ;;"
-            )
+                "Add emojis, nth emoji is for the nth answer. Seperate by ;",
+            ),
     )
     .addIntegerOption((option) =>
         option
@@ -41,24 +30,25 @@ export const data = new SlashCommandBuilder()
             .setDescription("Time in hours.")
             .setMinValue(1)
             .setMaxValue(768)
-            .setRequired(true)
+            .setRequired(true),
     )
     .addBooleanOption((option) =>
         option
             .setName("allow_multi_select")
             .setRequired(false)
             .setDescription(
-                "Allow multi-select or not. Auto-selected as false."
-            )
+                "Allow multi-select or not. Auto-selected as false.",
+            ),
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
-    const channel = interaction.options.getChannel("channel");
     const question = interaction.options.getString("question")?.trim();
     let multiSelect = interaction.options.getBoolean("allow_multi_select");
 
     const guildId = process.env.GUILD_ID;
-    if (!guildId) { throw new Error("Can't find guild ID") }
-    const separator = await Config.separator(guildId)
+    if (!guildId) {
+        throw new Error("Can't find guild ID");
+    }
+    const separator = await Config.separator(guildId);
     const answers = interaction.options
         .getString("answers")
         ?.split(separator)
@@ -69,7 +59,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .map((emoji) => emoji.trim());
     const time = interaction.options.getInteger("time");
     // typescript :sob: "Object is possibly null aah"
-    if (!channel || !question || !answers || !time || !emojis) {
+    if (!question || !answers || !time || !emojis) {
         throw new Error("How did this happen?");
     }
     if (emojis.length != answers.length) {
@@ -88,12 +78,19 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             emoji: emojis[i],
         });
     }
-    await interaction.reply({
-        poll: {
-            question: { text: question },
-            answers: answerObj,
-            duration: time,
-            allowMultiselect: multiSelect,
-        },
-    });
+    try {
+        await interaction.reply({
+            poll: {
+                question: { text: question },
+                answers: answerObj,
+                duration: time,
+                allowMultiselect: multiSelect,
+            },
+        });
+    } catch {
+        await interaction.reply({
+            content: "Something went wrong - recheck.",
+            ephemeral: true,
+        });
+    }
 }
