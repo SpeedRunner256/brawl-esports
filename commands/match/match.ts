@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
         option
             .setName("pagename")
             .setDescription("Page link for the match")
-            .setRequired(true)
+            .setRequired(true),
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
@@ -54,8 +54,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setCustomId("matchselect")
         .setPlaceholder("What match to show?")
         .addOptions(matchSelectMenuFields);
-    const matchSelectionRow = new ActionRowBuilder<StringSelectMenuBuilder>()
-        .addComponents(
+    const matchSelectionRow =
+        new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
             selectMatch,
         );
     const reply = await interaction.reply({
@@ -99,8 +99,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 .setThumbnail(match.icondarkurl)
                 .addFields([
                     {
-                        name:
-                            "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
+                        name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
                         value: `1. **${opp1.name}**: ${
                             opp1.match2players[0].displayname
                         }, ${opp1.match2players[1].displayname}, ${
@@ -182,8 +181,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setThumbnail(matchArray[0].icondarkurl)
             .addFields([
                 {
-                    name:
-                        "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
+                    name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
                     value: `1. **${opp1.name}**: ${
                         opp1.match2players[0].displayname
                     }, ${opp1.match2players[1].displayname}, ${
