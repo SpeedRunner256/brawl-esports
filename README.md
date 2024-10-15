@@ -9,10 +9,10 @@ This is just a small and simple discord bot to get eSports information (via liqu
 To install dependencies:
 
 ```bash
-bun install
+deno install
 ```
 
-You can probably use node too but I haven't tried it yet.
+Node AND Bun will not work without some rewriting - like the jsr imports or "file://" in the main file.
 
 To get the bot working, just open the powershell or bash script (setup.ps1/setup.sh) depending on which side of the universe you belong to.
 
@@ -23,7 +23,7 @@ To get the bot working, just open the powershell or bash script (setup.ps1/setup
 Finally, get the bot in a server (you already did this by getting a guild ID), and register the commands to your server.
 
 ```bash
-bun register
+deno registerCommands.ts
 ```
 
-Now, turn the bot on (bun .) and in any chat type out /configure and fill it in, without it the bot won't _really_ work.
+Now, turn the bot on (deno -A index.ts) and in any chat type out /configure and fill it in, without it the bot won't _really_ work.
