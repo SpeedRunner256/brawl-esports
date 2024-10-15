@@ -59,7 +59,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const people: string[] = [];
     collector.on("collect", async (i) => {
         // if user not yet in db
-        console.log(i.user.id);
         if (!(await Economy.userExist(i.user.id))) {
             await i.reply({
                 content:

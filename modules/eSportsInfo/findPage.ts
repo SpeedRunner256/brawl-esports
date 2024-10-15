@@ -7,7 +7,6 @@ export async function findPageName(query: string): Promise<string> {
             return data[3][0];
         });
     const answer = fetching.split("/")[4];
-    console.log("Searching for", answer);
     if (answer == "Navi") {
         return "Natus_Vincere";
     } else {

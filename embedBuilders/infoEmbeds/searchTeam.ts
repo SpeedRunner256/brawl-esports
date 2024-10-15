@@ -4,17 +4,17 @@ import { stringUtils } from "../../utilities/stringUtils.ts";
 
 export async function searchTeam(query: string): Promise<EmbedBuilder> {
     const team = await TeamInfo.setTeam(query);
-    if (team.status == "disbanded") {
+    if (team.disbanded) {
         console.log("Disbanded team, here's something else.");
         return new EmbedBuilder()
             .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
-            .setDescription(team.name + " is a disbanded team.")
+            .setDescription(team.name + " is a **disbanded** team.")
             .setThumbnail(team.logo)
             .setColor(0xf54254)
             .addFields([
                 {
-                    name: "<:time:1292086778550812672> Creation Date",
-                    value: stringUtils.formatDate(team.createdate),
+                    name: "<:time:1292086778550812672> Disband date",
+                    value: stringUtils.formatDate(team.disbandDate),
                     inline: true,
                 },
                 {

@@ -22,7 +22,6 @@ export async function getGamemodeBans(name: string) {
             }
         }
     }
-    console.log("Found", answer.length, "brawlers");
     return answer;
 }
 function getLatestGameDate(match: Match): Date {

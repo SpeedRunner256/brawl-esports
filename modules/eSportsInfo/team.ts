@@ -13,7 +13,6 @@ export class TeamInfo {
         const name = await findPageName(query);
         const db = new DatabaseTeam();
         const teams = await db.getTeam(null, name);
-        console.log(teams[0]);
         if (teams.length != 0) {
             return new TeamInfo(teams[0]);
         }
@@ -32,6 +31,7 @@ export class TeamInfo {
                     textlesslogodarkurl,
                     status,
                     createdate,
+                    disbanddate,
                     links,
                 } = data.result[0];
                 const returnable: Team = {
@@ -42,6 +42,7 @@ export class TeamInfo {
                     textlesslogodarkurl,
                     status,
                     createdate,
+                    disbanddate,
                     links,
                     players: [],
                 };
@@ -80,6 +81,18 @@ export class TeamInfo {
             });
         db.pushTeam(teamData);
         return new TeamInfo(teamData);
+    }
+    get disbanded() {
+        if (!this.currentObject) {
+            throw new Error("Did not find value");
+        }
+        return this.currentObject.status == "disbanded" ? true : false;
+    }
+    get disbandDate() {
+        if (!this.currentObject) {
+            throw new Error("Did not find value");
+        }
+        return this.currentObject.disbanddate;
     }
     get pagename() {
         if (!this.currentObject) {

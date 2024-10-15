@@ -18,14 +18,12 @@ export async function sortByBrawler(name: string) {
                 ) {
                     answer.push(match);
                     if (answer.length == 20) {
-                        console.log("Found 20");
                         return answer;
                     }
                 }
             }
         }
     }
-    console.log("Found ", answer.length);
     return answer;
 }
 function getLatestGameDate(match: Match): Date {

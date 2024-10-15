@@ -81,6 +81,7 @@ export type Team = {
     textlesslogodarkurl: string;
     status: string;
     createdate: string;
+    disbanddate: string;
     links: object;
     players: SquadPlayer[];
 };

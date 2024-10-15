@@ -168,7 +168,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     });
     collector.on("collect", async (i) => {
         const data = JSON.parse(await readFile("db/economy.json", "utf-8"));
-        console.log(Object.keys(data));
         if (!Object.keys(data).includes(i.user.id)) {
             await i.reply({
                 content:
