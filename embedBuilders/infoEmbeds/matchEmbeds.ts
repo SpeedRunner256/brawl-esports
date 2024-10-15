@@ -6,6 +6,12 @@ export function matchEmbedFields(
     matchNumber: number,
     gameNumber: number,
 ) {
+    if (match[matchNumber].match2games.length == 0) {
+        return {
+            name: "<:combat:1292086786872442973> Game not logged",
+            value: "Games are not logged for this set.",
+        };
+    }
     const game = match[matchNumber].match2games[gameNumber];
     if (
         Object.values(game.participants).length !== 0 &&
