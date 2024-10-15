@@ -89,7 +89,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         });
     } catch {
         await interaction.reply({
-            content: "Something went wrong - recheck.",
+            content:
+                "Something went wrong. Here are a few ways you could have gone wrong.\n1.No emojis.\n2. Number of emojis dont match number of answers\n3. You forgot to add a semi colon somewhere.",
             ephemeral: true,
         });
     }
