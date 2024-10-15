@@ -14,7 +14,7 @@ export async function sortByBrawler(name: string) {
             for (const brawler of Object.values(game.participants)) {
                 if (
                     Object.values(brawler)[0].toLowerCase() ==
-                    name.toLowerCase()
+                        name.toLowerCase()
                 ) {
                     answer.push(match);
                     if (answer.length == 20) {

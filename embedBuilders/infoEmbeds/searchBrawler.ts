@@ -23,15 +23,13 @@ export async function searchBrawler(query: string) {
             .setThumbnail(brawler.image)
             .addFields([
                 {
-                    name:
-                        "<:star_power:1276418263911497810> " +
+                    name: "<:star_power:1276418263911497810> " +
                         brawler.starPower1.name,
                     value: brawler.starPower1.description,
                     inline: true,
                 },
                 {
-                    name:
-                        "<:star_power:1276418263911497810> " +
+                    name: "<:star_power:1276418263911497810> " +
                         brawler.starPower2.name,
                     value: brawler.starPower2.description,
                     inline: true,
@@ -42,12 +40,14 @@ export async function searchBrawler(query: string) {
                     inline: true,
                 },
                 {
-                    name: `<:gadget:1276418294592573460> ${brawler.gadget1.name}`,
+                    name:
+                        `<:gadget:1276418294592573460> ${brawler.gadget1.name}`,
                     value: brawler.gadget1.description,
                     inline: true,
                 },
                 {
-                    name: `<:gadget:1276418294592573460> ${brawler.gadget2.name}`,
+                    name:
+                        `<:gadget:1276418294592573460> ${brawler.gadget2.name}`,
                     value: brawler.gadget2.description,
                     inline: true,
                 },

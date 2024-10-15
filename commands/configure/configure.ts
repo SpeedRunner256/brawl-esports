@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
             .addChannelTypes(ChannelType.GuildText)
             .setName("log")
             .setDescription("Enter your log channel.")
-            .setRequired(true),
+            .setRequired(true)
     )
     .addStringOption((option) =>
         option
@@ -24,13 +24,13 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
             .setDescription(
                 "Add a separator for the entirety of the bot. Defaulted to ';;'",
-            ),
+            )
     )
     .addIntegerOption((option) =>
         option
             .setName("starting_balance")
             .setRequired(false)
-            .setDescription("Starting balance for the user. Defaulted to 500."),
+            .setDescription("Starting balance for the user. Defaulted to 500.")
     )
     .addNumberOption((option) =>
         option
@@ -38,7 +38,7 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
             .setDescription(
                 "Multiplier for every gain of balance from the bot. Defaulted to 1.5x ",
-            ),
+            )
     );
 
 /* 1. Set log channel for interactions.

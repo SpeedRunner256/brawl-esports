@@ -11,11 +11,11 @@ import { getGamemodePicks } from "./gamemodePicks.ts";
 import { getMapPicks } from "./mapPicks.ts";
 import { findPrintableName } from "../../modules/eSportsInfo/findPage.ts";
 import {
-    makeMapEmbed,
-    makeGamemodeEmbed,
-    makeMapEmbedNerdy,
-    makeGamemodeEmbedNerdy,
     makeFields,
+    makeGamemodeEmbed,
+    makeGamemodeEmbedNerdy,
+    makeMapEmbed,
+    makeMapEmbedNerdy,
 } from "./picksEmbed.ts";
 
 export const data = new SlashCommandBuilder()
@@ -29,8 +29,8 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("name")
                     .setDescription("Name of the map")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     )
     .addSubcommand((input) =>
         input
@@ -66,8 +66,8 @@ export const data = new SlashCommandBuilder()
                             name: "Knockout",
                             value: "Knockout",
                         },
-                    ]),
-            ),
+                    ])
+            )
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {

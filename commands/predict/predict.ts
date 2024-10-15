@@ -21,25 +21,25 @@ export const data = new SlashCommandBuilder()
         option
             .setName("question")
             .setDescription("The title of the prediction")
-            .setRequired(true),
+            .setRequired(true)
     )
     .addStringOption((option) =>
         option
             .setName("choice1")
             .setDescription("Enter choice 1 here.")
-            .setRequired(true),
+            .setRequired(true)
     )
     .addStringOption((option) =>
         option
             .setName("choice2")
             .setDescription("Enter choice 2 here.")
-            .setRequired(true),
+            .setRequired(true)
     )
     .addStringOption((option) =>
         option
             .setName("time")
             .setDescription("Set the time in 1d2h3m4s format")
-            .setRequired(true),
+            .setRequired(true)
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
@@ -169,7 +169,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         });
         // Send messsage to person to started the event.
         await interaction.followUp({
-            content: `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
+            content:
+                `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
             ephemeral: true,
         });
         // Log this.

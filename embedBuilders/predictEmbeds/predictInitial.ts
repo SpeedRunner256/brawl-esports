@@ -4,7 +4,7 @@ export function predictCreateInitial(
     question: string,
     choice1: string,
     choice2: string,
-    time: string
+    time: string,
 ): EmbedBuilder {
     const answer = new EmbedBuilder()
         .setTitle(question)

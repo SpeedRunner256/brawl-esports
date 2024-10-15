@@ -3,11 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import "jsr:@std/dotenv/load";
 import {
+    ActivityType,
     Client,
-    GatewayIntentBits,
     Collection,
     Events,
-    ActivityType,
+    GatewayIntentBits,
 } from "discord.js";
 import type { Interaction } from "discord.js";
 const client = new Client({
@@ -84,7 +84,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
         } else {
             await interaction.reply({
-                content: `This set of parameters resulted in an error. If it shouldn't, please contact modmail.`,
+                content:
+                    `This set of parameters resulted in an error. If it shouldn't, please contact modmail.`,
                 ephemeral: true,
             });
         }

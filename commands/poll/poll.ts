@@ -8,13 +8,13 @@ export const data = new SlashCommandBuilder()
         option
             .setName("question")
             .setDescription("Question of the poll here.")
-            .setRequired(true),
+            .setRequired(true)
     )
     .addStringOption((option) =>
         option
             .setName("answers")
             .setRequired(true)
-            .setDescription("Set your answers here, separated by ;"),
+            .setDescription("Set your answers here, separated by ;")
     )
     .addStringOption((option) =>
         option
@@ -22,7 +22,7 @@ export const data = new SlashCommandBuilder()
             .setRequired(true)
             .setDescription(
                 "Add emojis, nth emoji is for the nth answer. Seperate by ;",
-            ),
+            )
     )
     .addIntegerOption((option) =>
         option
@@ -30,7 +30,7 @@ export const data = new SlashCommandBuilder()
             .setDescription("Time in hours.")
             .setMinValue(1)
             .setMaxValue(768)
-            .setRequired(true),
+            .setRequired(true)
     )
     .addBooleanOption((option) =>
         option
@@ -38,7 +38,7 @@ export const data = new SlashCommandBuilder()
             .setRequired(false)
             .setDescription(
                 "Allow multi-select or not. Auto-selected as false.",
-            ),
+            )
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
     const question = interaction.options.getString("question")?.trim();

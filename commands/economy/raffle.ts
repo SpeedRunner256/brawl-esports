@@ -17,13 +17,13 @@ export const data = new SlashCommandBuilder()
             .setDescription("Points to give out")
             .setMinValue(100)
             .setMaxValue(50_000)
-            .setRequired(true),
+            .setRequired(true)
     )
     .addStringOption((option) =>
         option
             .setName("time")
             .setDescription("Time of the raffle")
-            .setRequired(true),
+            .setRequired(true)
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {

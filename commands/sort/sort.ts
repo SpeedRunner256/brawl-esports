@@ -29,8 +29,8 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("name")
                     .setDescription("Name of the brawler")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     )
     .addSubcommand((input) =>
         input
@@ -40,8 +40,8 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("name")
                     .setDescription("Name of the team")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     )
     .addSubcommand((input) =>
         input
@@ -51,8 +51,8 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("name")
                     .setDescription("Name of the player")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
     const sub = interaction.options.getSubcommand();
@@ -88,7 +88,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     let matchNumber = "";
     let gameNumber = 0;
     for (const match of matches) {
-        const matchName = `${matchMenuCounter}. ${match.match2opponents[0].name} vs ${match.match2opponents[1].name}`;
+        const matchName = `${matchMenuCounter}. ${
+            match.match2opponents[0].name
+        } vs ${match.match2opponents[1].name}`;
         matchSelectMenuFields.push(
             new StringSelectMenuOptionBuilder()
                 .setLabel(matchName)
@@ -108,8 +110,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setCustomId("matchselect")
         .setPlaceholder("Select any one")
         .setOptions(matchSelectMenuFields);
-    const matchSelectRow =
-        new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+    const matchSelectRow = new ActionRowBuilder<StringSelectMenuBuilder>()
+        .addComponents(
             matchSelector,
         );
     const reply = await interaction.reply({
@@ -155,12 +157,38 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setThumbnail(match.icondarkurl)
             .addFields([
                 {
-                    name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
-                    value: `1. **${opp1.name}**: ${opp1.match2players[0].displayname}, ${opp1.match2players[1].displayname}, ${opp1.match2players[2].displayname}\n2. **${opp2.name}**: ${opp2.match2players[0].displayname}, ${opp2.match2players[1].displayname}, ${opp2.match2players[2].displayname}`,
+                    name:
+                        "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
+                    value: `1. **${opp1.name}**: ${
+                        opp1.match2players[0].displayname
+                    }, ${opp1.match2players[1].displayname}, ${
+                        opp1.match2players[2].displayname
+                    }\n2. **${opp2.name}**: ${
+                        opp2.match2players[0].displayname
+                    }, ${opp2.match2players[1].displayname}, ${
+                        opp2.match2players[2].displayname
+                    }`,
                 },
                 {
-                    name: `<:combat:1292086786872442973> Game ${gameNumber + 1}`,
-                    value: `<:bs_map:1291686752569921546> **Played On** ${game.map}\n<:score:1291686732621676605> **Game Score**: ${game.scores[0]}:${game.scores[1]} - **${match.match2opponents[game.winner - 1].name}** won\n<:brawlers:1291686735906078861> **Picks**\n1. **${game.participants["1_1"].brawler}**, **${game.participants["1_2"].brawler}**, **${game.participants["1_3"].brawler}**\n2. **${game.participants["2_1"].brawler}**, **${game.participants["2_2"].brawler}**, **${game.participants["2_3"].brawler}**\n<:bans:1291686740486131772> **Bans**: ${getBanList(game.extradata)}`,
+                    name: `<:combat:1292086786872442973> Game ${
+                        gameNumber + 1
+                    }`,
+                    value:
+                        `<:bs_map:1291686752569921546> **Played On** ${game.map}\n<:score:1291686732621676605> **Game Score**: ${
+                            game.scores[0]
+                        }:${game.scores[1]} - **${
+                            match.match2opponents[game.winner - 1].name
+                        }** won\n<:brawlers:1291686735906078861> **Picks**\n1. **${
+                            game.participants["1_1"].brawler
+                        }**, **${game.participants["1_2"].brawler}**, **${
+                            game.participants["1_3"].brawler
+                        }**\n2. **${game.participants["2_1"].brawler}**, **${
+                            game.participants["2_2"].brawler
+                        }**, **${
+                            game.participants["2_3"].brawler
+                        }**\n<:bans:1291686740486131772> **Bans**: ${
+                            getBanList(game.extradata)
+                        }`,
                 },
             ]);
         await interaction.editReply({
@@ -225,12 +253,38 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setThumbnail(match.icondarkurl)
             .addFields([
                 {
-                    name: "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
-                    value: `1. **${opp1.name}**: ${opp1.match2players[0].displayname}, ${opp1.match2players[1].displayname}, ${opp1.match2players[2].displayname}\n2. **${opp2.name}**: ${opp2.match2players[0].displayname}, ${opp2.match2players[1].displayname}, ${opp2.match2players[2].displayname}`,
+                    name:
+                        "<:duels:1291683169569083392> Opponents <:duels:1291683169569083392>",
+                    value: `1. **${opp1.name}**: ${
+                        opp1.match2players[0].displayname
+                    }, ${opp1.match2players[1].displayname}, ${
+                        opp1.match2players[2].displayname
+                    }\n2. **${opp2.name}**: ${
+                        opp2.match2players[0].displayname
+                    }, ${opp2.match2players[1].displayname}, ${
+                        opp2.match2players[2].displayname
+                    }`,
                 },
                 {
-                    name: `<:combat:1292086786872442973> Game ${gameNumber + 1}`,
-                    value: `<:bs_map:1291686752569921546> **Played On** ${game.map}\n<:score:1291686732621676605> **Game Score**: ${game.scores[0]}:${game.scores[1]} - **${match.match2opponents[game.winner - 1].name}** won\n<:brawlers:1291686735906078861> **Picks**\n1. **${game.participants["1_1"].brawler}**, **${game.participants["1_2"].brawler}**, **${game.participants["1_3"].brawler}**\n2. **${game.participants["2_1"].brawler}**, **${game.participants["2_2"].brawler}**, **${game.participants["2_3"].brawler}**\n<:bans:1291686740486131772> **Bans**: ${getBanList(game.extradata)}`,
+                    name: `<:combat:1292086786872442973> Game ${
+                        gameNumber + 1
+                    }`,
+                    value:
+                        `<:bs_map:1291686752569921546> **Played On** ${game.map}\n<:score:1291686732621676605> **Game Score**: ${
+                            game.scores[0]
+                        }:${game.scores[1]} - **${
+                            match.match2opponents[game.winner - 1].name
+                        }** won\n<:brawlers:1291686735906078861> **Picks**\n1. **${
+                            game.participants["1_1"].brawler
+                        }**, **${game.participants["1_2"].brawler}**, **${
+                            game.participants["1_3"].brawler
+                        }**\n2. **${game.participants["2_1"].brawler}**, **${
+                            game.participants["2_2"].brawler
+                        }**, **${
+                            game.participants["2_3"].brawler
+                        }**\n<:bans:1291686740486131772> **Bans**: ${
+                            getBanList(game.extradata)
+                        }`,
                 },
             ]);
         await interaction.editReply({

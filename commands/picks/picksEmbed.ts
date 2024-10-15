@@ -45,7 +45,8 @@ export async function makeGamemodeEmbed(
         .addFields([
             {
                 name: "<:time:1292086778550812672> General Info",
-                value: `Total games: ${all}\nTotal **picks**: ${total}\nTotal **bans**: ${banLength}`,
+                value:
+                    `Total games: ${all}\nTotal **picks**: ${total}\nTotal **bans**: ${banLength}`,
             },
             {
                 name: `<:brawlers:1291686735906078861> Picks on ${name}`,
@@ -98,7 +99,8 @@ export async function makeMapEmbed(
         .addFields([
             {
                 name: "General Info",
-                value: `Our database has stored **${total} total brawler occurances** played on this map, across **${all}** eSports matches`,
+                value:
+                    `Our database has stored **${total} total brawler occurances** played on this map, across **${all}** eSports matches`,
             },
             {
                 name: `Picks on ${name}`,
@@ -176,7 +178,9 @@ export function makeFields(
 ) {
     let field = "";
     for (const brawler of Object.entries(occurance)) {
-        field += `**${brawler[0]}**: ${Math.round((brawler[1] / total) * 100 * 100) / 100}%`;
+        field += `**${brawler[0]}**: ${
+            Math.round((brawler[1] / total) * 100 * 100) / 100
+        }%`;
 
         if (Object.keys(occurance).indexOf(brawler[0]) == 14) {
             break;

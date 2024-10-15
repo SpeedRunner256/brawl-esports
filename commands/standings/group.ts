@@ -18,7 +18,7 @@ export const data = new SlashCommandBuilder()
         input
             .setName("tournament")
             .setRequired(true)
-            .setDescription("Enter tournament page link here."),
+            .setDescription("Enter tournament page link here.")
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
     const query = interaction.options.getString("tournament");
@@ -99,7 +99,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 function groupField(group: Groups[]) {
     let answer = "";
     for (const team of group) {
-        answer += `${team.placement}. **${team.opponentname}** - ${team.scoreboard.game.w}W/${team.scoreboard.game.l}L\n`;
+        answer +=
+            `${team.placement}. **${team.opponentname}** - ${team.scoreboard.game.w}W/${team.scoreboard.game.l}L\n`;
     }
     return answer;
 }

@@ -2,10 +2,10 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
+    type ChatInputCommandInteraction,
     ComponentType,
     EmbedBuilder,
     SlashCommandBuilder,
-    type ChatInputCommandInteraction,
 } from "discord.js";
 import { searchBrawler } from "../../embedBuilders/infoEmbeds/searchBrawler.ts";
 import { searchMap } from "../../embedBuilders/infoEmbeds/searchMap.ts";
@@ -27,8 +27,8 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName("query")
                     .setDescription("Type your query here.")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     )
     .addSubcommand((subcommand) =>
         subcommand
@@ -38,8 +38,8 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName("query")
                     .setDescription("Type your query here.")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     )
     .addSubcommand((subcommand) =>
         subcommand
@@ -49,8 +49,8 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName("query")
                     .setDescription("Type your query here.")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     )
     .addSubcommand((subcommand) =>
         subcommand
@@ -60,8 +60,8 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName("query")
                     .setDescription("Type your query here.")
-                    .setRequired(true),
-            ),
+                    .setRequired(true)
+            )
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {

@@ -4,13 +4,15 @@ export class stringUtils {
         return players
             .map(
                 (player) =>
-                    `**[${
-                        player.id
-                    }](https://liquipedia.net/brawlstars/${new URLSearchParams(
-                        player.link,
-                    ).toString()})**: ${player.role} - ${this.formatDate(
-                        player.joindate,
-                    )}`,
+                    `**[${player.id}](https://liquipedia.net/brawlstars/${
+                        new URLSearchParams(
+                            player.link,
+                        ).toString()
+                    })**: ${player.role} - ${
+                        this.formatDate(
+                            player.joindate,
+                        )
+                    }`,
             )
             .join("\n");
     }
@@ -40,10 +42,12 @@ export class stringUtils {
 
         if (days) futureDate.setDate(futureDate.getDate() + parseInt(days));
         if (hours) futureDate.setHours(futureDate.getHours() + parseInt(hours));
-        if (minutes)
+        if (minutes) {
             futureDate.setMinutes(futureDate.getMinutes() + parseInt(minutes));
-        if (seconds)
+        }
+        if (seconds) {
             futureDate.setSeconds(futureDate.getSeconds() + parseInt(seconds));
+        }
 
         return futureDate.getTime() - Date.now();
     }

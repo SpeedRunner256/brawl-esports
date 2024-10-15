@@ -12,9 +12,7 @@ export async function searchPlayer(query: string) {
     const sendEmbed = new EmbedBuilder()
         .setTitle(`<:duels:1291683169569083392> ${player.id}`)
         .setDescription(
-            `${
-                player.pagename
-            } is a member (player/coach/analyst) at **${await findPrintableName(
+            `${player.pagename} is a member (player/coach/analyst) at **${await findPrintableName(
                 player?.teampagename,
             )}**.`,
         )
