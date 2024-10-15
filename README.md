@@ -33,5 +33,5 @@ and register the commands to your server.
 deno run register
 ```
 
-Now, turn the bot on (deno run bot) and in any chat type out /configure and
-fill it in, without it the bot won't _really_ work.
+Now, turn the bot on (deno run bot) and in any chat type out /configure and fill
+it in, without it the bot won't _really_ work.
