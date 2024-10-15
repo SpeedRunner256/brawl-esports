@@ -15,7 +15,7 @@ export async function findPageName(query: string): Promise<string> {
 }
 export async function findPrintableName(query: string): Promise<string> {
     if (!query.length) {
-        return "No data";
+        return "[NOT IN TEAM]";
     }
     const search = await fetch(
         `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
