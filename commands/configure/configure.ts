@@ -5,7 +5,7 @@ import {
     Colors,
     SlashCommandBuilder,
 } from "discord.js";
-import { readFile, writeFile } from "fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 export const data = new SlashCommandBuilder()
     .setName("configure")
     .setDescription(

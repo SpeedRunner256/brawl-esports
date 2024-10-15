@@ -1,6 +1,6 @@
-import { Config } from "../config";
-import { type User } from "../moduleTypes";
-import { readFile, writeFile } from "fs/promises";
+import { Config } from "../config.ts";
+import { type User } from "../moduleTypes.ts";
+import { readFile, writeFile } from "node:fs/promises";
 export class Economy {
     private currentUser: User;
     constructor(user: User) {

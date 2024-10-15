@@ -7,9 +7,9 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { readFile, writeFile } from "fs/promises";
-import { Config } from "../../modules/config";
-import { Economy } from "../../modules/economy/economy";
+import { readFile, writeFile } from "node:fs/promises";
+import { Config } from "../../modules/config.ts";
+import { Economy } from "../../modules/economy/economy.ts";
 export const data = new SlashCommandBuilder()
     .setName("result")
     .setDescription("Result of a prediction given a prediction number.")

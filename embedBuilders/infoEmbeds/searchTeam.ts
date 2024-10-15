@@ -1,10 +1,10 @@
 import { EmbedBuilder } from "discord.js";
-import { TeamInfo } from "../../modules/eSportsInfo/team";
-import { stringUtils } from "../../utilities/stringUtils";
+import { TeamInfo } from "../../modules/eSportsInfo/team.ts";
+import { stringUtils } from "../../utilities/stringUtils.ts";
 
 export async function searchTeam(query: string): Promise<EmbedBuilder> {
     const team = await TeamInfo.setTeam(query);
-    if (team.status === "disbanded") {
+    if (team.status == "disbanded") {
         console.log("Disbanded team, here's something else.");
         return new EmbedBuilder()
             .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)

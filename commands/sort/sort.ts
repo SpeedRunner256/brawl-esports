@@ -7,15 +7,16 @@ import {
     SlashCommandBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { sortByBrawler } from "./sortBrawler";
-import { sortByTeam } from "./sortTeam";
-import { sortByPlayer } from "./sortPlayer";
-import type { Match } from "../../modules/moduleTypes";
-import { findPrintableName } from "../../modules/eSportsInfo/findPage";
+import { sortByBrawler } from "./sortBrawler.ts";
+import { sortByTeam } from "./sortTeam.ts";
+import { sortByPlayer } from "./sortPlayer.ts";
+import type { Match } from "../../modules/moduleTypes.ts";
+import { findPrintableName } from "../../modules/eSportsInfo/findPage.ts";
 import { StringSelectMenuBuilder } from "discord.js";
 import { ActionRowBuilder } from "discord.js";
-import { DatabaseMatch } from "../../database/DatabaseMatch";
+import { DatabaseMatch } from "../../database/DatabaseMatch.ts";
 import { Colors } from "discord.js";
+import { getBanList } from "../../embedBuilders/infoEmbeds/matchEmbeds.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("sortby")
@@ -236,11 +237,4 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             embeds: [embed],
         });
     });
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getBanList(data: any): string {
-    const team1Bans = Object.values(data.bans.team1);
-    const team2Bans = Object.values(data.bans.team2);
-    const uniqueBans = [...new Set([...team2Bans, ...team1Bans])];
-    return uniqueBans.join(", ");
 }

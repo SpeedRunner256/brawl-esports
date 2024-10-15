@@ -6,13 +6,13 @@ import {
     ComponentType,
     SlashCommandBuilder,
 } from "discord.js";
-import { predictCreateInitial } from "../../embedBuilders/predictEmbeds/predictInitial";
-import { stringUtils } from "../../utilities/stringUtils";
-import { predictEndEmbed } from "../../embedBuilders/predictEmbeds/predictEnd";
-import { Economy } from "../../modules/economy/economy";
-import type { Prediction } from "../../modules/moduleTypes";
-import { savePredictionToDatabase } from "../../modules/predictSave";
-import { Config } from "../../modules/config";
+import { predictCreateInitial } from "../../embedBuilders/predictEmbeds/predictInitial.ts";
+import { stringUtils } from "../../utilities/stringUtils.ts";
+import { predictEndEmbed } from "../../embedBuilders/predictEmbeds/predictEnd.ts";
+import { Economy } from "../../modules/economy/economy.ts";
+import type { Prediction } from "../../modules/moduleTypes.ts";
+import { savePredictionToDatabase } from "../../modules/predictSave.ts";
+import { Config } from "../../modules/config.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("prediction")

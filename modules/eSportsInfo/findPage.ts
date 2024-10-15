@@ -1,5 +1,3 @@
-import jsdom from "jsdom";
-const { JSDOM } = jsdom;
 export async function findPageName(query: string): Promise<string> {
     const fetching = await fetch(
         `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
@@ -34,28 +32,4 @@ export async function findPrintableName(query: string): Promise<string> {
             return data;
         });
     return search[1][0];
-}
-export async function findPlayerImage(query: string): Promise<string> {
-    const link = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?action=opensearch&format=json&search=${query}`,
-    )
-        .then((response) => response.json())
-        .then((data) => {
-            return data[3][0];
-        });
-    const html: string = await fetch(link).then((response) => response.text());
-    const dom = new JSDOM(html);
-    const meta = dom.window.document.querySelectorAll("meta");
-    let imageLink: string = "";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    meta.forEach((element: any) => {
-        if (element.name == "twitter:image:src") {
-            imageLink = element.getAttribute("content");
-        }
-    });
-    if (imageLink == "") {
-        return "https://png.pngtree.com/png-vector/20210827/ourmid/pngtree-error-404-page-not-found-png-image_3832696.jpg";
-    } else {
-        return imageLink;
-    }
 }

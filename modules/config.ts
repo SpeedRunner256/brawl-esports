@@ -1,5 +1,5 @@
 import type { ChatInputCommandInteraction, TextChannel } from "discord.js";
-import { readFile } from "fs/promises";
+import { readFile } from "node:fs/promises";
 export class Config {
     static async separator(guildID: string): Promise<string> {
         try {
@@ -31,7 +31,7 @@ export class Config {
     }
     static async userAlreadyVoted(
         predictionNumber: string,
-        ID: string
+        ID: string,
     ): Promise<boolean> {
         const data = JSON.parse(await readFile("db/prediction.json", "utf8"));
         const prediction = data[predictionNumber];
@@ -45,12 +45,12 @@ export class Config {
             throw new Error("Guild is null");
         }
         const data = JSON.parse(await readFile("./config.json", "utf-8"));
-        return data[guildId].mult
+        return data[guildId].mult;
     }
     static async log(
         logMessage: string,
         logContent: string,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
     ): Promise<void> {
         const data = JSON.parse(await readFile("config.json", "utf8"));
         const guildId = interaction.guildId;
@@ -59,7 +59,7 @@ export class Config {
         }
         const log = data[guildId].log.id;
         (interaction.client.channels.cache.get(log) as TextChannel).send(
-            `${logMessage}\`\`\`json\n${logContent}\`\`\``
+            `${logMessage}\`\`\`json\n${logContent}\`\`\``,
         );
     }
 }

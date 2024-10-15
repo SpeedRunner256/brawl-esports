@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { Config } from "../../modules/config";
-
+import { Config } from "../../modules/config.ts";
+import "jsr:@std/dotenv/load";
 export const data = new SlashCommandBuilder()
     .setName("poll")
     .setDescription("Create a poll.")

@@ -1,6 +1,8 @@
-import { findPageName } from "./findPage";
-import { type Player } from "../moduleTypes";
-import { DatabasePlayer } from "../../database/DatabasePlayer";
+import { findPageName } from "./findPage.ts";
+import { type Player } from "../moduleTypes.ts";
+import { DatabasePlayer } from "../../database/DatabasePlayer.ts";
+import "jsr:@std/dotenv/load";
+
 export class PlayerInfo {
     private currentObject: Player;
 

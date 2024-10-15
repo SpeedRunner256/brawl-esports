@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
-import type { Match } from "../../modules/moduleTypes";
+import { readFile } from "node:fs/promises";
+import type { Match } from "../../modules/moduleTypes.ts";
 export async function sortByPlayer(name: string) {
     const udata = JSON.parse(
         await readFile("db/matches.json", "utf8"),

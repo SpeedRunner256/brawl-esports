@@ -1,5 +1,5 @@
-import type { Team } from "../modules/moduleTypes";
-import { readFile, writeFile } from "fs/promises";
+import type { Team } from "../modules/moduleTypes.ts";
+import { readFile, writeFile } from "node:fs/promises";
 
 export class DatabaseTeam {
     private filePath = "db/teams.json";

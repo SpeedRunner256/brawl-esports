@@ -11,10 +11,17 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # Config file
+.eslintrc.json
 config.json
 # Caches
-
+.prettierrc
+bun.lockb
+eslint.config.mjs
+tsconfig.json
+deno.lock
 .cache
+.gitignore
+
 db/
 # Diagnostic reports (https://nodejs.org/api/report.html)
 

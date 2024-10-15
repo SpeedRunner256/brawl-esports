@@ -1,5 +1,5 @@
 import type { APIEmbedField } from "discord.js";
-import type { Match } from "../../modules/moduleTypes";
+import type { Match } from "../../modules/moduleTypes.ts";
 
 export function matchEmbedFields(
     match: Match[],
@@ -19,8 +19,24 @@ export function matchEmbedFields(
     }
     throw new Error("Out of bounds.");
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getBanList(data: any): string {
+type ExtraData = {
+    bans: {
+        team1: {
+            1: string;
+            2: string;
+            3: string;
+        };
+        team2: {
+            1: string;
+            2: string;
+            3: string;
+        };
+    };
+    firstpick: number;
+    maptype: string;
+    bestof: string;
+};
+export function getBanList(data: ExtraData): string {
     const team1Bans = Object.values(data.bans.team1);
     const team2Bans = Object.values(data.bans.team2);
     const uniqueBans = [...new Set([...team2Bans, ...team1Bans])];

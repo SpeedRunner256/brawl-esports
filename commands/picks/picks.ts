@@ -7,16 +7,16 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { getGamemodePicks } from "./gamemodePicks";
-import { getMapPicks } from "./mapPicks";
-import { findPrintableName } from "../../modules/eSportsInfo/findPage";
+import { getGamemodePicks } from "./gamemodePicks.ts";
+import { getMapPicks } from "./mapPicks.ts";
+import { findPrintableName } from "../../modules/eSportsInfo/findPage.ts";
 import {
     makeMapEmbed,
     makeGamemodeEmbed,
     makeMapEmbedNerdy,
     makeGamemodeEmbedNerdy,
     makeFields,
-} from "./picksEmbed";
+} from "./picksEmbed.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("picks")
@@ -109,10 +109,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setDescription("Just doesn't exist yet :-(");
     switch (command) {
         case "gamemode":
-            embed = await makeGamemodeEmbed(occurance, field, name, total);
+            embed = await makeGamemodeEmbed(occurance, name, total);
             break;
         case "map":
-            embed = await makeMapEmbed(occurance, field, name, total);
+            embed = await makeMapEmbed(occurance, name, total);
             break;
     }
     // Stats for nerds button

@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
-import { PlayerInfo } from "../../modules/eSportsInfo/player";
-import { findPrintableName } from "../../modules/eSportsInfo/findPage";
+import { PlayerInfo } from "../../modules/eSportsInfo/player.ts";
+import { findPrintableName } from "../../modules/eSportsInfo/findPage.ts";
 
 export async function searchPlayer(query: string) {
     const player = await PlayerInfo.setPlayer(query);

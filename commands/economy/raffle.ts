@@ -5,8 +5,8 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { stringUtils } from "../../utilities/stringUtils";
-import { Economy } from "../../modules/economy/economy";
+import { stringUtils } from "../../utilities/stringUtils.ts";
+import { Economy } from "../../modules/economy/economy.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("raffle")

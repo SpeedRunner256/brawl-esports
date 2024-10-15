@@ -1,4 +1,5 @@
-import type { Groups } from "../moduleTypes";
+import type { Groups } from "../moduleTypes.ts";
+import process from "node:process";
 
 export class GroupsInfo {
     private currentObject: Groups[];

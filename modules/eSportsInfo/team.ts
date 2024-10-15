@@ -1,6 +1,9 @@
-import { findPageName } from "./findPage";
-import { type SquadPlayer, type Team } from "../moduleTypes";
-import { DatabaseTeam } from "../../database/DatabaseTeam";
+import { findPageName } from "./findPage.ts";
+import { type SquadPlayer, type Team } from "../moduleTypes.ts";
+import { DatabaseTeam } from "../../database/DatabaseTeam.ts";
+
+import "jsr:@std/dotenv/load";
+
 export class TeamInfo {
     currentObject: Team | undefined;
     constructor(data: Team | undefined) {

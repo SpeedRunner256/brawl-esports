@@ -1,5 +1,5 @@
-import type { Match } from "../modules/moduleTypes";
-import { readFile, writeFile } from "fs/promises";
+import type { Match } from "../modules/moduleTypes.ts";
+import { readFile, writeFile } from "node:fs/promises";
 
 export class DatabaseMatch {
     private filePath = "db/matches.json";

@@ -1,4 +1,4 @@
-import { type SquadPlayer } from "../modules/moduleTypes";
+import { type SquadPlayer } from "../modules/moduleTypes.ts";
 export class stringUtils {
     static formatStaff(players: SquadPlayer[]): string {
         return players

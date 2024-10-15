@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { MapInfo } from "../../modules/inGameInfo/mapInfo";
+import { MapInfo } from "../../modules/inGameInfo/mapInfo.ts";
 
 export async function searchMap(query: string) {
     let answer: EmbedBuilder = new EmbedBuilder()

@@ -1,6 +1,8 @@
 import { REST, Routes } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
+import "jsr:@std/dotenv/load";
+
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
 const token = process.env.DISCORD_TOKEN;
@@ -34,7 +36,7 @@ const rest = new REST().setToken(token);
 (async () => {
     try {
         console.log(
-            `Started refreshing ${commands.length} application (/) commands.`
+            `Started refreshing ${commands.length} application (/) commands.`,
         );
         await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
             body: commands,

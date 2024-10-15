@@ -1,5 +1,5 @@
-import { readFile, writeFile } from "fs/promises";
-import {type Brawler} from "../moduleTypes"
+import { readFile, writeFile } from "node:fs/promises";
+import { type Brawler } from "../moduleTypes.ts";
 export class BrawlerInfo {
     private isBrawler: boolean;
     currentBrawlerObject: Brawler | undefined;
@@ -71,77 +71,77 @@ export class BrawlerInfo {
     get exist() {
         return this.isBrawler;
     }
-    get name():string {
+    get name(): string {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.name;
     }
     get description() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.description;
     }
     get ID() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.id;
     }
     get link() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.link;
     }
     get image() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.imageUrl;
     }
     get class() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.class;
     }
     get rarityName() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.rarity.name;
     }
     get rarityColor() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return Number(
-            "0x" + this.currentBrawlerObject.rarity.color.split("#")[1]
+            "0x" + this.currentBrawlerObject.rarity.color.split("#")[1],
         );
     }
     get starPower1() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.starPowers[0];
     }
     get starPower2() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.starPowers[1];
     }
     get gadget1() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.gadgets[0];
     }
     get gadget2() {
         if (!this.currentBrawlerObject) {
-            throw new Error("Can't find brawler.")
+            throw new Error("Can't find brawler.");
         }
         return this.currentBrawlerObject.gadgets[1];
     }

@@ -1,6 +1,6 @@
-import { readFile, writeFile } from "fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
-import { type Map } from "../moduleTypes";
+import { type Map } from "../moduleTypes.ts";
 export class MapInfo {
     private currentMapObject: Map | undefined;
     private isMap: boolean;
@@ -71,7 +71,7 @@ export class MapInfo {
             throw new Error("Cant find object");
         }
         return Number(
-            "0x" + this.currentMapObject.gamemode.color.split("#")[1]
+            "0x" + this.currentMapObject.gamemode.color.split("#")[1],
         );
     }
     get name() {

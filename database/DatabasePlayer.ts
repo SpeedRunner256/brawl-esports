@@ -1,5 +1,5 @@
-import { readFile, writeFile } from "fs/promises";
-import type { Player } from "../modules/moduleTypes";
+import { readFile, writeFile } from "node:fs/promises";
+import type { Player } from "../modules/moduleTypes.ts";
 export class DatabasePlayer {
     private filePath = "db/players.json";
     constructor(filePath?: string) {

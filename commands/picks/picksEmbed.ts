@@ -1,12 +1,11 @@
 import { Colors, EmbedBuilder } from "discord.js";
-import { readFile } from "fs/promises";
-import { getGamemodeBans } from "./gamemodeBans";
-import { countOccurrences } from "./picks";
-import { getMapBans } from "./mapBans";
+import { readFile } from "node:fs/promises";
+import { getGamemodeBans } from "./gamemodeBans.ts";
+import { countOccurrences } from "./picks.ts";
+import { getMapBans } from "./mapBans.ts";
 
 export async function makeGamemodeEmbed(
     occurance: { [key: string]: number },
-    field: string,
     name: string,
     total: number,
 ) {
@@ -62,7 +61,6 @@ export async function makeGamemodeEmbed(
 
 export async function makeMapEmbed(
     occurance: { [key: string]: number },
-    field: string,
     name: string,
     total: number,
 ) {
@@ -125,7 +123,7 @@ export async function makeGamemodeEmbedNerdy(
      * get ban occurances (since that's produced in this file
      * send embed
      */
-    const embed = await makeGamemodeEmbed(occurance, field, name, total);
+    const embed = await makeGamemodeEmbed(occurance, name, total);
     const all = JSON.parse(await readFile("db/matches.json", "utf8")).length;
     const banOccurance = makeFields(
         countOccurrences(await getGamemodeBans(name)),
@@ -156,7 +154,7 @@ export async function makeMapEmbedNerdy(
      * get ban occurances (since that's produced in this file
      * send embed
      */
-    const embed = await makeMapEmbed(occurance, field, name, total);
+    const embed = await makeMapEmbed(occurance, name, total);
     const all = JSON.parse(await readFile("db/matches.json", "utf8")).length;
     const banfield = makeFields(countOccurrences(await getMapBans(name)), all);
     embed.setFields([

@@ -7,13 +7,13 @@ import {
     SlashCommandBuilder,
     type ChatInputCommandInteraction,
 } from "discord.js";
-import { searchBrawler } from "../../embedBuilders/infoEmbeds/searchBrawler";
-import { searchMap } from "../../embedBuilders/infoEmbeds/searchMap";
-import { searchPlayer } from "../../embedBuilders/infoEmbeds/searchPlayer";
+import { searchBrawler } from "../../embedBuilders/infoEmbeds/searchBrawler.ts";
+import { searchMap } from "../../embedBuilders/infoEmbeds/searchMap.ts";
+import { searchPlayer } from "../../embedBuilders/infoEmbeds/searchPlayer.ts";
 import {
     searchTeam,
     searchTeamPlayers,
-} from "../../embedBuilders/infoEmbeds/searchTeam";
+} from "../../embedBuilders/infoEmbeds/searchTeam.ts";
 
 // command declaration
 export const data = new SlashCommandBuilder()

@@ -1,11 +1,11 @@
-const headers = { Authorization: `Apikey ${process.env.LIQUID_TOKEN}` };
+import "jsr:@std/dotenv/load";
+import { DatabaseMatch } from "../../database/DatabaseMatch.ts";
 import {
     type Match,
     type Match2Games,
     type Match2Opponents,
     type Match2Players,
-} from "../moduleTypes";
-import { DatabaseMatch } from "../../database/DatabaseMatch";
+} from "../moduleTypes.ts";
 export class MatchInfo {
     private currentObject: Match[];
     constructor(data: Match[]) {
@@ -26,6 +26,7 @@ export class MatchInfo {
                 return new MatchInfo(matches);
             }
         }
+        const headers = { Authorization: `Apikey ${process.env.LIQUID_TOKEN}` };
         const param = new URLSearchParams({
             wiki: "brawlstars",
             conditions: `[[pagename::${query}]]`,

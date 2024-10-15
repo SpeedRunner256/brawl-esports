@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { BrawlerInfo } from "../../modules/inGameInfo/brawlerInfo";
+import { BrawlerInfo } from "../../modules/inGameInfo/brawlerInfo.ts";
 
 export async function searchBrawler(query: string) {
     const brawler = await BrawlerInfo.setBrawler(query);

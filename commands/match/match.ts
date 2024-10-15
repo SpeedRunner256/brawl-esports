@@ -8,8 +8,8 @@ import {
     SlashCommandBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds";
-import { MatchInfo } from "../../modules/eSportsInfo/match";
+import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds.ts";
+import { MatchInfo } from "../../modules/eSportsInfo/match.ts";
 import { StringSelectMenuBuilder } from "discord.js";
 
 export const data = new SlashCommandBuilder()

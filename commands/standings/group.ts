@@ -7,9 +7,9 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { GroupsInfo } from "../../modules/eSportsInfo/groups";
-import type { Groups } from "../../modules/moduleTypes";
-import { getRandomTeamNameEmoji } from "../../embedBuilders/infoEmbeds/searchTeam";
+import { getRandomTeamNameEmoji } from "../../embedBuilders/infoEmbeds/searchTeam.ts";
+import { GroupsInfo } from "../../modules/eSportsInfo/groups.ts";
+import type { Groups } from "../../modules/moduleTypes.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("groups")
