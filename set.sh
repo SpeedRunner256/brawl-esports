@@ -5,14 +5,14 @@ echo -e "\n=== Discord Bot Configuration ==="
 # Prompt for environment variables
 read -p "Enter Discord Bot Token: " DISCORD_TOKEN
 read -p "Enter Client ID: " CLIENT_ID
-read -p "Enter Guild Token: " GUILD_TOKEN
+read -p "Enter Guild ID: " GUILD_ID
 read -p "Enter Liquid Token: " LIQUID_TOKEN
 
 # Create .env file with the values
 cat > .env << EOF
 DISCORD_TOKEN=$DISCORD_TOKEN
 CLIENT_ID=$CLIENT_ID
-GUILD_TOKEN=$GUILD_TOKEN
+GUILD_ID=$GUILD_ID
 LIQUID_TOKEN=$LIQUID_TOKEN
 EOF
 
@@ -23,9 +23,9 @@ mkdir -p db
 json_files=(
     "brawler.json"
     "map.json"
-    "match.json"
-    "player.json"
-    "team.json"
+    "matches.json"
+    "players.json"
+    "teams.json"
     "prediction.json"
 )
 

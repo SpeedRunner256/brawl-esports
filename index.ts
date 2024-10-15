@@ -40,8 +40,8 @@ client.on("ready", () => {
 // Getting all commands from ./commands
 
 client.commands = new Collection();
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, "commands");
 const commandFolders = fs.readdirSync(foldersPath);
 for (const folder of commandFolders) {
@@ -84,8 +84,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
         } else {
             await interaction.reply({
-                content:
-                    `This set of parameters resulted in an error. If it shouldn't, please contact modmail.`,
+                content: `This set of parameters resulted in an error. If it shouldn't, please contact modmail.`,
                 ephemeral: true,
             });
         }

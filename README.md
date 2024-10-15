@@ -30,8 +30,8 @@ Finally, get the bot in a server (you already did this by getting a guild ID),
 and register the commands to your server.
 
 ```bash
-deno registerCommands.ts
+deno run register
 ```
 
-Now, turn the bot on (deno -A index.ts) and in any chat type out /configure and
+Now, turn the bot on (deno run bot) and in any chat type out /configure and
 fill it in, without it the bot won't _really_ work.

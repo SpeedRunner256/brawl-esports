@@ -2,6 +2,7 @@ import { REST, Routes } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
 import "jsr:@std/dotenv/load";
+import { fileURLToPath } from "node:url";
 
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
@@ -10,8 +11,13 @@ const token = process.env.DISCORD_TOKEN;
 if (!token || !clientId || !guildId) {
     throw new Error("Can't find necessary files in .env... Mind a recheck?");
 }
+console.log(
+    `- clientId -> ${clientId}\n- guildId -> ${guildId}\n- token -> ${token}`,
+);
 
 const commands = [];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, "commands");
 const commandFolders = fs.readdirSync(foldersPath);
 
@@ -21,10 +27,8 @@ for (const folder of commandFolders) {
         .readdirSync(commandsPath)
         .filter((file: string) => file.endsWith(".ts"));
     for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file);
-        //fucking eslint
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        const command = require(filePath);
+        const filePath = "file://" + path.join(commandsPath, file);
+        const command = await import(filePath);
         if ("data" in command && "execute" in command) {
             commands.push(command.data.toJSON());
         }

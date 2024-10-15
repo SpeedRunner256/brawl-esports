@@ -1,12 +1,12 @@
 # Function to prompt user for environment variables
 function Get-EnvVariables {
     $envVariables = @{}
-    
+
     Write-Host "`n=== Discord Bot Configuration ===" -ForegroundColor Cyan
-    
+
     $envVariables["DISCORD_TOKEN"] = Read-Host "Enter Discord Bot Token"
     $envVariables["CLIENT_ID"] = Read-Host "Enter Client ID"
-    $envVariables["GUILD_TOKEN"] = Read-Host "Enter Guild Token"
+    $envVariables["GUILD_TOKEN"] = Read-Host "Enter Guild ID"
     $envVariables["LIQUID_TOKEN"] = Read-Host "Enter Liquid Token"
 
     return $envVariables
@@ -19,7 +19,7 @@ $envVariables = Get-EnvVariables
 $envContent = @"
 DISCORD_TOKEN=$($envVariables["DISCORD_TOKEN"])
 CLIENT_ID=$($envVariables["CLIENT_ID"])
-GUILD_TOKEN=$($envVariables["GUILD_TOKEN"])
+GUILD_ID=$($envVariables["GUILD_ID"])
 LIQUID_TOKEN=$($envVariables["LIQUID_TOKEN"])
 "@
 
