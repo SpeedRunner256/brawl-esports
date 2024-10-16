@@ -2,6 +2,7 @@ import { findPageName } from "./findPage.ts";
 import { type Player } from "../moduleTypes.ts";
 import { DatabasePlayer } from "../../database/DatabasePlayer.ts";
 import "jsr:@std/dotenv/load";
+import process from "node:process";
 
 export class PlayerInfo {
     private currentObject: Player;

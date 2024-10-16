@@ -3,6 +3,7 @@ import { type SquadPlayer, type Team } from "../moduleTypes.ts";
 import { DatabaseTeam } from "../../database/DatabaseTeam.ts";
 
 import "jsr:@std/dotenv/load";
+import process from "node:process";
 
 export class TeamInfo {
     currentObject: Team | undefined;

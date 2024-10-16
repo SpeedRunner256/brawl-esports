@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import "jsr:@std/dotenv/load";
 import { fileURLToPath } from "node:url";
+import process from "node:process";
 
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;

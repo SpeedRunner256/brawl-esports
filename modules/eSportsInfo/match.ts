@@ -6,6 +6,7 @@ import {
     type Match2Opponents,
     type Match2Players,
 } from "../moduleTypes.ts";
+import process from "node:process";
 export class MatchInfo {
     private currentObject: Match[];
     constructor(data: Match[]) {
