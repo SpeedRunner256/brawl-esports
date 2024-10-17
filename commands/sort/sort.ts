@@ -55,6 +55,7 @@ export const data = new SlashCommandBuilder()
             )
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply({ephemeral:true})
     const sub = interaction.options.getSubcommand();
     const query = interaction.options.getString("name");
     if (!query) {
@@ -76,9 +77,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
     // Check if result is zero. (brawler/team/player doesn't exist)
     if (matches.length == 0) {
-        await interaction.reply({
+        await interaction.editReply({
             content: "No results found.",
-            ephemeral: true,
         });
         return;
     }
@@ -99,10 +99,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         matchMenuCounter += 1;
     }
     if (matchSelectMenuFields.length == 0) {
-        await interaction.reply({
+        await interaction.editReply({
             content:
                 "One of the following things happened.\n1. Your query has a spelling error\n2. The bot can't find this data in the database.\n * If you think its number 2 and you know it exists, please contact the owners.",
-            ephemeral: true,
         });
     }
     // Create the StringSelectMenu

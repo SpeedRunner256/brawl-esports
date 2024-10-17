@@ -24,6 +24,7 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply();
     const query = interaction.options.getString("pagename");
     if (!query) {
         throw new Error("Not found query");
@@ -60,7 +61,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .addComponents(
             selectMatch,
         );
-    const reply = await interaction.reply({
+    const reply = await interaction.editReply({
         content: `Select the match to show for ${matchArray[0].tickername}`,
         components: [matchSelectionRow],
     });
