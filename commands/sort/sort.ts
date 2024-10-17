@@ -11,12 +11,12 @@ import { sortByBrawler } from "./sortBrawler.ts";
 import { sortByTeam } from "./sortTeam.ts";
 import { sortByPlayer } from "./sortPlayer.ts";
 import type { Match } from "../../modules/moduleTypes.ts";
-import { findPrintableName } from "../../modules/eSportsInfo/findPage.ts";
 import { StringSelectMenuBuilder } from "discord.js";
 import { ActionRowBuilder } from "discord.js";
 import { DatabaseMatch } from "../../database/DatabaseMatch.ts";
 import { Colors } from "discord.js";
-import { getBanList } from "../../embedBuilders/infoEmbeds/matchEmbeds.ts";
+import { findPrintableName } from "../../modules/mediawiki.ts";
+import { getBanList } from "../../utilities/uilts.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("sortby")

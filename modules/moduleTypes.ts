@@ -129,6 +129,15 @@ export type Map = {
         imageUrl: string;
     };
 };
+export type GameMode = {
+    name: string;
+    title: string;
+    color: string;
+    description: string;
+    shortDescription: string;
+    link: string;
+    imageUrl: string;
+};
 export type User = {
     username: string;
     userID: string;

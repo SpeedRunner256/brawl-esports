@@ -7,9 +7,9 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { getRandomTeamNameEmoji } from "../../embedBuilders/infoEmbeds/searchTeam.ts";
-import { GroupsInfo } from "../../modules/eSportsInfo/groups.ts";
 import type { Groups } from "../../modules/moduleTypes.ts";
+import { getRandomTeamNameEmoji } from "../../modules/embeds.ts";
+import { LiquidDB } from "../../modules/liquid.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("groups")
@@ -26,7 +26,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         throw new Error("Did not get tournamentQuery");
     }
     // Get Groups
-    const groups = (await GroupsInfo.setGroups(query)).groupEntry;
+    const obj = await LiquidDB.get("group", query)
+    const groups = <Groups[]>obj.result;
     const groupA = groups.slice(0, 3);
     const groupB = groups.slice(3, 6);
     const groupC = groups.slice(6, 9);

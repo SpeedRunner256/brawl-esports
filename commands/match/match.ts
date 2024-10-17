@@ -8,9 +8,10 @@ import {
     SlashCommandBuilder,
     StringSelectMenuOptionBuilder,
 } from "discord.js";
-import { matchEmbedFields } from "../../embedBuilders/infoEmbeds/matchEmbeds.ts";
-import { MatchInfo } from "../../modules/eSportsInfo/match.ts";
 import { StringSelectMenuBuilder } from "discord.js";
+import { LiquidDB } from "../../modules/liquid.ts";
+import type { Match } from "../../modules/moduleTypes.ts";
+import { matchEmbedFields } from "../../modules/embeds.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("match")
@@ -27,7 +28,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!query) {
         throw new Error("Not found query");
     }
-    const matchArray = (await MatchInfo.setMatch(query)).matches;
+    const obj = await LiquidDB.get("match", query);
+    const matchArray = <Match[]>obj.result
     let matchNumber = 0;
     let gameNumber = 0; // My plans are measured in centuries motherfucker
     // Match Selection

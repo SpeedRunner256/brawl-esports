@@ -6,7 +6,7 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import { stringUtils } from "../../utilities/stringUtils.ts";
-import { Economy } from "../../modules/economy/economy.ts";
+import { Economy } from "../../modules/economy.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("raffle")

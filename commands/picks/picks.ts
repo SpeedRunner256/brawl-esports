@@ -9,7 +9,6 @@ import {
 } from "discord.js";
 import { getGamemodePicks } from "./gamemodePicks.ts";
 import { getMapPicks } from "./mapPicks.ts";
-import { findPrintableName } from "../../modules/eSportsInfo/findPage.ts";
 import {
     makeFields,
     makeGamemodeEmbed,
@@ -17,6 +16,7 @@ import {
     makeMapEmbed,
     makeMapEmbedNerdy,
 } from "./picksEmbed.ts";
+import { findPrintableName } from "../../modules/mediawiki.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("picks")

@@ -7,13 +7,15 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { searchBrawler } from "../../embedBuilders/infoEmbeds/searchBrawler.ts";
-import { searchMap } from "../../embedBuilders/infoEmbeds/searchMap.ts";
-import { searchPlayer } from "../../embedBuilders/infoEmbeds/searchPlayer.ts";
 import {
+    searchBrawler,
+    searchMap,
+    searchPlayer,
     searchTeam,
-    searchTeamPlayers,
-} from "../../embedBuilders/infoEmbeds/searchTeam.ts";
+} from "../../modules/embeds.ts";
+import { findPageName } from "../../modules/mediawiki.ts";
+import { LiquidDB } from "../../modules/liquid.ts";
+import type { SquadPlayer } from "../../modules/moduleTypes.ts";
 
 // command declaration
 export const data = new SlashCommandBuilder()
@@ -65,8 +67,10 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    const query = interaction.options.getString("query");
-
+    let query = interaction.options.getString("query");
+    if (!query) {
+        throw new Error("No name (cant even happen)");
+    }
     let sendEmbed: EmbedBuilder; // Embed to send in this interaction.reply
 
     const sendToChatButton = new ButtonBuilder()
@@ -88,19 +92,23 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             sendEmbed = await searchMap(query);
             break;
         case "player":
+            query = await findPageName(query);
             sendEmbed = await searchPlayer(query);
             break;
-        case "team":
+        case "team": {
+            query = await findPageName(query);
             sendEmbed = await searchTeam(query);
-            for (const member of await searchTeamPlayers(query)) {
+            const obj = await LiquidDB.get("teammember", query);
+            const teamMem = <SquadPlayer[]>obj.result
+            for (const member of teamMem) {
                 Row.addComponents(
                     new ButtonBuilder()
-                        .setCustomId(member.toLowerCase())
-                        .setLabel(member)
+                        .setCustomId(member.id.toLowerCase())
+                        .setLabel(member.id)
                         .setEmoji("<:bounty:1291683164758212668>")
                         .setStyle(ButtonStyle.Secondary),
                 ); // Make the "Player" Buttons for team.
-            }
+            }}
 
             break;
         default:
@@ -134,10 +142,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             });
             return;
         }
-        for (const member of await searchTeamPlayers(query)) {
-            if (member.toLowerCase() === i.customId) {
+        const obj = await LiquidDB.get("teammember", query);
+            const teamMem = <SquadPlayer[]>obj.result
+            for (const member of teamMem) {
+            if (member.id.toLowerCase() === i.customId) {
                 await i.reply({
-                    embeds: [await searchPlayer(member)],
+                    embeds: [await searchPlayer(member.id)],
                     ephemeral: true,
                 });
                 return;
