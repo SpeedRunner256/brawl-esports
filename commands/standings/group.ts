@@ -26,8 +26,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         throw new Error("Did not get tournamentQuery");
     }
     // Get Groups
-    const obj = await LiquidDB.get("group", query)
-    const groups = <Groups[]>obj.result;
+    const obj = await LiquidDB.get("group", query);
+    const groups = <Groups[]> obj.result;
     const groupA = groups.slice(0, 3);
     const groupB = groups.slice(3, 6);
     const groupC = groups.slice(6, 9);

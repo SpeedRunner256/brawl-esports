@@ -55,7 +55,7 @@ export const data = new SlashCommandBuilder()
             )
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
-    await interaction.deferReply({ephemeral:true})
+    await interaction.deferReply({ ephemeral: true });
     const sub = interaction.options.getSubcommand();
     const query = interaction.options.getString("name");
     if (!query) {

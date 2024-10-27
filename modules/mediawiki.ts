@@ -1,8 +1,8 @@
 export async function findPageName(query: string): Promise<string> {
     const params = new URLSearchParams({
         action: "opensearch",
-        "format": "json",
-        "search": query,
+        format: "json",
+        search: query,
     }).toString();
     const fetching = await fetch(
         `https://liquipedia.net/brawlstars/api.php?${params}`,
@@ -12,7 +12,7 @@ export async function findPageName(query: string): Promise<string> {
             return data[3][0];
         });
     const answer = fetching.split("/")[4];
-
+    console.log(answer);
     if (answer == "Navi") {
         return "Natus_Vincere";
     } else {
@@ -25,8 +25,8 @@ export async function findPrintableName(query: string): Promise<string> {
     }
     const params = new URLSearchParams({
         action: "opensearch",
-        "format": "json",
-        "search": query,
+        format: "json",
+        search: query,
     }).toString();
     const search = await fetch(
         `https://liquipedia.net/brawlstars/api.php?${params}`,

@@ -1,7 +1,6 @@
 import * as fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import "jsr:@std/dotenv/load";
 import { Client, Collection, GatewayIntentBits } from "discord.js";
 import type { Interaction } from "discord.js";
 import process from "node:process";

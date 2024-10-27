@@ -188,7 +188,6 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
     const obj = await LiquidDB.get("team", query);
     const team = <Team> obj.result;
     if (team.status == "disbanded" ? true : false) {
-        console.log("Disbanded team, here's something else.");
         return new EmbedBuilder()
             .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
             .setDescription(team.name + " is a **disbanded** team.")
@@ -232,25 +231,6 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
                 },
             ]);
     }
-    function getActivePlayers() {
-        const answer: SquadPlayer[] = [];
-        for (const player of team.players) {
-            if (player.type == "player") {
-                answer.push(player);
-            }
-        }
-        return answer;
-    }
-    function getActiveStaff() {
-        const answer: SquadPlayer[] = [];
-        for (const player of team.players) {
-            if (player.type == "staff") {
-                console.log("found staff");
-                answer.push(player);
-            }
-        }
-        return answer;
-    }
     return new EmbedBuilder()
         .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
         .setURL(`https://liquipedia.net/brawlstars/${team.pagename}`)
@@ -275,12 +255,12 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
             {
                 name: "<:game:1291684262910885918> Members",
                 value: stringUtils.formatSquadPlayerInfo(
-                    getActivePlayers(),
+                    getActivePlayers(team),
                 ),
             },
             {
                 name: "<:coach:1292130323806556272> Coaches",
-                value: stringUtils.formatStaff(getActiveStaff()),
+                value: stringUtils.formatStaff(getActiveStaff(team)),
             },
             {
                 name: "<:score:1291686732621676605> Links",
@@ -296,7 +276,24 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
             },
         ]);
 }
-
+function getActivePlayers(team: Team) {
+    const answer: SquadPlayer[] = [];
+    for (const player of team.players) {
+        if (player.type == "player") {
+            answer.push(player);
+        }
+    }
+    return answer;
+}
+function getActiveStaff(team: Team) {
+    const answer: SquadPlayer[] = [];
+    for (const player of team.players) {
+        if (player.type == "staff") {
+            answer.push(player);
+        }
+    }
+    return answer;
+}
 // again, probably doesnt belong here - push to some utility class
 export function getRandomTeamNameEmoji(): string {
     const emojiArray = [

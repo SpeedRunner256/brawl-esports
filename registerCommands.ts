@@ -1,7 +1,6 @@
 import { REST, Routes } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
-import "jsr:@std/dotenv/load";
 import { fileURLToPath } from "node:url";
 import process from "node:process";
 
@@ -16,7 +15,7 @@ console.log(
     `- clientId -> ${clientId}\n- guildId -> ${guildId}\n- token -> ${token}`,
 );
 
-const commands: any[] = [];
+const commands = [];
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, "commands");

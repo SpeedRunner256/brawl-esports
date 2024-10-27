@@ -21,8 +21,8 @@ export async function sortByTeam(name: string) {
                 }
             }
         }
-    } catch (error) {
-        console.log(error);
+    } catch (_error) {
+        console.log("Error in sort.ts");
     }
     return answer;
 }

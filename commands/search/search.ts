@@ -71,7 +71,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!query) {
         throw new Error("No name (cant even happen)");
     }
-    let sendEmbed: EmbedBuilder; // Embed to send in this interaction.reply
+    await interaction.deferReply({ ephemeral: true });
+    let sendEmbed: EmbedBuilder;
 
     const sendToChatButton = new ButtonBuilder()
         .setCustomId("sendtochat")
@@ -79,10 +80,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setStyle(ButtonStyle.Primary);
     const Row = new ActionRowBuilder<ButtonBuilder>().addComponents(
         sendToChatButton,
-    ); // Row to send in this interaction.reply
-    if (!query) {
-        return;
-    } //eslint :p
+    );
 
     switch (interaction.options.getSubcommand()) {
         case "brawler":
@@ -95,21 +93,33 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             query = await findPageName(query);
             sendEmbed = await searchPlayer(query);
             break;
-        case "team": {
-            query = await findPageName(query);
-            sendEmbed = await searchTeam(query);
-            const obj = await LiquidDB.get("teammember", query);
-            const teamMem = <SquadPlayer[]>obj.result
-            for (const member of teamMem) {
-                Row.addComponents(
-                    new ButtonBuilder()
-                        .setCustomId(member.id.toLowerCase())
-                        .setLabel(member.id)
-                        .setEmoji("<:bounty:1291683164758212668>")
-                        .setStyle(ButtonStyle.Secondary),
-                ); // Make the "Player" Buttons for team.
-            }}
-
+        case "team":
+            {
+                query = await findPageName(query);
+                sendEmbed = await searchTeam(query);
+                const obj = await LiquidDB.get("teammember", query);
+                const teamMem = <SquadPlayer[]> obj.result;
+                if (teamMem.length == 0) {
+                    Row.addComponents(
+                        new ButtonBuilder()
+                            .setDisabled(true)
+                            .setLabel("No active members")
+                            .setStyle(ButtonStyle.Secondary),
+                    );
+                }
+                for (const member of teamMem) {
+                    if (member.type != "player") {
+                        continue;
+                    }
+                    Row.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(member.id.toLowerCase())
+                            .setLabel(member.id)
+                            .setEmoji("<:bounty:1291683164758212668>")
+                            .setStyle(ButtonStyle.Secondary),
+                    ); // Make the "Player" Buttons for team.
+                }
+            }
             break;
         default:
             sendEmbed = new EmbedBuilder()
@@ -119,10 +129,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 ); // Need to confirm.
     }
 
-    const response = await interaction.reply({
+    const response = await interaction.editReply({
         embeds: [sendEmbed],
         components: [Row],
-        ephemeral: true,
     });
     // 40 seconds to get a reply, afterwards interaction fails.
     const collector = response.createMessageComponentCollector({
@@ -143,8 +152,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             return;
         }
         const obj = await LiquidDB.get("teammember", query);
-            const teamMem = <SquadPlayer[]>obj.result
-            for (const member of teamMem) {
+        const teamMem = <SquadPlayer[]> obj.result;
+        for (const member of teamMem) {
             if (member.id.toLowerCase() === i.customId) {
                 await i.reply({
                     embeds: [await searchPlayer(member.id)],

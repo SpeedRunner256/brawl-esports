@@ -30,7 +30,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         throw new Error("Not found query");
     }
     const obj = await LiquidDB.get("match", query);
-    const matchArray = <Match[]>obj.result
+    const matchArray = <Match[]> obj.result;
     let matchNumber = 0;
     let gameNumber = 0; // My plans are measured in centuries motherfucker
     // Match Selection
@@ -125,8 +125,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 embeds: [embed],
                 components: [navigationRow],
             });
-        } catch (error) {
-            console.log(error);
+        } catch {
+            console.log("Error in match.ts");
         }
     });
     const navigationButtonCollector = reply.createMessageComponentCollector({

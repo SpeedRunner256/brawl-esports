@@ -9,7 +9,9 @@ import type {
     Team,
 } from "./moduleTypes.ts";
 import process from "node:process";
-import "jsr:@std/dotenv/load";
+import { DatabasePlayer } from "../database/DatabasePlayer.ts";
+import { DatabaseTeam } from "../database/DatabaseTeam.ts";
+import { DatabaseMatch } from "../database/DatabaseMatch.ts";
 
 export class LiquidDB {
     result: Player | Team | Match[] | Groups[] | SquadPlayer[] | undefined;
@@ -63,7 +65,14 @@ export class LiquidDB {
         return new LiquidDB(result, queryExists);
     }
     private static async player(name: string): Promise<Player | undefined> {
-        const { headers, params } = await LiquidDB.queryHeadersParams(name);
+        const db = new DatabasePlayer();
+        for (const player of await db.getPlayer(name)) {
+            if (player.pagename.toLowerCase() == name.toLowerCase()) {
+                console.log(`Found ${player.id} in database.`);
+                return player;
+            }
+        }
+        const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Player = await fetch(
             `https://api.liquipedia.net/api/v3/player?${params}`,
             { headers },
@@ -92,6 +101,13 @@ export class LiquidDB {
         return Player;
     }
     private static async team(name: string): Promise<Team | undefined> {
+        const db = new DatabaseTeam();
+        for (const team of await db.getTeam(name)) {
+            if (team.pagename.toLowerCase() == name.toLowerCase()) {
+                console.log(`Found ${team.pagename} in database.`);
+                return team;
+            }
+        }
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Team = await fetch(
             `https://api.liquipedia.net/api/v3/team?${params}`,
@@ -158,7 +174,16 @@ export class LiquidDB {
         return Team;
     }
     private static async match(name: string): Promise<Match[] | undefined> {
-        const { headers, params } = await LiquidDB.queryHeadersParams(name);
+        const db = new DatabaseMatch();
+        const matches = await db.getMatch(name);
+        for (const match of matches) {
+            if (match.pagename == name) {
+                console.log(`Found ${match.pagename} in database.`);
+
+                return matches;
+            }
+        }
+        const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Match = await fetch(
             `https://api.liquipedia.net/api/v3/match?${params}`,
             { headers },
@@ -230,7 +255,7 @@ export class LiquidDB {
         return Match;
     }
     private static async group(name: string): Promise<Groups[] | undefined> {
-        const { headers, params } = await LiquidDB.queryHeadersParams(name);
+        const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Group = (await fetch(
             `https://api.liquipedia.net/api/v3/standingsentry?${[params]}`,
             { headers },
@@ -262,7 +287,7 @@ export class LiquidDB {
     private static async teammember(
         name: string,
     ): Promise<SquadPlayer[] | undefined> {
-        const { headers } = await LiquidDB.queryHeadersParams(name);
+        const { headers } = LiquidDB.queryHeadersParams(name);
         const param = new URLSearchParams({
             wiki: "brawlstars",
             conditions: `[[pagename::${name}]] AND [[status::active]]`,
