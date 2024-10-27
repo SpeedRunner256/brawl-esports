@@ -16,7 +16,7 @@ console.log(
     `- clientId -> ${clientId}\n- guildId -> ${guildId}\n- token -> ${token}`,
 );
 
-const commands = [];
+const commands: any[] = [];
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const foldersPath = path.join(__dirname, "commands");
