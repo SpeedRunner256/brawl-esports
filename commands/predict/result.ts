@@ -85,15 +85,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     } else {
         winnerPercent = percent2;
     }
-    Config.log(
-        "Logging prediction from /result",
-        JSON.stringify(logThis, null, "  ")
-            .split("\n")
-            .slice(1, 10)
-            .map((str) => str.trim())
-            .join("\n"),
-        interaction,
-    );
     // Make embed.
     const embed = new EmbedBuilder()
         .setTitle("Prediction results - " + logThis.question)
