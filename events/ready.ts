@@ -9,8 +9,8 @@ export function execute(client: Client) {
     client.user?.setPresence({
         activities: [
             {
-                name: "kacky with the boys",
-                type: ActivityType.Playing,
+                name: "Serving data on the rocks",
+                type: ActivityType.Custom,
             },
         ],
         status: "dnd",
