@@ -10,11 +10,10 @@ liquipediadb API) and brawlers info through the brawlify API.
 To install dependencies:
 
 ```bash
-deno install
+bun install
 ```
 
-Node AND Bun will not work without some rewriting - like the jsr imports or
-"file://" in the main file.
+Node probably will not work without some rewriting - I have not checked.
 
 To get the bot working, just open the powershell or bash script
 (setup.ps1/setup.sh) depending on which side of the universe you belong to.
@@ -30,8 +29,8 @@ Finally, get the bot in a server (you already did this by getting a guild ID),
 and register the commands to your server.
 
 ```bash
-deno run register
+bun run register
 ```
 
-Now, turn the bot on (deno run bot) and in any chat type out /configure and fill
+Now, turn the bot on (bun run bot) and in any chat type out /configure and fill
 it in, without it the bot won't _really_ work.
