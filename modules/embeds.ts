@@ -369,11 +369,5 @@ export async function makePun(pun: Pun, client: Client<boolean>) {
             value: catchp,
         },
     ]);
-    embed.setImage(
-        "https://cdn.discordapp.com/avatars/" +
-            pun.id +
-            "/" +
-            (await client.users.fetch(pun.id)).banner
-    );
     return embed;
 }
