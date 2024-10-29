@@ -172,23 +172,24 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
             ephemeral: true,
         });
+        
         // Log this.
-        // const logThis = {
-        //     predictionNumber,
-        //     question: currentPrediction.question,
-        //     choice1: currentPrediction.choice1,
-        //     choice2: currentPrediction.choice2,
-        //     time: time,
-        //     answer: { hasAnswered: false, answer: null },
-        // };
-        // Config.log(
-        //     "Logging Prediction data from /predict",
-        //     JSON.stringify(logThis, null, "  ")
-        //         .split("\n")
-        //         .slice(1, 10)
-        //         .map((str) => str.trim())
-        //         .join("\n"),
-        //     interaction,
-        // );
+         const logThis = {
+             predictionNumber,
+             question: currentPrediction.question,
+             choice1: currentPrediction.choice1,
+             choice2: currentPrediction.choice2,
+             time: time,
+             answer: { hasAnswered: false, answer: null },
+         };
+        Config.log(
+             "Logging Prediction data from /predict",
+             JSON.stringify(logThis, null, "  ")
+                 .split("\n")
+                 .slice(1, 10)
+                 .map((str) => str.trim())
+                 .join("\n"),
+             interaction,
+        );
     });
 }
