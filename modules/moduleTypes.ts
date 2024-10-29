@@ -183,3 +183,37 @@ export type Groups = {
         };
     };
 };
+export type ExtraData = {
+    bans: {
+        team1: {
+            1: string;
+            2: string;
+            3: string;
+        };
+        team2: {
+            1: string;
+            2: string;
+            3: string;
+        };
+    };
+    firstpick: number;
+    maptype: string;
+    bestof: string;
+};
+export type Pun = {
+    names: string[];
+    random_quotes: string[];
+    id: string;
+    embed: {
+        title: string;
+        color: number;
+        description: string;
+        thumbnail?: string;
+        footer?: string;
+    };
+};
+export type PunData = {
+    allow: string[];
+    links: string[];
+    puns: Pun[];
+};
