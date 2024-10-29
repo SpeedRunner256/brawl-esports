@@ -19,7 +19,7 @@ export class LiquidDB {
 
     private constructor(
         result: Player | Team | Match[] | Groups[] | SquadPlayer[] | undefined,
-        queryExists: boolean,
+        queryExists: boolean
     ) {
         this.result = result;
         this.queryExists = queryExists;
@@ -31,7 +31,7 @@ export class LiquidDB {
      */
     static async get(
         type: "player" | "team" | "match" | "teammember" | "group",
-        query: string,
+        query: string
     ) {
         // Do DB later, first get this working nice.
         let result:
@@ -75,29 +75,32 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Player = await fetch(
             `https://api.liquipedia.net/api/v3/player?${params}`,
-            { headers },
-        ).then((response) => response.json()).then((data) => {
-            const {
-                pagename,
-                id,
-                nationality,
-                region,
-                teampagename,
-                links,
-                status,
-                earnings,
-            } = data.result[0];
-            return {
-                pagename,
-                id,
-                nationality,
-                region,
-                teampagename,
-                twitter: links.twitter,
-                status,
-                earnings,
-            } as Player;
-        });
+            { headers }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                const {
+                    pagename,
+                    id,
+                    nationality,
+                    region,
+                    teampagename,
+                    links,
+                    status,
+                    earnings,
+                } = data.result[0];
+                return {
+                    pagename,
+                    id,
+                    nationality,
+                    region,
+                    teampagename,
+                    twitter: links.twitter,
+                    status,
+                    earnings,
+                } as Player;
+            });
+        db.pushPlayer(Player);
         return Player;
     }
     private static async team(name: string): Promise<Team | undefined> {
@@ -111,34 +114,37 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Team = await fetch(
             `https://api.liquipedia.net/api/v3/team?${params}`,
-            { headers },
-        ).then((response) => response.json()).then((data) => {
-            // Get team
-            const {
-                pagename,
-                name,
-                region,
-                logodarkurl,
-                textlesslogodarkurl,
-                status,
-                createdate,
-                disbanddate,
-                links,
-            } = data.result[0];
-            const returnable: Team = {
-                pagename,
-                name,
-                region,
-                logodarkurl,
-                textlesslogodarkurl,
-                status,
-                createdate,
-                disbanddate,
-                links,
-                players: [],
-            };
-            return returnable;
-        });
+            { headers }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                // Get team
+                const {
+                    pagename,
+                    name,
+                    region,
+                    logodarkurl,
+                    textlesslogodarkurl,
+                    status,
+                    createdate,
+                    disbanddate,
+                    links,
+                } = data.result[0];
+                const returnable: Team = {
+                    pagename,
+                    name,
+                    region,
+                    logodarkurl,
+                    textlesslogodarkurl,
+                    status,
+                    createdate,
+                    disbanddate,
+                    links,
+                    players: [],
+                };
+
+                return returnable;
+            });
         // Get SquadPlayers (different endpoint but intended to be in the same embed.)
         const param = new URLSearchParams({
             wiki: "brawlstars",
@@ -146,7 +152,7 @@ export class LiquidDB {
         });
         await fetch(
             `https://api.liquipedia.net/api/v3/squadplayer?${param.toString()}`,
-            { headers: headers },
+            { headers: headers }
         )
             .then((response) => response.json())
             .then((data) => {
@@ -161,9 +167,9 @@ export class LiquidDB {
                         nationality,
                     } = data.result[memberNumber];
                     Team.players.push({
-                        id,
+                        id: id == "" ? "Unknown Person" : id,
                         role,
-                        link,
+                        link: link == "" ? "404" : link,
                         type,
                         status,
                         joindate,
@@ -171,6 +177,7 @@ export class LiquidDB {
                     } as SquadPlayer);
                 }
             });
+        db.pushTeam(Team);
         return Team;
     }
     private static async match(name: string): Promise<Match[] | undefined> {
@@ -186,79 +193,82 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Match = await fetch(
             `https://api.liquipedia.net/api/v3/match?${params}`,
-            { headers },
-        ).then((response) => response.json()).then((data) => {
-            const answer: Match[] = [];
-            for (const result of data.result) {
-                const {
-                    pagename,
-                    objectname,
-                    winner,
-                    finished,
-                    stream,
-                    tickername,
-                    icondarkurl,
-                    liquipediatiertype,
-                } = result;
-                const match2opponents: Match2Opponents[] = [];
-                for (const opp of result.match2opponents) {
-                    const { id, name, score, placement } = opp;
-                    const match2players: Match2Players[] = [];
-                    for (const player of opp.match2players) {
-                        const { id, displayname, country } = player;
-                        match2players.push({ id, displayname, country });
-                    }
-                    match2opponents.push({
-                        id,
-                        name,
-                        score,
-                        placement,
-                        match2players,
-                    });
-                }
-                const match2games: Match2Games[] = [];
-                for (const match of result.match2games) {
+            { headers }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                const answer: Match[] = [];
+                for (const result of data.result) {
                     const {
-                        map,
-                        scores,
-                        participants,
+                        pagename,
+                        objectname,
                         winner,
-                        date,
-                        extradata,
-                        resulttype,
-                    } = match;
-                    match2games.push({
-                        map,
-                        scores,
+                        finished,
+                        stream,
+                        tickername,
+                        icondarkurl,
+                        liquipediatiertype,
+                    } = result;
+                    const match2opponents: Match2Opponents[] = [];
+                    for (const opp of result.match2opponents) {
+                        const { id, name, score, placement } = opp;
+                        const match2players: Match2Players[] = [];
+                        for (const player of opp.match2players) {
+                            const { id, displayname, country } = player;
+                            match2players.push({ id, displayname, country });
+                        }
+                        match2opponents.push({
+                            id,
+                            name,
+                            score,
+                            placement,
+                            match2players,
+                        });
+                    }
+                    const match2games: Match2Games[] = [];
+                    for (const match of result.match2games) {
+                        const {
+                            map,
+                            scores,
+                            participants,
+                            winner,
+                            date,
+                            extradata,
+                            resulttype,
+                        } = match;
+                        match2games.push({
+                            map,
+                            scores,
+                            winner,
+                            participants,
+                            date,
+                            extradata,
+                            resulttype,
+                        });
+                    }
+                    answer.push({
+                        pagename,
+                        objectname,
                         winner,
-                        participants,
-                        date,
-                        extradata,
-                        resulttype,
+                        stream,
+                        tickername,
+                        icondarkurl,
+                        finished,
+                        tiertype: liquipediatiertype,
+                        match2opponents,
+                        match2games,
                     });
                 }
-                answer.push({
-                    pagename,
-                    objectname,
-                    winner,
-                    stream,
-                    tickername,
-                    icondarkurl,
-                    finished,
-                    tiertype: liquipediatiertype,
-                    match2opponents,
-                    match2games,
-                });
-            }
-            return answer;
-        });
+                db.pushMatch(answer);
+                return answer;
+            });
         return Match;
     }
     private static async group(name: string): Promise<Groups[] | undefined> {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Group = (await fetch(
             `https://api.liquipedia.net/api/v3/standingsentry?${[params]}`,
-            { headers },
+            { headers }
         )
             .then((response) => response.json())
             .then((data) => {
@@ -285,7 +295,7 @@ export class LiquidDB {
         return Group;
     }
     private static async teammember(
-        name: string,
+        name: string
     ): Promise<SquadPlayer[] | undefined> {
         const { headers } = LiquidDB.queryHeadersParams(name);
         const param = new URLSearchParams({
@@ -295,29 +305,31 @@ export class LiquidDB {
         const answer: SquadPlayer[] = [];
         await fetch(
             `https://api.liquipedia.net/api/v3/squadplayer?${param.toString()}`,
-            { headers: headers },
-        ).then((response) => response.json()).then((data) => {
-            for (const memberNumber in Object.values(data.result)) {
-                const {
-                    id,
-                    role,
-                    link,
-                    type,
-                    status,
-                    joindate,
-                    nationality,
-                } = data.result[memberNumber];
-                answer.push({
-                    id,
-                    role,
-                    link,
-                    type,
-                    status,
-                    joindate,
-                    nationality,
-                });
-            }
-        });
+            { headers: headers }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                for (const memberNumber in Object.values(data.result)) {
+                    const {
+                        id,
+                        role,
+                        link,
+                        type,
+                        status,
+                        joindate,
+                        nationality,
+                    } = data.result[memberNumber];
+                    answer.push({
+                        id,
+                        role,
+                        link,
+                        type,
+                        status,
+                        joindate,
+                        nationality,
+                    });
+                }
+            });
         return answer;
     }
     private static queryHeadersParams(name: string) {

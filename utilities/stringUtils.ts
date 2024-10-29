@@ -64,10 +64,9 @@ export class stringUtils {
             const suffix = ["th", "st", "nd", "rd"][
                 day % 10 > 3 ? 0 : (day % 100) - (day % 10) != 10 ? day % 10 : 0
             ];
-
+            const link = encodeURI(player.link)
             const finalDate = formattedDate.replace(/(\d+)/, `$1${suffix}`);
-
-            return `[**${player.link}**](https://liquipedia.net/brawlstars/${player.link}): ${player.nationality} - ${finalDate}`;
+            return `[**${player.link}**](https://liquipedia.net/brawlstars/${link}): ${player.nationality} - ${finalDate}`;
         });
         let answer = "";
         for (const info of abc) {
