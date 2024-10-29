@@ -17,7 +17,7 @@ import {
 import { findPageName } from "../../modules/mediawiki.ts";
 import { LiquidDB } from "../../modules/liquid.ts";
 import type { SquadPlayer } from "../../modules/moduleTypes.ts";
-import { checkAllow, checkPun } from "../../utilities/uilts.ts";
+import { checkAllow, checkPun, hasPun } from "../../utilities/uilts.ts";
 
 // command declaration
 export const data = new SlashCommandBuilder()
@@ -92,7 +92,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             sendEmbed = await searchMap(query);
             break;
         case "player":
-            if (await checkAllow(interaction.user.id)) {
+            if (await checkAllow(interaction.user.id) && await hasPun(query)) {
                 sendEmbed = await makePun(await checkPun(query), interaction.client);
                 break;
             }

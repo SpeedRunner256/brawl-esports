@@ -27,3 +27,14 @@ export async function checkPun(pname: string) {
     }
     throw new Error(`No pun found - trying ${pname}`);
 }
+export async function hasPun(pname: string) {
+    const file: PunData = JSON.parse(await readFile("db/puns.json", "utf-8"));
+    for (const pun of file.puns) {
+        for (const name of pun.names) {
+            if (name == pname) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
