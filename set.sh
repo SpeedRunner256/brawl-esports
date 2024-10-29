@@ -21,12 +21,14 @@ mkdir -p db
 
 # Create JSON files in the db directory
 json_files=(
-    "brawler.json"
-    "map.json"
-    "matches.json"
-    "players.json"
-    "teams.json"
+    "brawler.json",
+    "map.json",
+    "match.json",
+    "player.json",
+    "team.json",
     "prediction.json"
+    "economy.json",
+    "puns.json"
 )
 
 # Create each JSON file

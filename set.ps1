@@ -37,6 +37,8 @@ $jsonFiles = @(
     "player.json",
     "team.json",
     "prediction.json"
+    "economy.json",
+    "puns.json"
 )
 
 foreach ($file in $jsonFiles) {
