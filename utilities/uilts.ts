@@ -25,5 +25,5 @@ export async function checkPun(pname: string) {
             }
         }
     }
-    throw new Error("No pun found.");
+    throw new Error(`No pun found - trying ${pname}`);
 }
