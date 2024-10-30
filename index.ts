@@ -5,7 +5,12 @@ import { Client, Collection, GatewayIntentBits } from "discord.js";
 import type { Interaction } from "discord.js";
 import process from "node:process";
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessagePolls],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessagePolls,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildMessages,
+    ],
 });
 interface Command {
     data: string;
