@@ -209,7 +209,10 @@ export type Pun = {
         color: number;
         description: string;
         thumbnail?: string;
-        footer?: string;
+        footer?: {
+            text?: string,
+            icon_url?:string,
+        };
     };
 };
 export type PunData = {
