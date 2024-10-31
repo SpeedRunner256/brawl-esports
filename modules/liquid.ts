@@ -73,7 +73,7 @@ export class LiquidDB {
     }
     private static async player(name: string): Promise<Player | undefined> {
         const db = new DatabasePlayer();
-        for (const player of await db.getPlayer(name)) {
+        for (const player of await db.getPlayer(null, null, name)) {
             if (player.pagename.toLowerCase() == name.toLowerCase()) {
                 console.log(`Found ${player.id} in database.`);
                 return player;
@@ -115,7 +115,8 @@ export class LiquidDB {
     }
     private static async team(name: string): Promise<Team | undefined> {
         const db = new DatabaseTeam();
-        for (const team of await db.getTeam(name)) {
+        const teams = await db.getTeam(null, name);
+        for (const team of teams) {
             if (team.pagename.toLowerCase() == name.toLowerCase()) {
                 console.log(`Found ${team.pagename} in database.`);
                 return team;
