@@ -129,7 +129,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 await readFile("db/puns.json", "utf-8")
             );
             data.puns.push(send);
-            writeFile("db/puns.json", JSON.stringify(data, null, "    "));
+            await writeFile("db/puns.json", JSON.stringify(data, null, "    "));
             await interaction.reply({ content: "Done.", ephemeral: true });
             break;
         }
@@ -158,7 +158,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         quotes ?? data.puns[pun].random_quotes;
                 }
             }
-            writeFile("db/puns.json", JSON.stringify(data, null, "    "));
+            await writeFile("db/puns.json", JSON.stringify(data, null, "    "));
             await interaction.reply({ content: "Done.", ephemeral: true });
             break;
         }

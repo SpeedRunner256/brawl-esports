@@ -172,7 +172,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
             ephemeral: true,
         });
-        
         // Log this.
          const logThis = {
              predictionNumber,

@@ -25,10 +25,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
-    const query = interaction.options.getString("pagename");
-    if (!query) {
-        throw new Error("Not found query");
-    }
+    const query = interaction.options.getString("pagename", true);
     const obj = await LiquidDB.get("match", query);
     const matchArray = <Match[]> obj.result;
     let matchNumber = 0;
@@ -41,7 +38,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             match.match2opponents[0].name == "TBD" ||
             match.match2opponents[1].name == "TBD"
         ) {
-            continue;
+            continue; // match not played 
         }
         const matchName = `${matchMenuCounter}. ${
             match.match2opponents[0].name

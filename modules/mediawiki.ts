@@ -1,3 +1,5 @@
+import { SearchNotFoundError } from "./errors";
+
 export async function findPageName(query: string): Promise<string> {
     const params = new URLSearchParams({
         action: "opensearch",
@@ -5,10 +7,19 @@ export async function findPageName(query: string): Promise<string> {
         search: query,
     }).toString();
     const fetching = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?${params}`,
+        `https://liquipedia.net/brawlstars/api.php?${params}`
     )
-        .then((response) => response.json())
+        .then((response) => {
+            console.log(response.status);
+            if (response.status != 200) {
+                throw new SearchNotFoundError(query);
+            }
+            return response.json();
+        })
         .then((data) => {
+            if (data[3].length == 0) {
+                throw new SearchNotFoundError(query);
+            }
             return data[3][0];
         });
     const answer = fetching.split("/")[4];
@@ -29,16 +40,13 @@ export async function findPrintableName(query: string): Promise<string> {
         search: query,
     }).toString();
     const search = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?${params}`,
+        `https://liquipedia.net/brawlstars/api.php?${params}`
     )
-        .then((response) => {
-            if (response.status != 200) {
-                return [["hi this is useless shit"], ["-1"]];
-            } else {
-                return response.json();
-            }
-        })
+        .then((response) => response.json())
         .then((data) => {
+            if (data[1].length == 0) {
+                throw new SearchNotFoundError(query);
+            }
             return data;
         });
     return search[1][0];

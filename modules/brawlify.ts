@@ -1,3 +1,4 @@
+import { BrawlerNotFoundError, GameModeNotFoundError, MapNotFoundError } from "./errors.ts";
 import type { Brawler, GameMode, Map } from "./moduleTypes.ts";
 /**
  * @description Brawlify API wrapper class for ```Brawler || Map || GameMode```. Handle your own ``undefined`` please.
@@ -9,7 +10,7 @@ export class Brawlify {
 
     private constructor(
         data: Brawler | Map | GameMode | undefined,
-        queryExists: boolean = false,
+        queryExists: boolean = false
     ) {
         this.result = data;
         this.queryExists = queryExists;
@@ -83,6 +84,8 @@ export class Brawlify {
                         } as Brawler;
                     }
                 }
+                // Cannot come here if brawler is found
+                throw new BrawlerNotFoundError(query);
             });
         return brawler;
     }
@@ -108,15 +111,17 @@ export class Brawlify {
                         } as Map;
                     }
                 }
+                throw new MapNotFoundError(query);
             });
         return map;
     }
 
     private static async gameMode(
-        query: string,
+        query: string
     ): Promise<GameMode | undefined> {
         const gameMode = await fetch("https://api.brawlify.com/v1/gamemodes")
-            .then((response) => response.json()).then((data) => {
+            .then((response) => response.json())
+            .then((data) => {
                 for (const mode of data.list) {
                     if (query.toLowerCase() == mode.name.toLowerCase()) {
                         const {
@@ -139,6 +144,7 @@ export class Brawlify {
                         } as GameMode;
                     }
                 }
+                throw new GameModeNotFoundError(query);
             });
         return gameMode;
     }

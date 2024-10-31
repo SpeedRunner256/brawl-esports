@@ -12,6 +12,13 @@ import process from "node:process";
 import { DatabasePlayer } from "../database/DatabasePlayer.ts";
 import { DatabaseTeam } from "../database/DatabaseTeam.ts";
 import { DatabaseMatch } from "../database/DatabaseMatch.ts";
+import {
+    GroupNotFoundError,
+    MatchNotFoundError,
+    PlayerNotFoundError,
+    TeamMemberNotFoundError,
+    TeamNotFoundError,
+} from "./errors.ts";
 
 export class LiquidDB {
     result: Player | Team | Match[] | Groups[] | SquadPlayer[] | undefined;
@@ -89,6 +96,9 @@ export class LiquidDB {
                     status,
                     earnings,
                 } = data.result[0];
+                if (!pagename) {
+                    throw new PlayerNotFoundError(name);
+                }
                 return {
                     pagename,
                     id,
@@ -142,7 +152,9 @@ export class LiquidDB {
                     links,
                     players: [],
                 };
-
+                if (!returnable.pagename) {
+                    throw new TeamNotFoundError(name);
+                }
                 return returnable;
             });
         // Get SquadPlayers (different endpoint but intended to be in the same embed.)
@@ -198,6 +210,9 @@ export class LiquidDB {
             .then((response) => response.json())
             .then((data) => {
                 const answer: Match[] = [];
+                if (!data.result) {
+                    throw new MatchNotFoundError(name);
+                }
                 for (const result of data.result) {
                     const {
                         pagename,
@@ -274,6 +289,9 @@ export class LiquidDB {
             .then((data) => {
                 data = data["result"];
                 const answer: Groups[] = [];
+                if (!data) {
+                    return new GroupNotFoundError(name);
+                }
                 for (const group of data) {
                     const {
                         pagename,
@@ -319,6 +337,9 @@ export class LiquidDB {
                         joindate,
                         nationality,
                     } = data.result[memberNumber];
+                    if (!link) {
+                        throw new TeamMemberNotFoundError(name);
+                    }
                     answer.push({
                         id,
                         role,

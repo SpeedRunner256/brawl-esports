@@ -8,7 +8,7 @@ export async function execute(interaction: Interaction) {
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) {
         console.error(
-            `No command matching ${interaction.commandName} was found.`,
+            `No command matching ${interaction.commandName} was found.`
         );
         return;
     }
@@ -18,14 +18,12 @@ export async function execute(interaction: Interaction) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {
             await interaction.followUp({
-                content:
-                    "This set of parameters resulted in an error. If it shouldn't, please contact modmail.",
+                content: `${error.name}: ${error.message}`,
                 ephemeral: true,
             });
         } else {
             await interaction.reply({
-                content:
-                    `This set of parameters resulted in an error. If it shouldn't, please contact modmail.`,
+                content: `${error.name}: ${error.message}`,
                 ephemeral: true,
             });
         }
