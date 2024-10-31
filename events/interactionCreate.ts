@@ -15,11 +15,12 @@ export async function execute(interaction: Interaction) {
     try {
         await command.execute(interaction);
     } catch (error) {
+        console.log("Some error");
         console.error(error);
         if (interaction.replied || interaction.deferred) {
             await interaction.followUp({
                 content: `${error.name}: ${error.message}`,
-                ephemeral: true,
+                ephemeral:true,
             });
         } else {
             await interaction.reply({

@@ -17,6 +17,7 @@ import {
     makeMapEmbedNerdy,
 } from "./picksEmbed.ts";
 import { findPrintableName } from "../../modules/mediawiki.ts";
+import { MapNotFoundError } from "../../modules/errors.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("picks")
@@ -81,10 +82,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
     const name = await findPrintableName(givenName);
     if (!name) {
-        await interaction.reply({
+        await interaction.editReply({
             content:
                 "Map not found. Possible causes:\n1. Map not in databse\n2. Map not played in tournament before\n3. Spelly error\n4. Map does not exist.",
-            ephemeral: true,
         });
         return;
     }
@@ -102,7 +102,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const occurance = countOccurrences(stats);
     const field = makeFields(occurance, total);
     if (field.length == 0) {
-        await interaction.reply("Map not found/wrong name");
+        throw new MapNotFoundError(name);
     }
     let embed = new EmbedBuilder()
         .setTitle("404 - Not Found")

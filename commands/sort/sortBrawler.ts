@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import type { Match } from "../../modules/moduleTypes.ts";
 export async function sortByBrawler(name: string) {
     const unsorteddata = JSON.parse(
-        await readFile("db/matches.json", "utf8"),
+        await readFile("db/matches.json", "utf8")
     ) as Match[];
     const data = sortMatchesByDate(unsorteddata);
     const answer: Match[] = [];
@@ -12,9 +12,12 @@ export async function sortByBrawler(name: string) {
                 continue;
             }
             for (const brawler of Object.values(game.participants)) {
+                if (Object.values(brawler).length == 0) {
+                    continue
+                }
                 if (
                     Object.values(brawler)[0].toLowerCase() ==
-                        name.toLowerCase()
+                    name.toLowerCase()
                 ) {
                     answer.push(match);
                     if (answer.length == 20) {

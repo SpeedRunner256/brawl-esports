@@ -7,7 +7,7 @@ import { getMapBans } from "./mapBans.ts";
 export async function makeGamemodeEmbed(
     occurance: { [key: string]: number },
     name: string,
-    total: number,
+    total: number
 ) {
     // get non-nerd top 6 picks
     let genpick = "";
@@ -45,8 +45,7 @@ export async function makeGamemodeEmbed(
         .addFields([
             {
                 name: "<:time:1292086778550812672> General Info",
-                value:
-                    `Total games: ${all}\nTotal **picks**: ${total}\nTotal **bans**: ${banLength}`,
+                value: `Total **games**: ${all}\nTotal **picks**: ${total}\nTotal **bans**: ${banLength}`,
             },
             {
                 name: `<:brawlers:1291686735906078861> Picks on ${name}`,
@@ -63,7 +62,7 @@ export async function makeGamemodeEmbed(
 export async function makeMapEmbed(
     occurance: { [key: string]: number },
     name: string,
-    total: number,
+    total: number
 ) {
     // get non-nerd general to 6 picks
     let genpick = "";
@@ -99,8 +98,7 @@ export async function makeMapEmbed(
         .addFields([
             {
                 name: "General Info",
-                value:
-                    `Our database has stored **${total} total brawler occurances** played on this map, across **${all}** eSports matches`,
+                value: `Total **games**: ${all}\nTotal **picks**: ${total}`,
             },
             {
                 name: `Picks on ${name}`,
@@ -118,7 +116,7 @@ export async function makeGamemodeEmbedNerdy(
     occurance: { [key: string]: number },
     field: string,
     name: string,
-    total: number,
+    total: number
 ) {
     /** Get old embed
      * get total matches
@@ -129,7 +127,7 @@ export async function makeGamemodeEmbedNerdy(
     const all = JSON.parse(await readFile("db/matches.json", "utf8")).length;
     const banOccurance = makeFields(
         countOccurrences(await getGamemodeBans(name)),
-        all,
+        all
     );
 
     embed.setFields([
@@ -149,7 +147,7 @@ export async function makeMapEmbedNerdy(
     occurance: { [key: string]: number },
     field: string,
     name: string,
-    total: number,
+    total: number
 ) {
     /** Get old embed
      * get total matches
@@ -174,7 +172,7 @@ export async function makeMapEmbedNerdy(
 
 export function makeFields(
     occurance: { [key: string]: number },
-    total: number,
+    total: number
 ) {
     let field = "";
     for (const brawler of Object.entries(occurance)) {

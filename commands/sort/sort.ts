@@ -113,10 +113,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .addComponents(
             matchSelector,
         );
-    const reply = await interaction.reply({
+    const reply = await interaction.editReply({
         content: `Found ${matches.length} results.`,
         components: [matchSelectRow],
-        ephemeral: true,
     });
     // Make navigation buttons
     const previous = new ButtonBuilder()
