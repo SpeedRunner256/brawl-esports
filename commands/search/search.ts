@@ -81,7 +81,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setLabel("Send to chat!")
         .setStyle(ButtonStyle.Primary);
     const Row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        sendToChatButton,
+        sendToChatButton
     );
 
     switch (interaction.options.getSubcommand()) {
@@ -92,11 +92,17 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             sendEmbed = await searchMap(query);
             break;
         case "player":
-            if (await checkAllow(interaction.user.id) && await hasPun(query)) {
-                sendEmbed = await makePun(await checkPun(query), interaction.client);
+            if (
+                (await checkAllow(interaction.user.id)) &&
+                (await hasPun(query))
+            ) {
+                sendEmbed = await makePun(
+                    await checkPun(query),
+                    interaction.client
+                );
                 break;
             }
-            console.log("Not a member of checkPun")
+            console.log("Not a member of checkPun");
             query = await findPageName(query);
             sendEmbed = await searchPlayer(query);
             break;
@@ -105,26 +111,26 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 query = await findPageName(query);
                 sendEmbed = await searchTeam(query);
                 const obj = await LiquidDB.get("teammember", query);
-                const teamMem = <SquadPlayer[]> obj.result;
+                const teamMem = <SquadPlayer[]>obj.result;
                 if (teamMem.length == 0) {
-                    Row.addComponents(
-                        new ButtonBuilder()
-                            .setDisabled(true)
-                            .setLabel("No active members")
-                            .setStyle(ButtonStyle.Secondary),
-                    );
-                }
-                for (const member of teamMem) {
-                    if (member.type != "player") {
-                        continue;
+                    await interaction.editReply({
+                        embeds: [sendEmbed],
+                        components: [Row],
+                    });
+                    return;
+                } else {
+                    for (const member of teamMem) {
+                        if (member.type != "player") {
+                            continue;
+                        }
+                        Row.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId(member.id.toLowerCase())
+                                .setLabel(member.id)
+                                .setEmoji("<:bounty:1291683164758212668>")
+                                .setStyle(ButtonStyle.Secondary)
+                        ); // Make the "Player" Buttons for team.
                     }
-                    Row.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId(member.id.toLowerCase())
-                            .setLabel(member.id)
-                            .setEmoji("<:bounty:1291683164758212668>")
-                            .setStyle(ButtonStyle.Secondary),
-                    ); // Make the "Player" Buttons for team.
                 }
             }
             break;
@@ -132,7 +138,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             sendEmbed = new EmbedBuilder()
                 .setTitle("typescript-eslint")
                 .setDescription(
-                    "Only for eslint to stop barking at me, I think getting default is impossible. But who am I to say. If you're seeing this, come to me with a screenshot of how this happened.",
+                    "Only for eslint to stop barking at me, I think getting default is impossible. But who am I to say. If you're seeing this, come to me with a screenshot of how this happened."
                 ); // Need to confirm.
     }
 
@@ -159,7 +165,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             return;
         }
         const obj = await LiquidDB.get("teammember", query);
-        const teamMem = <SquadPlayer[]> obj.result;
+        const teamMem = <SquadPlayer[]>obj.result;
         for (const member of teamMem) {
             if (member.id.toLowerCase() === i.customId) {
                 await i.reply({
