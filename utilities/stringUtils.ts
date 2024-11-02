@@ -16,17 +16,6 @@ export class stringUtils {
             )
             .join("\n");
     }
-    static brackets(input: string): string[] {
-        const regex = /\[\[(.*?)\]\]/g;
-        const matches = input.matchAll(regex);
-        const extractedStrings: string[] = [];
-
-        for (const match of matches) {
-            extractedStrings.push(match[1]);
-        }
-
-        return extractedStrings;
-    }
     static duration(durationString: string): number {
         const regex = /(\d+d)?(\d+h)?(\d+m)?(\d+s)?/;
         const match = durationString.replace(/\s+/g, "").match(regex);

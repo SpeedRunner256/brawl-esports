@@ -8,9 +8,9 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import type { Groups } from "../../modules/moduleTypes.ts";
-import { getRandomTeamNameEmoji } from "../../modules/embeds.ts";
-import { LiquidDB } from "../../modules/liquid.ts";
-
+import { Helper } from "../../modules/helper.ts";
+import { LiquidDB } from "../../modules/api.ts";
+const helper = new Helper();
 export const data = new SlashCommandBuilder()
     .setName("groups")
     .setDescription("Get group tables.")
@@ -45,12 +45,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         .setColor(Colors.DarkPurple)
         .addFields([
             {
-                name: `${getRandomTeamNameEmoji()} Group A`,
+                name: `${helper.randomShieldEmoji()} Group A`,
                 value: groupField(groupA),
                 inline: true,
             },
             {
-                name: `${getRandomTeamNameEmoji()}  Group B`,
+                name: `${helper.randomShieldEmoji()}  Group B`,
                 value: groupField(groupB),
                 inline: true,
             },
@@ -60,12 +60,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 inline: true,
             },
             {
-                name: `${getRandomTeamNameEmoji()}  Group C`,
+                name: `${helper.randomShieldEmoji()}  Group C`,
                 value: groupField(groupC),
                 inline: true,
             },
             {
-                name: `${getRandomTeamNameEmoji()}  Group D`,
+                name: `${helper.randomShieldEmoji()}  Group D`,
                 value: groupField(groupD),
                 inline: true,
             },

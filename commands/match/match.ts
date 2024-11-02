@@ -9,7 +9,7 @@ import {
     StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { StringSelectMenuBuilder } from "discord.js";
-import { LiquidDB } from "../../modules/liquid.ts";
+import { LiquidDB } from "../../modules/api.ts";
 import type { Match } from "../../modules/moduleTypes.ts";
 import { matchEmbedFields } from "../../modules/embeds.ts";
 

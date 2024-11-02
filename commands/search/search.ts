@@ -15,11 +15,10 @@ import {
     searchTeam,
 } from "../../modules/embeds.ts";
 import { findPageName } from "../../modules/mediawiki.ts";
-import { LiquidDB } from "../../modules/liquid.ts";
+import { LiquidDB } from "../../modules/api.ts";
 import type { SquadPlayer } from "../../modules/moduleTypes.ts";
 import { checkAllow, checkPun, hasPun } from "../../utilities/uilts.ts";
 
-// command declaration
 export const data = new SlashCommandBuilder()
     .setName("search")
     .setDescription("Search a query!")
@@ -112,7 +111,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 sendEmbed = await searchTeam(query);
                 const obj = await LiquidDB.get("teammember", query);
                 const teamMem = <SquadPlayer[]>obj.result;
-                if (teamMem.length == 0) {
+                if (teamMem.length == 0) { // Disbanded team
                     await interaction.editReply({
                         embeds: [sendEmbed],
                         components: [Row],
@@ -122,7 +121,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     for (const member of teamMem) {
                         if (member.type != "player") {
                             continue;
-                        }
+                        } 
                         Row.addComponents(
                             new ButtonBuilder()
                                 .setCustomId(member.id.toLowerCase())

@@ -9,10 +9,10 @@ import {
 import { stringUtils } from "../../utilities/stringUtils.ts";
 import { Economy } from "../../modules/economy.ts";
 import type { Prediction } from "../../modules/moduleTypes.ts";
-import { savePredictionToDatabase } from "../../modules/predictSave.ts";
+import { Helper } from "../../modules/helper.ts";
 import { Config } from "../../modules/config.ts";
 import { predictCreateInitial, predictEndEmbed } from "../../modules/embeds.ts";
-
+const helper = new Helper();
 export const data = new SlashCommandBuilder()
     .setName("prediction")
     .setDescription("Startup a prediction")
@@ -81,7 +81,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         userChoices: { 1: [], 2: [] },
         answer: { hasAnswer: false, answer: 0 },
     };
-    await savePredictionToDatabase(currentPrediction);
+    await helper.savePredictionToDatabase(currentPrediction);
 
     // Buttons and responses.
     const collector = reply.createMessageComponentCollector({
@@ -125,7 +125,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             user.debit(100);
             // Add the prediction log
             currentPrediction.userChoices[1].push(i.user.id);
-            await savePredictionToDatabase(currentPrediction);
+            await helper.savePredictionToDatabase(currentPrediction);
             return;
         } else if (i.customId === "choice2") {
             // Not enough money
@@ -153,7 +153,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             user.debit(100);
             // Add to log.
             currentPrediction.userChoices[2].push(i.user.id);
-            await savePredictionToDatabase(currentPrediction);
+            await helper.savePredictionToDatabase(currentPrediction);
             return;
         }
     });

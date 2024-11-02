@@ -19,7 +19,7 @@ export type Match2Opponents = {
 };
 export type Match2Games = {
     map: string;
-    scores: [number, number];
+    scores: number[];
     participants: {
         "1_1": { brawler: string };
         "1_2": { brawler: string };
@@ -104,7 +104,7 @@ export type Brawler = {
         {
             name: string;
             description: string;
-        },
+        }
     ];
     gadgets: [
         {
@@ -114,7 +114,7 @@ export type Brawler = {
         {
             name: string;
             description: string;
-        },
+        }
     ];
 };
 export type Map = {
@@ -210,8 +210,8 @@ export type Pun = {
         description: string;
         thumbnail?: string;
         footer?: {
-            text?: string,
-            icon_url?:string,
+            text?: string;
+            icon_url?: string;
         };
     };
 };
@@ -219,4 +219,12 @@ export type PunData = {
     allow: string[];
     links: string[];
     puns: Pun[];
+};
+export type MessageMatch = {
+    ID: string;
+    teams: [string, string];
+    setScore: [number, number];
+    gameScore: [number, number];
+    sets: number;
+    games: number;
 };

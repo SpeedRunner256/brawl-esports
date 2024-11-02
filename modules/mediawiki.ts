@@ -1,5 +1,5 @@
 import { SearchNotFoundError } from "./errors";
-
+// going to Utils alongside a lot of functions in embeds.ts
 export async function findPageName(query: string): Promise<string> {
     const params = new URLSearchParams({
         action: "opensearch",

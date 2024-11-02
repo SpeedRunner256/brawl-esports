@@ -7,27 +7,39 @@ import type {
     Player,
     SquadPlayer,
     Team,
+    Brawler,
+    GameMode,
+    Map,
 } from "./moduleTypes.ts";
-import process from "node:process";
-import { DatabasePlayer } from "../database/DatabasePlayer.ts";
-import { DatabaseTeam } from "../database/DatabaseTeam.ts";
-import { DatabaseMatch } from "../database/DatabaseMatch.ts";
 import {
+    BrawlerNotFoundError,
+    GameModeNotFoundError,
+    MapNotFoundError,
     GroupNotFoundError,
     MatchNotFoundError,
     PlayerNotFoundError,
     TeamMemberNotFoundError,
     TeamNotFoundError,
 } from "./errors.ts";
-
+import process from "node:process";
+import { DatabasePlayer } from "../database/DatabasePlayer.ts";
+import { DatabaseTeam } from "../database/DatabaseTeam.ts";
+import { DatabaseMatch } from "../database/DatabaseMatch.ts";
+type Result =
+    | Player
+    | Team
+    | Match[]
+    | Groups[]
+    | SquadPlayer[]
+    | Brawler
+    | GameMode
+    | Map
+    | undefined;
 export class LiquidDB {
-    result: Player | Team | Match[] | Groups[] | SquadPlayer[] | undefined;
+    result: Result;
     queryExists: boolean = false;
 
-    private constructor(
-        result: Player | Team | Match[] | Groups[] | SquadPlayer[] | undefined,
-        queryExists: boolean
-    ) {
+    private constructor(result: Result, queryExists: boolean) {
         this.result = result;
         this.queryExists = queryExists;
     }
@@ -37,17 +49,19 @@ export class LiquidDB {
      * @param type - Type of the result you intend to recieve.
      */
     static async get(
-        type: "player" | "team" | "match" | "teammember" | "group",
+        type:
+            | "brawler"
+            | "gamemode"
+            | "map"
+            | "player"
+            | "team"
+            | "match"
+            | "teammember"
+            | "group",
         query: string
     ) {
         // Do DB later, first get this working nice.
-        let result:
-            | Player
-            | Team
-            | Match[]
-            | Groups[]
-            | SquadPlayer[]
-            | undefined;
+        let result: Result;
         let queryExists: boolean = false;
         switch (type) {
             case "player":
@@ -65,12 +79,128 @@ export class LiquidDB {
             case "group":
                 result = await LiquidDB.group(query);
                 break;
+            case "brawler":
+                result = await LiquidDB.brawler(query);
+            case "gamemode":
+                result = await LiquidDB.gameMode(query);
+                break;
+            case "map":
+                result = await LiquidDB.map(query);
+                break;
         }
         if (result) {
             queryExists = true;
         }
         return new LiquidDB(result, queryExists);
     }
+
+    private static async brawler(query: string): Promise<Brawler | undefined> {
+        const brawler = await fetch("https://api.brawlify.com/v1/brawlers")
+            .then((response) => response.json())
+            .then((data) => {
+                for (const brawler of data.list) {
+                    if (query.toLowerCase() == brawler.name.toLowerCase()) {
+                        return {
+                            id: brawler.id,
+                            name: brawler.name,
+                            description: brawler.description,
+                            link: brawler.link,
+                            imageUrl: brawler.imageUrl,
+                            class: brawler.class.name,
+                            rarity: {
+                                name: brawler.rarity.name,
+                                color: brawler.rarity.color,
+                            },
+                            starPowers: [
+                                {
+                                    name: brawler.starPowers[0].name,
+                                    description:
+                                        brawler.starPowers[0].description,
+                                },
+                                {
+                                    name: brawler.starPowers[1].name,
+                                    description:
+                                        brawler.starPowers[1].description,
+                                },
+                            ],
+                            gadgets: [
+                                {
+                                    name: brawler.gadgets[0].name,
+                                    description: brawler.gadgets[0].description,
+                                },
+                                {
+                                    name: brawler.gadgets[1].name,
+                                    description: brawler.gadgets[1].description,
+                                },
+                            ],
+                        } as Brawler;
+                    }
+                }
+                // Cannot come here if brawler is found
+                throw new BrawlerNotFoundError(query);
+            });
+        return brawler;
+    }
+
+    private static async map(query: string): Promise<Map | undefined> {
+        const map = await fetch("https://api.brawlify.com/v1/maps")
+            .then((response) => response.json())
+            .then((data) => {
+                for (const map of data.list) {
+                    if (query.toLowerCase() == map.name.toLowerCase()) {
+                        const { id, name, link, imageUrl, gameMode } = map;
+                        return {
+                            id: id,
+                            name: name,
+                            link: link,
+                            imageUrl: imageUrl,
+                            gamemode: {
+                                name: gameMode.name,
+                                color: gameMode.color,
+                                link: gameMode.link,
+                                imageUrl: gameMode.imageUrl,
+                            },
+                        } as Map;
+                    }
+                }
+                throw new MapNotFoundError(query);
+            });
+        return map;
+    }
+
+    private static async gameMode(
+        query: string
+    ): Promise<GameMode | undefined> {
+        const gameMode = await fetch("https://api.brawlify.com/v1/gamemodes")
+            .then((response) => response.json())
+            .then((data) => {
+                for (const mode of data.list) {
+                    if (query.toLowerCase() == mode.name.toLowerCase()) {
+                        const {
+                            name,
+                            title,
+                            color,
+                            description,
+                            shortDescription,
+                            link,
+                            imageUrl,
+                        } = mode;
+                        return {
+                            name,
+                            title,
+                            color,
+                            description,
+                            shortDescription,
+                            link,
+                            imageUrl,
+                        } as GameMode;
+                    }
+                }
+                throw new GameModeNotFoundError(query);
+            });
+        return gameMode;
+    }
+
     private static async player(name: string): Promise<Player | undefined> {
         const db = new DatabasePlayer();
         for (const player of await db.getPlayer(null, null, name)) {
@@ -199,7 +329,13 @@ export class LiquidDB {
         for (const match of matches) {
             if (match.pagename == name) {
                 console.log(`Found ${match.pagename} in database.`);
-
+                // If match isnt yet complete but needs to be played soon then rerun
+                if (
+                    match.match2games[0].scores.length == 0 &&
+                    match.match2games[0].resulttype != "np"
+                ) {
+                    break;
+                }
                 return matches;
             }
         }

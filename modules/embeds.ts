@@ -3,11 +3,13 @@ import { Colors } from "discord.js";
 import type { Brawler, Map, Match, Player, Pun, Team } from "./moduleTypes.ts";
 import { EmbedBuilder } from "discord.js";
 import { stringUtils } from "../utilities/stringUtils.ts";
-import { Brawlify } from "./brawlify.ts";
-import { LiquidDB } from "./liquid.ts";
+import { LiquidDB } from "./api.ts";
 import { findPrintableName } from "./mediawiki.ts";
 import type { SquadPlayer } from "./moduleTypes.ts";
 import { getBanList } from "../utilities/uilts.ts";
+import { Helper } from "./helper.ts";
+
+const helper = new Helper();
 //match.ts
 export function matchEmbedFields(
     match: Match[],
@@ -49,9 +51,8 @@ export function matchEmbedFields(
     }
     throw new Error("matchNumber/gameNumber out of bounds");
 }
-// search.ts
 export async function searchBrawler(query: string) {
-    const obj = await Brawlify.get("brawler", query);
+    const obj = await LiquidDB.get("brawler", query);
     const brawler = <Brawler>obj.result;
     if (!obj.queryExists || !obj.result) {
         return new EmbedBuilder()
@@ -114,7 +115,7 @@ export async function searchBrawler(query: string) {
 }
 
 export async function searchMap(query: string) {
-    const obj = await Brawlify.get("map", query);
+    const obj = await LiquidDB.get("map", query);
     const map = <Map>obj.result;
     if (!obj.queryExists || !obj.result) {
         return new EmbedBuilder()
@@ -190,7 +191,7 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
     const team = <Team>obj.result;
     if (team.status == "disbanded" ? true : false) {
         return new EmbedBuilder()
-            .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
+            .setTitle(`${helper.randomShieldEmoji()} ${team.name}`)
             .setDescription(team.name + " is a **disbanded** team.")
             .setThumbnail(team.logodarkurl)
             .setColor(0xf54254)
@@ -233,7 +234,7 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
             ]);
     }
     return new EmbedBuilder()
-        .setTitle(`${getRandomTeamNameEmoji()} ${team.name}`)
+        .setTitle(`${helper.randomShieldEmoji} ${team.name}`)
         .setURL(`https://liquipedia.net/brawlstars/${team.pagename}`)
         .setThumbnail(team.textlesslogodarkurl)
         .setColor(team.status == "Active" ? 0x4287f5 : 0xf54254)
@@ -255,13 +256,11 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
             },
             {
                 name: "<:game:1291684262910885918> Members",
-                value: stringUtils.formatSquadPlayerInfo(
-                    getActivePlayers(team)
-                ),
+                value: helper.activePlayers(team),
             },
             {
                 name: "<:coach:1292130323806556272> Coaches",
-                value: stringUtils.formatStaff(getActiveStaff(team)),
+                value: helper.activeStaff(team),
             },
             {
                 name: "<:score:1291686732621676605> Links",
@@ -276,41 +275,6 @@ export async function searchTeam(query: string): Promise<EmbedBuilder> {
                 inline: true,
             },
         ]);
-}
-function getActivePlayers(team: Team) {
-    const answer: SquadPlayer[] = [];
-    for (const player of team.players) {
-        if (player.type == "player") {
-            answer.push(player);
-        }
-    }
-    return answer;
-}
-function getActiveStaff(team: Team) {
-    const answer: SquadPlayer[] = [];
-    for (const player of team.players) {
-        if (player.type == "staff") {
-            answer.push(player);
-        }
-    }
-    return answer;
-}
-// again, probably doesnt belong here - push to some utility class
-export function getRandomTeamNameEmoji(): string {
-    const emojiArray = [
-        "<:badge1:1292091475823300670>",
-        "<:badge2:1292091479262629958>",
-        "<:badge3:1292091482035195946>",
-        "<:badge4:1292091484472082502>",
-        "<:badge5:1292091486946590793>",
-        "<:badge6:1292091489697927228>",
-        "<:badge7:1292091492269297676>",
-        "<:badge8:1292091494865305622>",
-        "<:badge9:1292091497210056745>",
-        "<:badge10:1292091500532076627>",
-    ];
-    const randomIndex = Math.floor(Math.random() * emojiArray.length);
-    return emojiArray[randomIndex];
 }
 
 export function predictEndEmbed(question: string, time: string): EmbedBuilder {
@@ -336,7 +300,7 @@ export function predictCreateInitial(
         .setColor(0x6441a5)
         .setFooter({ text: "Predict now!" })
         .setTimestamp()
-        .setFooter({ text: "Voting requires 100 kash." })
+        .setFooter({ text: "Type /start to start an account!" })
         .addFields([
             {
                 name: "Choice 1",
