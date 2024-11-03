@@ -6,13 +6,15 @@ import {
     ComponentType,
     SlashCommandBuilder,
 } from "discord.js";
-import { stringUtils } from "../../utilities/stringUtils.ts";
-import { Economy } from "../../modules/economy.ts";
-import type { Prediction } from "../../modules/moduleTypes.ts";
-import { Helper } from "../../modules/helper.ts";
-import { Config } from "../../modules/config.ts";
-import { predictCreateInitial, predictEndEmbed } from "../../modules/embeds.ts";
+import { stringUtils as stringUtil } from "../../lib/helper.ts";
+import { Economy } from "../../lib/economy.ts";
+import type { Prediction } from "../../lib/moduleTypes.ts";
+import { Helper, Config } from "../../lib/helper.ts";
+import { MyEmbeds } from "../../lib/embeds.ts";
 const helper = new Helper();
+const e = new MyEmbeds();
+const stringUtils = new stringUtil();
+const config = new Config();
 export const data = new SlashCommandBuilder()
     .setName("prediction")
     .setDescription("Startup a prediction")
@@ -52,7 +54,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         throw new Error("How does this even happen?");
     }
     //create embed
-    const initialEmbed = predictCreateInitial(question, choice1, choice2, time);
+    const initialEmbed = e.predictCreateInitial(
+        question,
+        choice1,
+        choice2,
+        time
+    );
 
     const choiceRow = new ActionRowBuilder<ButtonBuilder>();
 
@@ -109,7 +116,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 return;
             }
             // Already voted
-            if (await Config.userAlreadyVoted(predictionNumber, i.user.id)) {
+            if (await config.userAlreadyVoted(predictionNumber, i.user.id)) {
                 await i.reply({
                     content: "You have already voted on this prediction",
                     ephemeral: true,
@@ -137,7 +144,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 return;
             }
             // Already voted
-            if (await Config.userAlreadyVoted(predictionNumber, i.user.id)) {
+            if (await config.userAlreadyVoted(predictionNumber, i.user.id)) {
                 await i.reply({
                     content: "You have already voted on this prediction",
                     ephemeral: true,
@@ -161,34 +168,40 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         // Disable all buttons + change embed
         choiceRow.components[0].setDisabled(true);
         choiceRow.components[1].setDisabled(true);
-        const endEmbed = predictEndEmbed(question, time);
+        const endEmbed = e.predictEndEmbed(question, time);
         await interaction.editReply({
             embeds: [endEmbed],
             components: [choiceRow],
         });
         // Send messsage to person to started the event.
         await interaction.followUp({
-            content:
-                `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
+            content: `/result for result. Your prediction number is \`\`${predictionNumber}\`\``,
             ephemeral: true,
         });
         // Log this.
-         const logThis = {
-             predictionNumber,
-             question: currentPrediction.question,
-             choice1: currentPrediction.choice1,
-             choice2: currentPrediction.choice2,
-             time: time,
-             answer: { hasAnswered: false, answer: null },
-         };
-        Config.log(
-             "Logging Prediction data from /predict",
-             JSON.stringify(logThis, null, "  ")
-                 .split("\n")
-                 .slice(1, 10)
-                 .map((str) => str.trim())
-                 .join("\n"),
-             interaction,
+        const logThis: {
+            predictionNumber: typeof predictionNumber;
+            question: string;
+            choice1: string;
+            choice2: string;
+            time: string;
+            answer: { hasAnswered: boolean; answer: null | string };
+        } = {
+            predictionNumber,
+            question: currentPrediction.question,
+            choice1: currentPrediction.choice1,
+            choice2: currentPrediction.choice2,
+            time: time,
+            answer: { hasAnswered: false, answer: null },
+        };
+        config.log(
+            "Logging Prediction data from /predict",
+            JSON.stringify(logThis, null, "  ")
+                .split("\n")
+                .slice(1, 10)
+                .map((str) => str.trim())
+                .join("\n"),
+            interaction
         );
     });
 }

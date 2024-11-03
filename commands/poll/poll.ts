@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { Config } from "../../modules/config.ts";
+import { Config } from "../../lib/helper.ts";
 import process from "node:process";
 export const data = new SlashCommandBuilder()
     .setName("poll")
@@ -21,7 +21,7 @@ export const data = new SlashCommandBuilder()
             .setName("emojis")
             .setRequired(true)
             .setDescription(
-                "Add emojis, nth emoji is for the nth answer. Seperate by ;",
+                "Add emojis, nth emoji is for the nth answer. Seperate by ;"
             )
     )
     .addIntegerOption((option) =>
@@ -37,18 +37,19 @@ export const data = new SlashCommandBuilder()
             .setName("allow_multi_select")
             .setRequired(false)
             .setDescription(
-                "Allow multi-select or not. Auto-selected as false.",
+                "Allow multi-select or not. Auto-selected as false."
             )
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
     const question = interaction.options.getString("question")?.trim();
+    const config = new Config();
     let multiSelect = interaction.options.getBoolean("allow_multi_select");
 
     const guildId = process.env.GUILD_ID;
     if (!guildId) {
         throw new Error("Can't find guild ID");
     }
-    const separator = await Config.separator(guildId);
+    const separator = await config.separator(guildId);
     const answers = interaction.options
         .getString("answers")
         ?.split(separator)
@@ -71,7 +72,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!multiSelect) {
         multiSelect = false;
     }
-    const answerObj = [];
+    const answerObj: { text: string; emoji: string }[] = [];
     for (let i = 0; i < emojis.length; i++) {
         answerObj.push({
             text: answers[i],

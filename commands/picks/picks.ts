@@ -7,8 +7,7 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import { getGamemodePicks } from "./gamemodePicks.ts";
-import { getMapPicks } from "./mapPicks.ts";
+import { Helper } from "../../lib/helper.ts";
 import {
     makeFields,
     makeGamemodeEmbed,
@@ -16,8 +15,8 @@ import {
     makeMapEmbed,
     makeMapEmbedNerdy,
 } from "./picksEmbed.ts";
-import { findPrintableName } from "../../modules/mediawiki.ts";
-import { MapNotFoundError } from "../../modules/errors.ts";
+import { findPrintableName } from "../../lib/mediawiki.ts";
+import { MapNotFoundError } from "../../lib/errors.ts";
 
 export const data = new SlashCommandBuilder()
     .setName("picks")
@@ -72,6 +71,7 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
+    const helper = new Helper();
     const reply = await interaction.deferReply({
         ephemeral: true,
     });
@@ -91,10 +91,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     let stats: string[] = [];
     switch (command) {
         case "map":
-            stats = await getMapPicks(name);
+            stats = await helper.getMapPicks(name);
             break;
         case "gamemode":
-            stats = await getGamemodePicks(name);
+            stats = await helper.getGamemodePicks(name);
             break;
     }
     // Computation for stats

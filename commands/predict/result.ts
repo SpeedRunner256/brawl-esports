@@ -8,8 +8,9 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import { readFile, writeFile } from "node:fs/promises";
-import { Config } from "../../modules/config.ts";
-import { Economy } from "../../modules/economy.ts";
+import { Config as conf } from "../../lib/helper.ts";
+import { Economy } from "../../lib/economy.ts";
+const Config = new conf();
 export const data = new SlashCommandBuilder()
     .setName("result")
     .setDescription("Result of a prediction given a prediction number.")
@@ -31,9 +32,8 @@ export const data = new SlashCommandBuilder()
     );
 export async function execute(interaction: ChatInputCommandInteraction) {
     const mult = await Config.mult(interaction.guildId);
-    const predictionNumber = interaction.options.getInteger(
-        "prediction_number",
-    );
+    const predictionNumber =
+        interaction.options.getInteger("prediction_number");
     const answer = interaction.options.getInteger("answer");
     const data = JSON.parse(await readFile("db/prediction.json", "utf8"));
     let predict;
@@ -42,10 +42,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         if (`${predictionNumber}` == prediction) {
             if (data[prediction].answer.hasAnswer) {
                 await interaction.reply({
-                    content:
-                        `This prediction has already been answered choice ${
-                            data[prediction].answer.answer
-                        }.`,
+                    content: `This prediction has already been answered choice ${data[prediction].answer.answer}.`,
                     ephemeral: true,
                 });
                 return;
@@ -59,7 +56,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
     if (!found) {
         await interaction.reply({
-            content: "Unsuccessful. Did not find prediction number " +
+            content:
+                "Unsuccessful. Did not find prediction number " +
                 predictionNumber,
             ephemeral: true,
         });
@@ -75,8 +73,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         answer: predict.answer,
     };
     // Finding percentage.
-    const amount = predict.userChoices[1].length +
-        predict.userChoices[2].length;
+    const amount =
+        predict.userChoices[1].length + predict.userChoices[2].length;
     const percent1 = (predict.userChoices[1].length / amount) * 100;
     const percent2 = (predict.userChoices[2].length / amount) * 100;
     let winnerPercent = 0;
@@ -113,15 +111,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 <:money:1292086783886233621> Total points given: ${
                     amount * winnerPercent * mult
                 }
-                \`\`\`Choice 1: ${
-                    convertToAscii(
-                        convertNumber(percent1),
-                    )
-                }: ${percent1}%\nChoice 2: ${
-                    convertToAscii(
-                        convertNumber(percent2),
-                    )
-                }: ${percent2}%\`\`\``,
+                \`\`\`Choice 1: ${convertToAscii(
+                    convertNumber(percent1)
+                )}: ${percent1}%\nChoice 2: ${convertToAscii(
+                    convertNumber(percent2)
+                )}: ${percent2}%\`\`\``,
                 inline: false,
             },
         ]);

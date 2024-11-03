@@ -1,9 +1,9 @@
 import { Colors, EmbedBuilder } from "discord.js";
 import { readFile } from "node:fs/promises";
-import { getGamemodeBans } from "./gamemodeBans.ts";
 import { countOccurrences } from "./picks.ts";
-import { getMapBans } from "./mapBans.ts";
+import { Helper } from "../../lib/helper.ts";
 
+const helper = new Helper();
 export async function makeGamemodeEmbed(
     occurance: { [key: string]: number },
     name: string,
@@ -22,7 +22,7 @@ export async function makeGamemodeEmbed(
     }
     // get non-nerd general top 6 bans
     counter = 1;
-    const bans = await getGamemodeBans(name);
+    const bans = await helper.getGamemodeBans(name);
     const banOccurance = countOccurrences(bans);
     const banLength = bans.length;
     let genban = "";
@@ -77,7 +77,7 @@ export async function makeMapEmbed(
     }
     // get non-nerd general top 6 bans
     counter = 1;
-    const banOccurance = countOccurrences(await getMapBans(name));
+    const banOccurance = countOccurrences(await helper.getMapBans(name));
     let genban = "";
     for (const brawler of Object.entries(banOccurance)) {
         genban += `${brawler[0]}`;
@@ -126,7 +126,7 @@ export async function makeGamemodeEmbedNerdy(
     const embed = await makeGamemodeEmbed(occurance, name, total);
     const all = JSON.parse(await readFile("db/matches.json", "utf8")).length;
     const banOccurance = makeFields(
-        countOccurrences(await getGamemodeBans(name)),
+        countOccurrences(await helper.getGamemodeBans(name)),
         all
     );
 
@@ -156,7 +156,7 @@ export async function makeMapEmbedNerdy(
      */
     const embed = await makeMapEmbed(occurance, name, total);
     const all = JSON.parse(await readFile("db/matches.json", "utf8")).length;
-    const banfield = makeFields(countOccurrences(await getMapBans(name)), all);
+    const banfield = makeFields(countOccurrences(await helper.getMapBans(name)), all);
     embed.setFields([
         {
             name: ":nerd: Stats for nerds - Picks",

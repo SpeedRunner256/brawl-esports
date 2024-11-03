@@ -22,9 +22,8 @@ import {
     TeamNotFoundError,
 } from "./errors.ts";
 import process from "node:process";
-import { DatabasePlayer } from "../database/DatabasePlayer.ts";
-import { DatabaseTeam } from "../database/DatabaseTeam.ts";
-import { DatabaseMatch } from "../database/DatabaseMatch.ts";
+import { Database } from "./database.ts";
+const db = new Database();
 type Result =
     | Player
     | Team
@@ -81,6 +80,7 @@ export class LiquidDB {
                 break;
             case "brawler":
                 result = await LiquidDB.brawler(query);
+                break;
             case "gamemode":
                 result = await LiquidDB.gameMode(query);
                 break;
@@ -202,7 +202,6 @@ export class LiquidDB {
     }
 
     private static async player(name: string): Promise<Player | undefined> {
-        const db = new DatabasePlayer();
         for (const player of await db.getPlayer(null, null, name)) {
             if (player.pagename.toLowerCase() == name.toLowerCase()) {
                 console.log(`Found ${player.id} in database.`);
@@ -244,7 +243,6 @@ export class LiquidDB {
         return Player;
     }
     private static async team(name: string): Promise<Team | undefined> {
-        const db = new DatabaseTeam();
         const teams = await db.getTeam(null, name);
         for (const team of teams) {
             if (team.pagename.toLowerCase() == name.toLowerCase()) {
@@ -324,7 +322,6 @@ export class LiquidDB {
         return Team;
     }
     private static async match(name: string): Promise<Match[] | undefined> {
-        const db = new DatabaseMatch();
         const matches = await db.getMatch(name);
         for (const match of matches) {
             if (match.pagename == name) {

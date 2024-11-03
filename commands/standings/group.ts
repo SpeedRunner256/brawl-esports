@@ -7,9 +7,9 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import type { Groups } from "../../modules/moduleTypes.ts";
-import { Helper } from "../../modules/helper.ts";
-import { LiquidDB } from "../../modules/api.ts";
+import type { Groups } from "../../lib/moduleTypes.ts";
+import { Helper } from "../../lib/helper.ts";
+import { LiquidDB } from "../../lib/api.ts";
 const helper = new Helper();
 export const data = new SlashCommandBuilder()
     .setName("groups")

@@ -7,18 +7,13 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-import {
-    makePun,
-    searchBrawler,
-    searchMap,
-    searchPlayer,
-    searchTeam,
-} from "../../modules/embeds.ts";
-import { findPageName } from "../../modules/mediawiki.ts";
-import { LiquidDB } from "../../modules/api.ts";
-import type { SquadPlayer } from "../../modules/moduleTypes.ts";
-import { checkAllow, checkPun, hasPun } from "../../utilities/uilts.ts";
-
+import { MyEmbeds } from "../../lib/embeds.ts";
+import { findPageName } from "../../lib/mediawiki.ts";
+import { LiquidDB } from "../../lib/api.ts";
+import type { SquadPlayer } from "../../lib/moduleTypes.ts";
+import { Helper } from "../../lib/helper.ts";
+const helper = new Helper();
+const e = new MyEmbeds();
 export const data = new SlashCommandBuilder()
     .setName("search")
     .setDescription("Search a query!")
@@ -85,33 +80,34 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     switch (interaction.options.getSubcommand()) {
         case "brawler":
-            sendEmbed = await searchBrawler(query);
+            sendEmbed = await e.searchBrawler(query);
             break;
         case "map":
-            sendEmbed = await searchMap(query);
+            sendEmbed = await e.searchMap(query);
             break;
         case "player":
             if (
-                (await checkAllow(interaction.user.id)) &&
-                (await hasPun(query))
+                (await helper.checkAllow(interaction.user.id)) &&
+                (await helper.hasPun(query))
             ) {
-                sendEmbed = await makePun(
-                    await checkPun(query),
+                sendEmbed = await e.makePun(
+                    await helper.checkPun(query),
                     interaction.client
                 );
                 break;
             }
             console.log("Not a member of checkPun");
             query = await findPageName(query);
-            sendEmbed = await searchPlayer(query);
+            sendEmbed = await e.searchPlayer(query);
             break;
         case "team":
             {
                 query = await findPageName(query);
-                sendEmbed = await searchTeam(query);
+                sendEmbed = await e.searchTeam(query);
                 const obj = await LiquidDB.get("teammember", query);
                 const teamMem = <SquadPlayer[]>obj.result;
-                if (teamMem.length == 0) { // Disbanded team
+                if (teamMem.length == 0) {
+                    // Disbanded team
                     await interaction.editReply({
                         embeds: [sendEmbed],
                         components: [Row],
@@ -121,7 +117,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     for (const member of teamMem) {
                         if (member.type != "player") {
                             continue;
-                        } 
+                        }
                         Row.addComponents(
                             new ButtonBuilder()
                                 .setCustomId(member.id.toLowerCase())
@@ -168,7 +164,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         for (const member of teamMem) {
             if (member.id.toLowerCase() === i.customId) {
                 await i.reply({
-                    embeds: [await searchPlayer(member.id)],
+                    embeds: [await e.searchPlayer(member.id)],
                     ephemeral: true,
                 });
                 return;

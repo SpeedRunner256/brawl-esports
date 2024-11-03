@@ -208,7 +208,9 @@ export type Pun = {
         title: string;
         color: number;
         description: string;
-        thumbnail?: string;
+        thumbnail?: {
+            url: string;
+        };
         footer?: {
             text?: string;
             icon_url?: string;
@@ -225,6 +227,7 @@ export type MessageMatch = {
     teams: [string, string];
     setScore: [number, number];
     gameScore: [number, number];
+    winner?: string;
     sets: number;
     games: number;
 };

@@ -59,7 +59,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     let separator = interaction.options.getString("separator");
 
     if (!separator) {
-        separator = ";;";
+        separator = ";";
     }
     if (!startBal) {
         startBal = 500;

@@ -9,10 +9,10 @@ import {
     StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { StringSelectMenuBuilder } from "discord.js";
-import { LiquidDB } from "../../modules/api.ts";
-import type { Match } from "../../modules/moduleTypes.ts";
-import { matchEmbedFields } from "../../modules/embeds.ts";
-
+import { LiquidDB } from "../../lib/api.ts";
+import type { Match } from "../../lib/moduleTypes.ts";
+import { MyEmbeds} from "../../lib/embeds.ts";
+const e = new MyEmbeds();
 export const data = new SlashCommandBuilder()
     .setName("match")
     .setDescription("IMPORTANT: look at help if haven't already.")
@@ -111,7 +111,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                             opp2.match2players[2].displayname
                         }`,
                     },
-                    matchEmbedFields(matchArray, matchNumber, gameNumber),
+                    e.matchEmbedFields(matchArray, matchNumber, gameNumber),
                 ]);
             await i.reply({
                 content: "Edited embed.",
@@ -200,7 +200,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         opp2.match2players[2].displayname
                     }`,
                 },
-                matchEmbedFields(matchArray, matchNumber, gameNumber),
+                e.matchEmbedFields(matchArray, matchNumber, gameNumber),
             ]);
         await interaction.editReply({
             content: "Navigation buttons clicked, updating.",

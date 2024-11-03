@@ -13,7 +13,7 @@ export function execute(client: Client) {
                 type: ActivityType.Custom,
             },
         ],
-        status: "dnd",
+        status: "online",
     });
     console.log("Bot has started as " + client.user?.username);
 }

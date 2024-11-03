@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { readFile } from "fs/promises";
-import { Pun, PunData } from "../../modules/moduleTypes";
+import { Pun, PunData } from "../../lib/moduleTypes.ts";
 import { writeFile } from "fs/promises";
 
 export const data = new SlashCommandBuilder()
