@@ -1,7 +1,7 @@
 export type Match = {
     pagename: string;
     objectname: string;
-    winner: number;
+    winner: string;
     finished: boolean;
     stream: object;
     tickername: string;

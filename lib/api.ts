@@ -24,6 +24,7 @@ import {
 import process from "node:process";
 import { Database } from "./database.ts";
 const db = new Database();
+db.get("match", "db/matches.json")
 type Result =
     | Player
     | Team

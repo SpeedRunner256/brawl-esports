@@ -7,7 +7,6 @@ import process from "node:process";
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
 const token = process.env.DISCORD_TOKEN;
-// fucking typescript-eslint
 if (!token || !clientId || !guildId) {
     throw new Error("Can't find necessary files in .env... Mind a recheck?");
 }

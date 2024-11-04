@@ -6,7 +6,6 @@
         "noEmit": true,
         "allowImportingTsExtensions": true,
         "sourceMap": true,
-        "target": "ES6",
         "module": "NodeNext",
         "outDir": "./tsc",
         "moduleResolution": "NodeNext"
