@@ -1,5 +1,8 @@
 import type {
+    Brawler,
+    GameMode,
     Groups,
+    Map,
     Match,
     Match2Games,
     Match2Opponents,
@@ -7,15 +10,12 @@ import type {
     Player,
     SquadPlayer,
     Team,
-    Brawler,
-    GameMode,
-    Map,
 } from "./moduleTypes.ts";
 import {
     BrawlerNotFoundError,
     GameModeNotFoundError,
-    MapNotFoundError,
     GroupNotFoundError,
+    MapNotFoundError,
     MatchNotFoundError,
     PlayerNotFoundError,
     TeamMemberNotFoundError,
@@ -24,7 +24,7 @@ import {
 import process from "node:process";
 import { Database } from "./database.ts";
 const db = new Database();
-db.get("match", "db/matches.json")
+db.get("match", "db/matches.json");
 type Result =
     | Player
     | Team
@@ -58,7 +58,7 @@ export class LiquidDB {
             | "match"
             | "teammember"
             | "group",
-        query: string
+        query: string,
     ) {
         // Do DB later, first get this working nice.
         let result: Result;
@@ -170,7 +170,7 @@ export class LiquidDB {
     }
 
     private static async gameMode(
-        query: string
+        query: string,
     ): Promise<GameMode | undefined> {
         const gameMode = await fetch("https://api.brawlify.com/v1/gamemodes")
             .then((response) => response.json())
@@ -212,7 +212,7 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Player = await fetch(
             `https://api.liquipedia.net/api/v3/player?${params}`,
-            { headers }
+            { headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -254,7 +254,7 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Team = await fetch(
             `https://api.liquipedia.net/api/v3/team?${params}`,
-            { headers }
+            { headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -294,7 +294,7 @@ export class LiquidDB {
         });
         await fetch(
             `https://api.liquipedia.net/api/v3/squadplayer?${param.toString()}`,
-            { headers: headers }
+            { headers: headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -340,7 +340,7 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Match = await fetch(
             `https://api.liquipedia.net/api/v3/match?${params}`,
-            { headers }
+            { headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -418,7 +418,7 @@ export class LiquidDB {
         const { headers, params } = LiquidDB.queryHeadersParams(name);
         const Group = (await fetch(
             `https://api.liquipedia.net/api/v3/standingsentry?${[params]}`,
-            { headers }
+            { headers },
         )
             .then((response) => response.json())
             .then((data) => {
@@ -448,7 +448,7 @@ export class LiquidDB {
         return Group;
     }
     private static async teammember(
-        name: string
+        name: string,
     ): Promise<SquadPlayer[] | undefined> {
         const { headers } = LiquidDB.queryHeadersParams(name);
         const param = new URLSearchParams({
@@ -458,7 +458,7 @@ export class LiquidDB {
         const answer: SquadPlayer[] = [];
         await fetch(
             `https://api.liquipedia.net/api/v3/squadplayer?${param.toString()}`,
-            { headers: headers }
+            { headers: headers },
         )
             .then((response) => response.json())
             .then((data) => {

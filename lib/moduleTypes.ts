@@ -104,7 +104,7 @@ export type Brawler = {
         {
             name: string;
             description: string;
-        }
+        },
     ];
     gadgets: [
         {
@@ -114,7 +114,7 @@ export type Brawler = {
         {
             name: string;
             description: string;
-        }
+        },
     ];
 };
 export type Map = {

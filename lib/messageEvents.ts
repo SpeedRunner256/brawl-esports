@@ -1,6 +1,9 @@
+import { MyEmbeds } from "./embeds.ts";
+import { findPageName } from "./mediawiki.ts";
 import { MessageMatch } from "./moduleTypes.ts";
 
 const DB: MessageMatch[] = [];
+const e = new MyEmbeds();
 export class BracketClass {
     sep = "/";
     matches: string[] | undefined;
@@ -56,24 +59,63 @@ export class BracketClass {
         const win = a[2];
         this.Win(id, win);
         // win/id/team
-        const m = this.Get(id);
-        if (!m) {
-            return "Invalid message format.";
+        const currentMatch = this.Get(id);
+        if (!currentMatch) {
+            return "Invalid message format - ID doesn't exist";
         }
-        const gameScore = Array.from(m.gameScore);
-        const setScore = Array.from(m.setScore);
-        this.Work(m);
-        if (m.setScore[0] == m.sets) {
-            return `# Game, Set, Match!\n## ${m.teams[0]} wins this match - ${m.setScore[0]}:${m.setScore[1]}`;
-        } else if (m.setScore[1] == m.sets) {
-            return `# Game, Set, Match!\n## ${m.teams[1]} wins this match - ${m.setScore[0]}:${m.setScore[1]}`;
-        } else if (gameScore[0] >= m.games) {
-            return `# Game & Set!\n## ${m.teams[0]} wins - ${gameScore[0]}:${gameScore[1]}\n### Sets - ${setScore[0]}:${setScore[1]}`;
-        } else if (gameScore[1] >= m.games) {
-            return `# Game & Set!\n## ${m.teams[1]} wins - ${gameScore[0]}:${gameScore[1]}\n### Sets - ${setScore[0]}:${setScore[1]}`;
+        const gameScore = Array.from(currentMatch.gameScore);
+        this.Work(currentMatch);
+        if (currentMatch.setScore[0] == currentMatch.sets) {
+            return `# Game, Set, Match!\n## ${
+                currentMatch.teams[0]
+            } wins this match - ${currentMatch.setScore[0]}:${
+                currentMatch.setScore[1]
+            }`;
+        } else if (currentMatch.setScore[1] == currentMatch.sets) {
+            return `# Game, Set, Match!\n## ${
+                currentMatch.teams[1]
+            } wins this match - ${currentMatch.setScore[0]}:${
+                currentMatch.setScore[1]
+            }`;
+        } else if (gameScore[0] >= currentMatch.games) {
+            return `# Game & Set!\n## ${currentMatch.teams[0]} wins - ${
+                gameScore[0]
+            }:${gameScore[1]}\n### Sets - ${currentMatch.setScore[0]}:${
+                currentMatch.setScore[1]
+            }`;
+        } else if (gameScore[1] >= currentMatch.games) {
+            return `# Game & Set!\n## ${currentMatch.teams[1]} wins - ${
+                gameScore[0]
+            }:${gameScore[1]}\n### Sets - ${currentMatch.setScore[0]}:${
+                currentMatch.setScore[1]
+            }`;
         } else {
-            return `# Game!\n## ${win} wins - ${gameScore[0]} - ${gameScore[1]}\n### Sets - ${setScore[0]}:${setScore[1]}`;
+            return `# Game!\n## ${win} wins - ${currentMatch.gameScore[0]} - ${
+                currentMatch.gameScore[1]
+            }\n### Sets - ${currentMatch.setScore[0]}:${
+                currentMatch.setScore[1]
+            }\n${
+                currentMatch.gameScore[0] + 1 == currentMatch.games &&
+                    currentMatch.setScore[0] + 1 == currentMatch.sets
+                    ? `## Match point for ${currentMatch.teams[0]}`
+                    : currentMatch.gameScore[1] + 1 == currentMatch.games &&
+                            currentMatch.setScore[1] + 1 == currentMatch.sets
+                    ? `## Match point for ${currentMatch.teams[1]}`
+                    : ""
+            }`;
         }
+    }
+    async map(query: string) {
+        return e.searchMap(await findPageName(query.split("/")[1]));
+    }
+    async brawler(query: string) {
+        return e.searchBrawler(await findPageName(query.split("/")[1]));
+    }
+    async player(query: string) {
+        return e.searchPlayer(await findPageName(query.split("/")[1]));
+    }
+    async team(query: string) {
+        return e.searchTeam(await findPageName(query.split("/")[1]));
     }
     private Add(obj: MessageMatch) {
         DB.push(obj);

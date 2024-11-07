@@ -7,7 +7,7 @@ export async function findPageName(query: string): Promise<string> {
         search: query,
     }).toString();
     const fetching = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?${params}`
+        `https://liquipedia.net/brawlstars/api.php?${params}`,
     )
         .then((response) => {
             if (response.status != 200) {
@@ -38,7 +38,7 @@ export async function findPrintableName(query: string): Promise<string> {
         search: query,
     }).toString();
     const search = await fetch(
-        `https://liquipedia.net/brawlstars/api.php?${params}`
+        `https://liquipedia.net/brawlstars/api.php?${params}`,
     )
         .then((response) => response.json())
         .then((data) => {

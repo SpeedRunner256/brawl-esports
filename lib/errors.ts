@@ -1,7 +1,7 @@
 export class NotFoundError extends Error {
     constructor(message: string) {
         super(
-            `Query '${message}' not found.`
+            `Query '${message}' not found.`,
         );
         this.name = this.constructor.name;
     }

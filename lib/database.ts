@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "fs/promises";
-import { Player, Team, Match } from "./moduleTypes.ts";
+import { Match, Player, Team } from "./moduleTypes.ts";
 
 type Type = "match" | "player" | "team";
 export class Database {
@@ -22,7 +22,7 @@ export class Database {
      */
     async pushPlayer(playerObject: Player): Promise<void> {
         const data = JSON.parse(
-            await readFile("db/players.json", "utf-8")
+            await readFile("db/players.json", "utf-8"),
         ) as Player[];
         let existsInDb = false;
         for (const player of data) {
@@ -46,11 +46,11 @@ export class Database {
     async getPlayer(
         Id: string | null = null,
         Nationality: string | null = null,
-        Pagename: string | null = null
+        Pagename: string | null = null,
     ): Promise<Player[]> {
         const playerArray: Player[] = [];
         const data = JSON.parse(
-            await readFile("db/players.json", "utf-8")
+            await readFile("db/players.json", "utf-8"),
         ) as Player[];
         for (const player of data) {
             const { id, nationality, pagename } = player;
@@ -73,7 +73,7 @@ export class Database {
      */
     async pushTeam(teamObject: Team) {
         const data = JSON.parse(
-            await readFile("db/teams.json", "utf8")
+            await readFile("db/teams.json", "utf8"),
         ) as Team[];
         let existsInDB = false;
         for (const team of data) {
@@ -95,10 +95,10 @@ export class Database {
      */
     async getTeam(
         teamName: string | null = null,
-        pageName: string | null = null
+        pageName: string | null = null,
     ): Promise<Team[]> {
         const data = JSON.parse(
-            await readFile("db/teams.json", "utf8")
+            await readFile("db/teams.json", "utf8"),
         ) as Team[];
         const answer: Team[] = [];
         for (const team of data) {
@@ -114,7 +114,7 @@ export class Database {
     }
     async pushMatch(matchObject: Match[]) {
         const data = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         let existInDb = false;
         for (const match1 of matchObject) {
@@ -135,10 +135,10 @@ export class Database {
     async getMatch(
         pageName: string | null = null,
         tickerName: string | null = null,
-        objectName: string | null = null
+        objectName: string | null = null,
     ) {
         const data = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         const answer: Match[] = [];
         for (const match of data) {

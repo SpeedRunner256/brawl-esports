@@ -21,7 +21,7 @@ export const data = new SlashCommandBuilder()
             .setName("emojis")
             .setRequired(true)
             .setDescription(
-                "Add emojis, nth emoji is for the nth answer. Seperate by ;"
+                "Add emojis, nth emoji is for the nth answer. Seperate by ;",
             )
     )
     .addIntegerOption((option) =>
@@ -37,7 +37,7 @@ export const data = new SlashCommandBuilder()
             .setName("allow_multi_select")
             .setRequired(false)
             .setDescription(
-                "Allow multi-select or not. Auto-selected as false."
+                "Allow multi-select or not. Auto-selected as false.",
             )
     );
 export async function execute(interaction: ChatInputCommandInteraction) {

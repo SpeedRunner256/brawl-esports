@@ -1,5 +1,11 @@
 import { readFile, writeFile } from "fs/promises";
-import { ExtraData, Prediction, PunData, SquadPlayer, Team } from "./moduleTypes.ts";
+import {
+    ExtraData,
+    Prediction,
+    PunData,
+    SquadPlayer,
+    Team,
+} from "./moduleTypes.ts";
 import { ChatInputCommandInteraction, TextChannel } from "discord.js";
 import { Match } from "./moduleTypes.ts";
 
@@ -42,13 +48,15 @@ export class Helper {
         return players
             .map(
                 (player) =>
-                    `**[${
-                        player.id
-                    }](https://liquipedia.net/brawlstars/${new URLSearchParams(
-                        player.link
-                    ).toString()})**: ${player.role} - ${this.formatDate(
-                        player.joindate
-                    )}`
+                    `**[${player.id}](https://liquipedia.net/brawlstars/${
+                        new URLSearchParams(
+                            player.link,
+                        ).toString()
+                    })**: ${player.role} - ${
+                        this.formatDate(
+                            player.joindate,
+                        )
+                    }`,
             )
             .join("\n");
     }
@@ -139,7 +147,7 @@ export class Helper {
     }
     async getGamemodeBans(name: string) {
         const unsorteddata = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         const data = this.sortMatchesByDate(unsorteddata);
         const answer: string[] = [];
@@ -151,14 +159,18 @@ export class Helper {
                 if (
                     game.extradata.maptype.toLowerCase() == name.toLowerCase()
                 ) {
-                    for (const ban1 of Object.values(
-                        game.extradata.bans.team1
-                    )) {
+                    for (
+                        const ban1 of Object.values(
+                            game.extradata.bans.team1,
+                        )
+                    ) {
                         answer.push(ban1);
                     }
-                    for (const ban2 of Object.values(
-                        game.extradata.bans.team2
-                    )) {
+                    for (
+                        const ban2 of Object.values(
+                            game.extradata.bans.team2,
+                        )
+                    ) {
                         answer.push(ban2);
                     }
                 }
@@ -168,7 +180,7 @@ export class Helper {
     }
     async getGamemodePicks(name: string) {
         const unsorteddata = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         const data = this.sortMatchesByDate(unsorteddata);
         const answer: string[] = [];
@@ -188,7 +200,7 @@ export class Helper {
     }
     async getMapBans(name: string) {
         const unsorteddata = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         const data = this.sortMatchesByDate(unsorteddata);
         const answer: string[] = [];
@@ -198,14 +210,18 @@ export class Helper {
                     continue;
                 }
                 if (game.map.toLowerCase() == name.toLowerCase()) {
-                    for (const ban1 of Object.values(
-                        game.extradata.bans.team1
-                    )) {
+                    for (
+                        const ban1 of Object.values(
+                            game.extradata.bans.team1,
+                        )
+                    ) {
                         answer.push(ban1);
                     }
-                    for (const ban2 of Object.values(
-                        game.extradata.bans.team2
-                    )) {
+                    for (
+                        const ban2 of Object.values(
+                            game.extradata.bans.team2,
+                        )
+                    ) {
                         answer.push(ban2);
                     }
                 }
@@ -215,7 +231,7 @@ export class Helper {
     }
     async getMapPicks(name: string) {
         const unsorteddata = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         const data = this.sortMatchesByDate(unsorteddata);
         const answer: string[] = [];
@@ -235,7 +251,7 @@ export class Helper {
     }
     async sortByBrawler(name: string) {
         const unsorteddata = JSON.parse(
-            await readFile("db/matches.json", "utf8")
+            await readFile("db/matches.json", "utf8"),
         ) as Match[];
         const data = this.sortMatchesByDate(unsorteddata);
         const answer: Match[] = [];
@@ -250,7 +266,7 @@ export class Helper {
                     }
                     if (
                         Object.values(brawler)[0].toLowerCase() ==
-                        name.toLowerCase()
+                            name.toLowerCase()
                     ) {
                         answer.push(match);
                         if (answer.length == 20) {
@@ -273,7 +289,8 @@ export class Helper {
                 for (const players of match.match2opponents) {
                     for (const player of players.match2players) {
                         if (
-                            player.displayname.toLowerCase() == name.toLowerCase()
+                            player.displayname.toLowerCase() ==
+                                name.toLowerCase()
                         ) {
                             answer.push(match);
                             if (answer.length == 20) {
@@ -320,7 +337,9 @@ export class Helper {
         return uniqueBans.join(", ");
     }
     async checkAllow(uid: string) {
-        const file: PunData = JSON.parse(await readFile("db/puns.json", "utf-8"));
+        const file: PunData = JSON.parse(
+            await readFile("db/puns.json", "utf-8"),
+        );
         for (const id of file.allow) {
             if (id == uid) {
                 return true;
@@ -329,7 +348,9 @@ export class Helper {
         return false;
     }
     async checkPun(pname: string) {
-        const file: PunData = JSON.parse(await readFile("db/puns.json", "utf-8"));
+        const file: PunData = JSON.parse(
+            await readFile("db/puns.json", "utf-8"),
+        );
         for (const pun of file.puns) {
             for (const name of pun.names) {
                 if (name == pname) {
@@ -340,7 +361,9 @@ export class Helper {
         throw new Error(`No pun found - trying ${pname}`);
     }
     async hasPun(pname: string) {
-        const file: PunData = JSON.parse(await readFile("db/puns.json", "utf-8"));
+        const file: PunData = JSON.parse(
+            await readFile("db/puns.json", "utf-8"),
+        );
         for (const pun of file.puns) {
             for (const name of pun.names) {
                 if (name == pname) {
@@ -383,7 +406,7 @@ export class Config {
     }
     async userAlreadyVoted(
         predictionNumber: string,
-        ID: string
+        ID: string,
     ): Promise<boolean> {
         const data = JSON.parse(await readFile("db/prediction.json", "utf8"));
         const prediction = data[predictionNumber];
@@ -402,7 +425,7 @@ export class Config {
     async log(
         logMessage: string,
         logContent: string,
-        interaction: ChatInputCommandInteraction
+        interaction: ChatInputCommandInteraction,
     ): Promise<void> {
         const data = JSON.parse(await readFile("config.json", "utf8"));
         const guildId = interaction.guildId;
@@ -411,7 +434,7 @@ export class Config {
         }
         const log = data[guildId].log.id;
         (interaction.client.channels.cache.get(log) as TextChannel).send(
-            `${logMessage}\`\`\`json\n${logContent}\`\`\``
+            `${logMessage}\`\`\`json\n${logContent}\`\`\``,
         );
     }
 }
@@ -470,7 +493,7 @@ export class stringUtils {
             const suffix = ["th", "st", "nd", "rd"][
                 day % 10 > 3 ? 0 : (day % 100) - (day % 10) != 10 ? day % 10 : 0
             ];
-            const link = encodeURI(player.link)
+            const link = encodeURI(player.link);
             const finalDate = formattedDate.replace(/(\d+)/, `$1${suffix}`);
             return `[**${player.link}**](https://liquipedia.net/brawlstars/${link}): ${player.nationality} - ${finalDate}`;
         });

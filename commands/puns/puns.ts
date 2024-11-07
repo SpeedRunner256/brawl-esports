@@ -14,7 +14,7 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("names")
                     .setDescription(
-                        "Names that trigger this embed, separated by ;"
+                        "Names that trigger this embed, separated by ;",
                     )
                     .setRequired(true)
             )
@@ -40,7 +40,7 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("quotes")
                     .setDescription(
-                        "Things this user says (their catchphrases), each separated by ;"
+                        "Things this user says (their catchphrases), each separated by ;",
                     )
                     .setRequired(true)
             )
@@ -48,7 +48,7 @@ export const data = new SlashCommandBuilder()
                 input
                     .setName("color")
                     .setDescription(
-                        "Optionally, get a color here; format -> integer value string (8 digits)"
+                        "Optionally, get a color here; format -> integer value string (8 digits)",
                     )
                     .setMinValue(0) // 0x00_00_00
                     .setMaxValue(16777215) // 0xff_ff_ff
@@ -108,7 +108,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             const color = interaction.options.getInteger("color", true);
             const description = interaction.options.getString(
                 "description",
-                true
+                true,
             );
             const send = {
                 names,
@@ -126,7 +126,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 },
             } as Pun;
             const data: PunData = JSON.parse(
-                await readFile("db/puns.json", "utf-8")
+                await readFile("db/puns.json", "utf-8"),
             );
             data.puns.push(send);
             await writeFile("db/puns.json", JSON.stringify(data, null, "    "));
@@ -144,18 +144,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             const color = interaction.options.getInteger("color");
             const description = interaction.options.getString("description");
             const data: PunData = JSON.parse(
-                await readFile("db/puns.json", "utf-8")
+                await readFile("db/puns.json", "utf-8"),
             );
             for (const pun in data.puns) {
                 if (data.puns[pun].id === id) {
-                    data.puns[pun].embed.title =
-                        title ?? data.puns[pun].embed.title;
-                    data.puns[pun].embed.color =
-                        color ?? data.puns[pun].embed.color;
-                    data.puns[pun].embed.description =
-                        description ?? data.puns[pun].embed.description;
-                    data.puns[pun].random_quotes =
-                        quotes ?? data.puns[pun].random_quotes;
+                    data.puns[pun].embed.title = title ??
+                        data.puns[pun].embed.title;
+                    data.puns[pun].embed.color = color ??
+                        data.puns[pun].embed.color;
+                    data.puns[pun].embed.description = description ??
+                        data.puns[pun].embed.description;
+                    data.puns[pun].random_quotes = quotes ??
+                        data.puns[pun].random_quotes;
                 }
             }
             await writeFile("db/puns.json", JSON.stringify(data, null, "    "));

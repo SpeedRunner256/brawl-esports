@@ -11,7 +11,7 @@ import {
 import { StringSelectMenuBuilder } from "discord.js";
 import { LiquidDB } from "../../lib/api.ts";
 import type { Match } from "../../lib/moduleTypes.ts";
-import { MyEmbeds} from "../../lib/embeds.ts";
+import { MyEmbeds } from "../../lib/embeds.ts";
 const e = new MyEmbeds();
 export const data = new SlashCommandBuilder()
     .setName("match")
@@ -38,7 +38,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             match.match2opponents[0].name == "TBD" ||
             match.match2opponents[1].name == "TBD"
         ) {
-            continue; // match not played 
+            continue; // match not played
         }
         const matchName = `${matchMenuCounter}. ${
             match.match2opponents[0].name
@@ -111,7 +111,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                             opp2.match2players[2].displayname
                         }`,
                     },
-                    e.matchEmbedFields(matchArray, matchNumber, gameNumber),
+                    ...e.matchEmbedFields(matchArray, matchNumber, gameNumber),
                 ]);
             await i.reply({
                 content: "Edited embed.",
@@ -200,7 +200,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         opp2.match2players[2].displayname
                     }`,
                 },
-                e.matchEmbedFields(matchArray, matchNumber, gameNumber),
+                ...e.matchEmbedFields(matchArray, matchNumber, gameNumber),
             ]);
         await interaction.editReply({
             content: "Navigation buttons clicked, updating.",

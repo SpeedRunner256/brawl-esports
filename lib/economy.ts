@@ -1,4 +1,4 @@
-import { Config as conf} from "./helper.ts";
+import { Config as conf } from "./helper.ts";
 import { type User } from "./moduleTypes.ts";
 import { readFile, writeFile } from "node:fs/promises";
 const Config = new conf();

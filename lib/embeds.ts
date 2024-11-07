@@ -4,82 +4,94 @@ import type { Brawler, Map, Match, Player, Pun, Team } from "./moduleTypes.ts";
 import { EmbedBuilder } from "discord.js";
 import { LiquidDB } from "./api.ts";
 import { findPrintableName } from "./mediawiki.ts";
-import { Helper, stringUtils as stringUtil} from "./helper.ts";
+import { Helper, stringUtils as stringUtil } from "./helper.ts";
 
 const helper = new Helper();
 const stringUtils = new stringUtil();
 export class MyEmbeds {
     matchEmbedFields(match: Match[], matchNumber: number, gameNumber: number) {
+        const gameNum = gameNumber + 1;
         if (match[matchNumber].match2games.length == 0) {
-            return {
-                name: "<:combat:1292086786872442973> Game not logged",
-                value: "Games are not logged for this set.",
-            };
+            return [
+                {
+                    name: "<:combat:1292086786872442973> Game not logged",
+                    value: "Games are not logged for this set.",
+                },
+            ] as APIEmbedField[];
         }
         const game = match[matchNumber].match2games[gameNumber];
         if (
             Object.values(game.participants).length !== 0 &&
             Object.values(game.scores).length !== 0
         ) {
-            return {
-                name: `<:combat:1292086786872442973> Game ${gameNumber + 1}`,
-                value: `<:bs_map:1291686752569921546> **Played On** ${
-                    game.map
-                }\n<:score:1291686732621676605> **Game Score**: ${
-                    game.scores[0]
-                }:${game.scores[1]} - **${
-                    match[matchNumber].match2opponents[game.winner - 1].name
-                }** won\n<:brawlers:1291686735906078861> **Picks**\n1. **${
-                    game.participants["1_1"].brawler
-                }**, **${game.participants["1_2"].brawler}**, **${
-                    game.participants["1_3"].brawler
-                }**\n2. **${game.participants["2_1"].brawler}**, **${
-                    game.participants["2_2"].brawler
-                }**, **${
-                    game.participants["2_3"].brawler
-                }**\n<:bans:1291686740486131772> **Bans**: ${helper.getBanList(
-                    game.extradata
-                )}`,
-                inline: true,
-            } as APIEmbedField;
+            return [
+                {
+                    name: `<:combat:1292086786872442973> Game ${gameNum}`,
+                    value: "\u200b",
+                },
+                {
+                    name: "<:bs_map:1291686752569921546> **Played On**",
+                    value: game.map,
+                    inline: true,
+                },
+                {
+                    name: "<:score:1291686732621676605> **Game Score**",
+                    value: `**${
+                        match[matchNumber].match2opponents[game.winner - 1].name
+                    }** won - ${game.scores[0]}:${game.scores[1]}`,
+                    inline: true,
+                },
+                {
+                    name: "<:brawlers:1291686735906078861> **Picks**",
+                    value: `1. **${game.participants["1_1"].brawler}**, **${
+                        game.participants["1_2"].brawler
+                    }**, **${game.participants["1_3"].brawler}**\n2. **${
+                        game.participants["2_1"].brawler
+                    }**, **${game.participants["2_2"].brawler}**, **${
+                        game.participants["2_3"].brawler
+                    }**`,
+                },
+                {
+                    name: "<:bans:1291686740486131772> **Bans**",
+                    value: `${helper.getBanList(game.extradata)}`,
+                },
+            ] as APIEmbedField[];
         }
         throw new Error("matchNumber/gameNumber out of bounds");
     }
     async searchBrawler(query: string) {
         const obj = await LiquidDB.get("brawler", query);
-        const brawler = <Brawler>obj.result;
+        const brawler = <Brawler> obj.result;
         if (!obj.queryExists || !obj.result) {
             return new EmbedBuilder()
                 .setTitle("Brawler not found")
                 .setColor(Colors.DarkRed)
                 .setDescription(
-                    "Maybe you typed something wrong? If you are 100% sure you didn't type anything wrong, contact modmail."
+                    "Maybe you typed something wrong? If you are 100% sure you didn't type anything wrong, contact modmail.",
                 );
         }
         // Brawler definitely exists
         return new EmbedBuilder()
             .setTitle(
-                `<:bsStar:1292082767848542208> ${brawler.name} <:bsStar:1292082767848542208>`
+                `<:bsStar:1292082767848542208> ${brawler.name} <:bsStar:1292082767848542208>`,
             )
             .setDescription(brawler.description)
             .setColor(Number("0x" + brawler.rarity.color.split("#")[1]))
             .setURL(
                 (
                     "https://www.liquipedia.net/brawlstars/" + brawler.name
-                ).replace(/\s/g, "%20")
+                ).replace(/\s/g, "%20"),
             )
             .setThumbnail(brawler.imageUrl)
             .addFields([
                 {
-                    name:
-                        "<:star_power:1276418263911497810> " +
+                    name: "<:star_power:1276418263911497810> " +
                         brawler.starPowers[0].name,
                     value: brawler.starPowers[0].description,
                     inline: true,
                 },
                 {
-                    name:
-                        "<:star_power:1276418263911497810> " +
+                    name: "<:star_power:1276418263911497810> " +
                         brawler.starPowers[1].name,
                     value: brawler.starPowers[1].description,
                     inline: true,
@@ -90,12 +102,16 @@ export class MyEmbeds {
                     inline: true,
                 },
                 {
-                    name: `<:gadget:1276418294592573460> ${brawler.gadgets[0].name}`,
+                    name: `<:gadget:1276418294592573460> ${
+                        brawler.gadgets[0].name
+                    }`,
                     value: brawler.gadgets[0].description,
                     inline: true,
                 },
                 {
-                    name: `<:gadget:1276418294592573460> ${brawler.gadgets[1].name}`,
+                    name: `<:gadget:1276418294592573460> ${
+                        brawler.gadgets[1].name
+                    }`,
                     value: brawler.gadgets[1].description,
                     inline: true,
                 },
@@ -108,21 +124,21 @@ export class MyEmbeds {
     }
     async searchMap(query: string) {
         const obj = await LiquidDB.get("map", query);
-        const map = <Map>obj.result;
+        const map = <Map> obj.result;
         if (!obj.queryExists || !obj.result) {
             return new EmbedBuilder()
                 .setTitle("Map not found")
                 .setColor(Colors.DarkRed)
                 .setDescription(
-                    "Maybe you typed something wrong? If you are 100% sure you didn't type anything wrong, contact modmail."
+                    "Maybe you typed something wrong? If you are 100% sure you didn't type anything wrong, contact modmail.",
                 );
         }
         return new EmbedBuilder()
             .setTitle(
-                `<:bs_map:1291686752569921546> ${map.name} <:bs_map:1291686752569921546>`
+                `<:bs_map:1291686752569921546> ${map.name} <:bs_map:1291686752569921546>`,
             )
             .setDescription(
-                `> Gamemode: [${map.gamemode.name}](${map.gamemode.link})`
+                `> Gamemode: [${map.gamemode.name}](${map.gamemode.link})`,
             )
             .setImage(map.imageUrl)
             .setURL(map.link)
@@ -130,23 +146,21 @@ export class MyEmbeds {
     }
     async searchPlayer(query: string) {
         const obj = await LiquidDB.get("player", query);
-        const player = <Player>obj.result;
+        const player = <Player> obj.result;
         if (!obj.queryExists || !obj.result) {
             return new EmbedBuilder()
                 .setTitle("Player not found")
                 .setColor(Colors.DarkRed)
                 .setDescription(
-                    "Maybe you typed something wrong? If you are 100% sure you didn't type anything wrong, contact modmail."
+                    "Maybe you typed something wrong? If you are 100% sure you didn't type anything wrong, contact modmail.",
                 );
         }
         return new EmbedBuilder()
             .setTitle(`<:duels:1291683169569083392> ${player.id}`)
             .setDescription(
-                `${
-                    player.pagename
-                } is a member (player/coach/analyst) at **${await findPrintableName(
-                    player?.teampagename
-                )}**.`
+                `${player.pagename} is a member (player/coach/analyst) at **${await findPrintableName(
+                    player?.teampagename,
+                )}**.`,
             )
             .setColor(player?.status == "Active" ? 0x4287f5 : 0xf54254)
             .setURL(`https://liquipedia.net/brawlstars/${player?.pagename}`)
@@ -157,10 +171,8 @@ export class MyEmbeds {
                 {
                     name: "<:game:1291684262910885918> Team",
                     value: `[${await findPrintableName(
-                        player?.teampagename
-                    )}](https://liquipedia.net/brawlstars/${
-                        player.teampagename
-                    })`,
+                        player?.teampagename,
+                    )}](https://liquipedia.net/brawlstars/${player.teampagename})`,
                     inline: true,
                 },
                 {
@@ -182,7 +194,7 @@ export class MyEmbeds {
     }
     async searchTeam(query: string): Promise<EmbedBuilder> {
         const obj = await LiquidDB.get("team", query);
-        const team = <Team>obj.result;
+        const team = <Team> obj.result;
         if (team.status == "disbanded" ? true : false) {
             return new EmbedBuilder()
                 .setTitle(`${helper.randomShieldEmoji()} ${team.name}`)
@@ -221,7 +233,7 @@ export class MyEmbeds {
                                     `[${
                                         key.charAt(0).toUpperCase() +
                                         key.slice(1)
-                                    }](${value})`
+                                    }](${value})`,
                             )
                             .join(", "),
                         inline: true,
@@ -264,7 +276,7 @@ export class MyEmbeds {
                             ([key, value]) =>
                                 `[${
                                     key.charAt(0).toUpperCase() + key.slice(1)
-                                }](${value})`
+                                }](${value})`,
                         )
                         .join(", "),
                     inline: true,
@@ -275,7 +287,7 @@ export class MyEmbeds {
         const answer = new EmbedBuilder()
             .setTitle("Predictions Closed")
             .setDescription(
-                `This prediction - ${question} - has received all the votes it could. Please come back for the next one!\nPrediction entries ran for ${time}.`
+                `This prediction - ${question} - has received all the votes it could. Please come back for the next one!\nPrediction entries ran for ${time}.`,
             )
             .setColor(0xf5428d)
             .setTimestamp();
@@ -285,7 +297,7 @@ export class MyEmbeds {
         question: string,
         choice1: string,
         choice2: string,
-        time: string
+        time: string,
     ): EmbedBuilder {
         const answer = new EmbedBuilder()
             .setTitle(question)
@@ -309,12 +321,12 @@ export class MyEmbeds {
         return answer;
     }
     async makePun(pun: Pun, client: Client<boolean>) {
-        const embed = EmbedBuilder.from(<APIEmbed>pun.embed);
+        const embed = EmbedBuilder.from(<APIEmbed> pun.embed);
         embed.setThumbnail(
             "https://cdn.discordapp.com/avatars/" +
                 pun.id +
                 "/" +
-                (await client.users.fetch(pun.id)).avatar
+                (await client.users.fetch(pun.id)).avatar,
         );
         let catchp = "";
         for (const catcha of pun.random_quotes) {
