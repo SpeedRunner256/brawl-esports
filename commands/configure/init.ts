@@ -1,5 +1,4 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { Economy } from "../../lib/economy.ts";
 import { EmbedBuilder } from "@discordjs/builders";
 export const data = new SlashCommandBuilder()
     .setName("start")

@@ -1,13 +1,16 @@
 {
-    "compilerOptions": {
-        "noImplicitAny": true,
-        "removeComments": true,
-        "preserveConstEnums": true,
-        "noEmit": true,
-        "allowImportingTsExtensions": true,
-        "sourceMap": true,
-        "module": "NodeNext",
-        "outDir": "./tsc",
-        "moduleResolution": "NodeNext"
-    }
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"sourceMap": true,
+		"module": "NodeNext",
+		"outDir": "./tsc",
+		"moduleResolution": "NodeNext",
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"useUnknownInCatchVariables": false
+	}
 }
